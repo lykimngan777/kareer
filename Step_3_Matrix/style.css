@@ -1,2 +1,4 @@
-/* Matrix Styles */
-body { background: #000; color: #fff; }
+:root {
+    --bg-color: #f2f2f2;
+    /* ... (Full content of style.css) */
+}

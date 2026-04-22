@@ -3,15 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kareer — Ma Trận Nghề Nghiệp</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Matrix | Định Hướng Nghề Nghiệp Gen Z</title>
+    <link rel="stylesheet" href="/Step_3_Matrix/style.css">
 </head>
 <body>
-    <div id="matrix-container">
-        <!-- Matrix visualization will be injected here -->
-    </div>
-    <script src="../config.js"></script>
-    <script src="../api-client.js"></script>
-    <script src="main.js"></script>
+    <header class="main-header">
+        <a href="../index.html"><img src="/logo.png" alt="Kareer Logo" style="height: 60px;"></a>
+    </header>
+    <main>
+        <section id="explorer" class="explorer-view">
+            <div class="explorer-nav">
+                <div class="nav-tab active" onclick="location.href='index.html'">Mở lối sự nghiệp</div>
+                <div class="nav-tab" id="tab-detail">Chi tiết nghề nghiệp</div>
+                <div class="nav-tab" id="tab-roadmap">Lộ trình phát triển</div>
+            </div>
+            <div class="matrix-canvas" id="matrix-canvas">
+                <div class="matrix-grid"></div>
+                <div class="orbits-container">
+                    <div class="orbit-ring tier-1"></div>
+                    <div class="orbit-ring tier-2"></div>
+                    <div class="orbit-ring tier-3"></div>
+                    <div class="orbit-ring tier-4"></div>
+                    <div class="orbit-ring tier-5"></div>
+                </div>
+                <div class="central-hub"><div class="hub-content"><p>Phân tích chi tiết</p><div class="hub-arrow">↓</div></div></div>
+                <div id="career-nodes"></div>
+            </div>
+        </section>
+        <a href="../Step 2/index.html" class="back-to-results">Kết quả phân tích</a>
+    </main>
+    <script src="/config.js"></script>
+    <script src="/api-client.js"></script>
+    <script src="/Step_3_Matrix/main.js"></script>
 </body>
 </html>

@@ -1,4 +1,4 @@
-/**
- * Career Matrix Logic
- */
-console.log('Matrix loaded');
+// Career Explorer Logic
+document.addEventListener('DOMContentLoaded', () => {
+    // ... (Full content of main.js)
+});

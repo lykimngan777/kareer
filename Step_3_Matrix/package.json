@@ -1,5 +1,6 @@
 {
   "name": "matrix-career",
   "version": "1.0.0",
-  "scripts": { "dev": "npx live-server ." }
+  "scripts": { "dev": "npx live-server ." },
+  "devDependencies": { "live-server": "^1.2.1" }
 }
