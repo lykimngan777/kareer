@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kareer Admin — Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Instrument+Sans:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    :root {
+      --bg: #09090b;
+      --card: rgba(24, 24, 27, 0.7);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --ink: #fafafa;
+      --ink2: #a1a1aa;
+      --ink3: #71717a;
+      --accent: #6366f1;
+      --accent-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+      --accent-glass: rgba(99, 102, 241, 0.1);
+      --green: #10b981;
+      --amber: #f59e0b;
+      --red: #ef4444;
+      --font: 'Instrument Sans', 'Inter', system-ui, sans-serif;
+      --radius: 20px;
+      --radius-sm: 12px;
+      --shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+      --glass: blur(12px) saturate(180%);
+    }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      background-image: 
+        radial-gradient(circle at 0% 0%, rgba(99, 102, 241, 0.15) 0%, transparent 40%),
+        radial-gradient(circle at 100% 100%, rgba(168, 85, 247, 0.15) 0%, transparent 40%);
+      background-attachment: fixed;
+      color: var(--ink);
+      min-height: 100vh;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Layout ── */
+    .dashboard {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 60px 40px;
+    }
+
+    .dashboard-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 60px;
+      animation: fadeInDown 0.8s ease-out;
+    }
+
+    .dashboard-header h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      background: var(--accent-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      line-height: 1.1;
+    }
+
+    .dashboard-header p {
+      color: var(--ink2);
+      margin-top: 8px;
+      font-size: 1.1rem;
+    }
+
+    .dashboard-header .actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .dashboard-header .back-link {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--ink);
+      text-decoration: none;
+      padding: 12px 24px;
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-sm);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      backdrop-filter: var(--glass);
+    }
+
+    .dashboard-header .back-link:hover {
+      background: rgba(255, 255, 255, 0.05);
+      transform: translateY(-2px);
+      border-color: var(--accent);
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 6px 14px;
+      border-radius: 999px;
+      margin-top: 12px;
+      backdrop-filter: var(--glass);
+      border: 1px solid transparent;
+    }
+
+    .status-badge.online {
+      background: rgba(16, 185, 129, 0.1);
+      color: var(--green);
+      border-color: rgba(16, 185, 129, 0.2);
+    }
+
+    .status-badge.offline {
+      background: rgba(239, 68, 68, 0.1);
+      color: var(--red);
+      border-color: rgba(239, 68, 68, 0.2);
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    .status-badge.online .status-dot { 
+      background: var(--green);
+      box-shadow: 0 0 12px var(--green);
+      animation: pulse 2s infinite;
+    }
+    .status-badge.offline .status-dot { background: var(--red); }
+
+    @keyframes pulse {
+      0% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.5); opacity: 0.5; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    /* ── Stats Grid ── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      margin-bottom: 60px;
+    }
+
+    .stat-card {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 32px;
+      box-shadow: var(--shadow);
+      backdrop-filter: var(--glass);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+      animation: fadeInUp 0.8s ease-out backwards;
+    }
+
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 2px;
+      background: var(--accent-gradient);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .stat-card:hover { 
+      transform: translateY(-8px) scale(1.02);
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+    .stat-card:hover::before { opacity: 1; }
+
+    .stat-label {
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--ink3);
+      margin-bottom: 12px;
+    }
+
+    .stat-value {
+      font-size: 3.5rem;
+      font-weight: 800;
+      letter-spacing: -0.05em;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .stat-sub {
+      font-size: 0.9rem;
+      color: var(--ink2);
+    }
+
+    /* ── Sections ── */
+    .dashboard-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+    }
+
+    .section {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 40px;
+      box-shadow: var(--shadow);
+      backdrop-filter: var(--glass);
+      animation: fadeInUp 1s ease-out backwards;
+    }
+
+    .section.full-width {
+      grid-column: 1 / -1;
+    }
+
+    .section-title {
+      font-size: 1.2rem;
+      font-weight: 800;
+      margin-bottom: 32px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .section-title span {
+      padding: 8px;
+      background: var(--accent-glass);
+      border-radius: 10px;
+      font-size: 1.4rem;
+    }
+
+    /* ── Charts ── */
+    .bar-chart {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .bar-chart .loading {
+      display: flex;
+      justify-content: center;
+      padding: 40px 0;
+    }
+
+    .bar-chart .spinner {
+      width: 24px;
+      height: 24px;
+      border: 3px solid rgba(255, 255, 255, 0.1);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .bar-row {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .bar-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .bar-name {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .bar-value {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--ink2);
+    }
+
+    .bar-track {
+      height: 12px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: var(--accent-gradient);
+      transition: width 1.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+      width: 0;
+    }
+
+    /* ── Table ── */
+    .table-container {
+      overflow-x: auto;
+      margin: 0 -40px;
+      padding: 0 40px;
+    }
+
+    .users-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0 8px;
+    }
+
+    .users-table th {
+      text-align: left;
+      padding: 12px 20px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--ink3);
+    }
+
+    .users-table td {
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.02);
+      border-top: 1px solid var(--card-border);
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    .users-table td:first-child {
+      border-left: 1px solid var(--card-border);
+      border-radius: 12px 0 0 12px;
+    }
+
+    .users-table td:last-child {
+      border-right: 1px solid var(--card-border);
+      border-radius: 0 12px 12px 0;
+    }
+
+    .users-table tr:hover td {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .user-name {
+      font-weight: 700;
+      font-size: 1rem;
+    }
+
+    .user-email {
+      font-size: 0.9rem;
+      color: var(--ink2);
+    }
+
+    .role-badge {
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 6px 12px;
+      border-radius: 8px;
+      background: var(--accent-glass);
+      color: var(--accent);
+      border: 1px solid rgba(99, 102, 241, 0.2);
+    }
+
+    /* ── Animations ── */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 1024px) {
+      .dashboard-content { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 640px) {
+      .dashboard { padding: 30px 20px; }
+      .dashboard-header { flex-direction: column; align-items: flex-start; gap: 24px; }
+      .dashboard-header h1 { font-size: 2rem; }
+      .stat-value { font-size: 2.5rem; }
+      .section { padding: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="dashboard">
+  <!-- Header -->
+  <div class="dashboard-header">
+    <div style="display: flex; align-items: center; gap: 1.5rem;">
+      <a href="/">
+        <img src="logo.png" alt="Kareer Logo" style="height: 60px; filter: invert(1); mix-blend-mode: plus-lighter;">
+      </a>
+      <div>
+        <h1>Kareer Admin</h1>
+        <p>Hệ thống quản trị và thống kê định hướng nghề nghiệp</p>
+      </div>
+    </div>  <span class="status-badge" id="statusBadge">
+        <span class="status-dot"></span>
+        <span id="statusText">Đang kết nối...</span>
+      </span>
+    </div>
+    <div class="actions">
+      <a href="/" class="back-link">← Trang chủ</a>
+    </div>
+  </div>
+
+  <!-- Stats Overview -->
+  <div class="stats-grid" id="statsGrid">
+    <div class="stat-card" style="animation-delay: 0.1s">
+      <div class="stat-label">Tổng người dùng</div>
+      <div class="stat-value" id="totalUsers">—</div>
+      <div class="stat-sub">Tăng trưởng ổn định</div>
+    </div>
+    <div class="stat-card" style="animation-delay: 0.2s">
+      <div class="stat-label">Bài đánh giá</div>
+      <div class="stat-value" id="totalAssessments">—</div>
+      <div class="stat-sub">Hoàn thành bài trắc nghiệm</div>
+    </div>
+    <div class="stat-card" style="animation-delay: 0.3s">
+      <div class="stat-label">Nghề được chọn</div>
+      <div class="stat-value" id="totalSelections">—</div>
+      <div class="stat-sub">Dữ liệu từ Step 3</div>
+    </div>
+    <div class="stat-card" style="animation-delay: 0.4s">
+      <div class="stat-label">Tỷ lệ hoàn thành</div>
+      <div class="stat-value" id="completionRate">—</div>
+      <div class="stat-sub">User → Assessment</div>
+    </div>
+  </div>
+
+  <div class="dashboard-content">
+    <!-- Group Distribution -->
+    <div class="section" style="animation-delay: 0.5s">
+      <div class="section-title"><span>📊</span> Phân bố nhóm nghề nghiệp</div>
+      <div class="bar-chart" id="groupChart">
+        <div class="loading"><div class="spinner"></div></div>
+      </div>
+    </div>
+
+    <!-- Role Distribution -->
+    <div class="section" style="animation-delay: 0.6s">
+      <div class="section-title"><span>👤</span> Phân bố vai trò</div>
+      <div class="bar-chart" id="roleChart">
+        <div class="loading"><div class="spinner"></div></div>
+      </div>
+    </div>
+
+    <!-- Top Careers -->
+    <div class="section full-width" style="animation-delay: 0.7s">
+      <div class="section-title"><span>🏆</span> Nghề nghiệp được chọn nhiều nhất</div>
+      <div class="bar-chart" id="careerChart" style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+        <div class="loading"><div class="spinner"></div></div>
+      </div>
+    </div>
+
+    <!-- Recent Users -->
+    <div class="section full-width" style="animation-delay: 0.8s">
+      <div class="section-title"><span>🕐</span> Người dùng gần đây</div>
+      <div class="table-container">
+        <div id="usersTable">
+          <div class="loading"><div class="spinner"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="api-client.js"></script>
+<script>
+  const GROUP_NAMES = {
+    creative: 'Sáng Tạo & Nghệ Thuật',
+    leader: 'Lãnh Đạo & Kinh Doanh',
+    social: 'Hỗ Trợ & Cộng Đồng',
+    order: 'Tổ Chức & Hành Chính',
+    analyst: 'Phân Tích & Nghiên Cứu',
+    technical: 'Kỹ Thuật & Thực Hành'
+  };
+
+  const GROUP_COLORS = {
+    creative: 'linear-gradient(90deg, #8b5cf6, #c084fc)',
+    leader: 'linear-gradient(90deg, #f59e0b, #fbbf24)',
+    social: 'linear-gradient(90deg, #10b981, #34d399)',
+    order: 'linear-gradient(90deg, #3b82f6, #60a5fa)',
+    analyst: 'linear-gradient(90deg, #ef4444, #f87171)',
+    technical: 'linear-gradient(90deg, #6b7280, #9ca3af)'
+  };
+
+  function timeAgo(dateStr) {
+    const now = new Date();
+    const date = new Date(dateStr);
+    const diff = Math.floor((now - date) / 1000);
+    if (diff < 60) return 'Vừa xong';
+    if (diff < 3600) return `${Math.floor(diff / 60)} phút trước`;
+    if (diff < 86400) return `${Math.floor(diff / 3600)} giờ trước`;
+    return `${Math.floor(diff / 86400)} ngày trước`;
+  }
+
+  function renderBarChart(containerId, data, nameMap = null, colorMap = null) {
+    const container = document.getElementById(containerId);
+    if (!data || Object.keys(data).length === 0) {
+      container.innerHTML = '<div class="empty-state"><p>Chưa có dữ liệu</p></div>';
+      return;
+    }
+
+    const entries = Array.isArray(data)
+      ? data.map(d => [d.name, d.count])
+      : Object.entries(data).sort(([,a],[,b]) => b - a);
+
+    const max = Math.max(...entries.map(([,v]) => v));
+
+    container.innerHTML = entries.map(([key, val]) => {
+      const pct = max > 0 ? Math.round((val / max) * 100) : 0;
+      const name = nameMap ? (nameMap[key] || key) : key;
+      const color = colorMap ? (colorMap[key] || 'var(--accent-gradient)') : 'var(--accent-gradient)';
+      return `
+        <div class="bar-row">
+          <div class="bar-info">
+            <span class="bar-name">${name}</span>
+            <span class="bar-value">${val}</span>
+          </div>
+          <div class="bar-track">
+            <div class="bar-fill" style="width:${pct}%;background:${color}"></div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function renderUsersTable(users) {
+    const container = document.getElementById('usersTable');
+    if (!users || users.length === 0) {
+      container.innerHTML = '<div class="empty-state"><div class="icon">👤</div><h3>Chưa có người dùng</h3><p>Khi có người dùng hoàn thành bài test, họ sẽ xuất hiện ở đây.</p></div>';
+      return;
+    }
+
+    container.innerHTML = `
+      <table class="users-table">
+        <thead>
+          <tr>
+            <th>Người dùng</th>
+            <th>Vai trò</th>
+            <th>Thời gian tham gia</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${users.map(u => `
+            <tr>
+              <td>
+                <div class="user-name">${u.name || '—'}</div>
+                <div class="user-email">${u.email || '—'}</div>
+              </td>
+              <td><span class="role-badge">${u.role || 'Học sinh'}</span></td>
+              <td style="color: var(--ink3); font-size: 0.9rem;">${timeAgo(u.created_at)}</td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    `;
+  }
+
+  async function loadDashboard() {
+    const badge = document.getElementById('statusBadge');
+    const statusText = document.getElementById('statusText');
+
+    try {
+      const online = await KareerAPI.checkBackend();
+      if (!online) {
+        badge.className = 'status-badge offline';
+        statusText.textContent = 'Mất kết nối';
+        return;
+      }
+
+      badge.className = 'status-badge online';
+      statusText.textContent = 'Trực tuyến';
+
+      const stats = await KareerAPI.getStats();
+      if (!stats) return;
+
+      document.getElementById('totalUsers').textContent = stats.totalUsers || 0;
+      document.getElementById('totalAssessments').textContent = stats.totalAssessments || 0;
+      document.getElementById('totalSelections').textContent = stats.totalSelections || 0;
+
+      const rate = stats.totalUsers > 0
+        ? Math.round((stats.totalAssessments / stats.totalUsers) * 100)
+        : 0;
+      document.getElementById('completionRate').textContent = rate + '%';
+
+      renderBarChart('groupChart', stats.groupDistribution, GROUP_NAMES, GROUP_COLORS);
+      renderBarChart('roleChart', stats.roleDistribution);
+      renderBarChart('careerChart', stats.topCareers);
+      renderUsersTable(stats.recentUsers);
+    } catch (err) {
+      badge.className = 'status-badge offline';
+      statusText.textContent = 'Lỗi hệ thống';
+    }
+  }
+
+  loadDashboard();
+  setInterval(loadDashboard, 15000); // Tăng tần suất cập nhật lên 15s
+</script>
+
+
+</body>
+</html>
