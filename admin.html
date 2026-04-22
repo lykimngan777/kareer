@@ -245,25 +245,6 @@
       gap: 20px;
     }
 
-    .bar-chart .loading {
-      display: flex;
-      justify-content: center;
-      padding: 40px 0;
-    }
-
-    .bar-chart .spinner {
-      width: 24px;
-      height: 24px;
-      border: 3px solid rgba(255, 255, 255, 0.1);
-      border-top-color: var(--accent);
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
     .bar-row {
       display: flex;
       flex-direction: column;
@@ -406,12 +387,12 @@
         <h1>Kareer Admin</h1>
         <p>Hệ thống quản trị và thống kê định hướng nghề nghiệp</p>
       </div>
-    </div>  <span class="status-badge" id="statusBadge">
+    </div>
+    <div class="actions">
+      <span class="status-badge" id="statusBadge">
         <span class="status-dot"></span>
         <span id="statusText">Đang kết nối...</span>
       </span>
-    </div>
-    <div class="actions">
       <a href="/" class="back-link">← Trang chủ</a>
     </div>
   </div>
