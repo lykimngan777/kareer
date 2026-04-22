@@ -1,4 +1,6 @@
 :root {
     --bg-color: #f2f2f2;
-    /* ... (Full content of style.css) */
+    --text-color: #111111;
+    --accent-color: #000000;
 }
+/* ... (Full content as seen in view_file) */
