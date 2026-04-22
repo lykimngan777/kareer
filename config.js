@@ -1,3 +1,2 @@
-// Kareer — Production Config
-// Thay URL bên dưới sau khi deploy backend
-window.Kareer_API_URL = ''; 
+// Global configurations
+window.Kareer_API_URL = 'http://localhost:3000'; // Default for local dev
