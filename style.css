@@ -532,35 +532,67 @@ body {
 
 .assessment-nav {
     display: flex;
-    justify-content: space-between;
-    gap: 1rem;
+    justify-content: center;
+    gap: 2rem;
+    margin-top: 2rem;
 }
 
 .btn-primary, .btn-secondary {
-    padding: 1rem 2rem;
-    border-radius: 4px;
+    padding: 1.2rem 3.5rem;
+    border-radius: 100px;
     cursor: pointer;
-    font-weight: 500;
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
     transition: var(--transition-smooth);
+    border: none;
 }
 
 .btn-primary {
     background: var(--accent-color);
     color: white;
-    border: none;
-    flex: 1;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
 }
 
 .btn-secondary {
-    background: transparent;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.8);
+    color: var(--text-secondary);
 }
 
 .btn-secondary:disabled {
     opacity: 0.3;
     cursor: not-allowed;
 }
+
+.assessment-label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.8rem;
+    color: rgba(0,0,0,0.3);
+}
+
+.assessment-input {
+    width: 100%;
+    padding: 1.5rem 2rem;
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(0,0,0,0.02);
+    border-radius: 12px;
+    font-size: 1.1rem;
+    color: var(--text-primary);
+    transition: var(--transition-smooth);
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.assessment-input:focus {
+    outline: none;
+    background: #fff;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+}
+
 
 /* Results Custom Styling */
 .results-card {
