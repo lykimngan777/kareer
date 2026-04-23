@@ -131,7 +131,13 @@ a { text-decoration: none; color: inherit; }
 .medium { background: #fff3e0; color: #ef6c00; }
 .low { background: #fafafa; color: #999; }
 
-.explorer-nav { position: absolute; top: 2rem; display: flex; gap: 1rem; z-index: 10; }
+.explorer-nav {
+    position: relative;
+    margin: 2rem 0 1rem 0;
+    display: flex;
+    gap: 1rem;
+    z-index: 10;
+}
 
 .nav-tab {
     padding: 0.7rem 2.2rem;

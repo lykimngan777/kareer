@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
         { name: "Quản lý Chuỗi cung ứng", code: "1324", riasec: ["C", "E"], salary: "35-90 triệu VNĐ", market: "Robert Walters: Vai trò chiến lược trong chuyển dịch FDI." },
         { name: "Nhà thiết kế thời trang", code: "2163", riasec: ["A", "R"], salary: "12-45 triệu VNĐ", market: "QĐ 34: Nhóm thiết kế sản phẩm và may mặc." },
         { name: "Giáo viên Tiếng Anh", code: "2353", riasec: ["S", "A"], salary: "15-45 triệu VNĐ", market: "Thị trường: Ưu tiên chứng chỉ IELTS/TESOL quốc tế." },
-        { name: "Chuyên viên Luật", code: "2611", riasec: ["I", "C"], salary: "15-55 triệu VNĐ", market: "Navigos: Nhu cầu cao trong M&A và tuân thủ doanh nghiệp." },
+        { name: "Chuyên viên Luật", code: "2611", riasec: ["I", "C"], salary: "15-55 triệu VNĐ", market: "Navigos: Nhu cầu cao trong M&A and tuân thủ doanh nghiệp." },
         { name: "Doanh nhân / Founder", code: "1120", riasec: ["E", "A"], salary: "Vô hạn", market: "Startup: Hệ sinh thái khởi nghiệp Việt Nam năng động." },
         { name: "Quản lý Khách sạn", code: "1411", riasec: ["E", "S"], salary: "25-70 triệu VNĐ", market: "Reeracoen: Phục hồi mạnh tại các thủ phủ du lịch." },
         { name: "Nhà khoa học dữ liệu", code: "2120", riasec: ["I", "R"], salary: "35-100 triệu VNĐ", market: "Robert Walters: Kỹ năng cốt lõi của kỷ nguyên số." }
@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const reasons = {
         "Very High": "Dựa trên RIASEC, bạn có sự tương đồng tuyệt đối với yêu cầu cốt lõi của nghề này.",
-        "High": "Sự kết hợp giữa đam mê và năng lực của bạn sẽ giúp bạn tỏa sáng nhanh chóng.",
+        "High": "Sự kết hợp giữa đam mê and năng lực của bạn sẽ giúp bạn tỏa sáng nhanh chóng.",
         "Medium": "Bạn có tiềm năng, nhưng cần bồi dưỡng thêm một số kỹ năng chuyên biệt.",
         "Low": "Nghề này có thể mang lại góc nhìn mới, dù không phải thế mạnh tự nhiên của bạn.",
         "Very Low": "Đòi hỏi sự nỗ lực vượt bậc để thích nghi với môi trường làm việc đặc thù."
@@ -67,8 +67,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const processedCareers = careerDatabase.map(c => ({ ...c, fit: calculateFit(c) }));
 
-        const width = window.innerWidth;
-        const height = window.innerHeight;
+        const width = careerNodesContainer.offsetWidth;
+        const height = careerNodesContainer.offsetHeight;
         const isMobile = width <= 768;
 
         const fitLevels = [
@@ -244,11 +244,11 @@ document.addEventListener('DOMContentLoaded', () => {
             };
 
             const analysisData = {
-                'R': "Bạn sở hữu bộ kỹ năng thao tác thực tế xuất sắc cùng nền tảng kiến thức logic sắc bén. Sự kiên trì trong việc giải quyết các vấn đề kỹ thuật là vũ khí mạnh nhất giúp bạn vượt qua thử thách. Tuy nhiên, hãy lưu ý cân bằng giữa chuyên môn kỹ thuật và yếu tố cảm xúc trong giao tiếp.",
-                'I': "Kiến thức chuyên sâu, tư duy phản biện và khả năng quan sát nhạy bén là những giá trị cốt lõi làm nên con người bạn. Bạn có kỹ năng nhìn thấu gốc rễ của vấn đề, dù đôi khi có thể sa lầy vào việc nghiên cứu quá mức.",
-                'A': "Sự sáng tạo không giới hạn và bộ kỹ năng thiết kế, biểu đạt cảm xúc giúp bạn luôn có những góc nhìn độc đáo. Bạn có kiến thức phong phú về thẩm mỹ và khả năng truyền tải ý tưởng một cách tự nhiên.",
-                'S': "Kỹ năng thấu cảm và vốn kiến thức về tâm lý, xã hội giúp bạn kết nối mọi người một cách kỳ diệu. Sự chân thành trong truyền đạt là công cụ mạnh mẽ nhất giúp bạn gây dựng lòng tin và dẫn dắt cộng đồng.",
-                'E': "Kỹ năng quyết đoán, khả năng thuyết phục và kiến thức quản trị chiến lược là động cơ thúc đẩy bạn tiến về phía trước. Bạn có tố chất của một người dẫn đầu, luôn biết cách truyền cảm hứng để đạt được mục tiêu lớn.",
+                'R': "Bạn sở hữu bộ kỹ năng thao tác thực tế xuất sắc cùng nền tảng kiến thức logic sắc bén. Sự kiên trì trong việc giải quyết các vấn đề kỹ thuật là vũ khí mạnh nhất giúp bạn vượt qua thử thách. Tuy nhiên, hãy lưu ý cân bằng giữa chuyên môn kỹ thuật and yếu tố cảm xúc trong giao tiếp.",
+                'I': "Kiến thức chuyên sâu, tư duy phản biện and khả năng quan sát nhạy bén là những giá trị cốt lõi làm nên con người bạn. Bạn có kỹ năng nhìn thấu gốc rễ của vấn đề, dù đôi khi có thể sa lầy vào việc nghiên cứu quá mức.",
+                'A': "Sự sáng tạo không giới hạn and bộ kỹ năng thiết kế, biểu đạt cảm xúc giúp bạn luôn có những góc nhìn độc đáo. Bạn có kiến thức phong phú về thẩm mỹ and khả năng truyền tải ý tưởng một cách tự nhiên.",
+                'S': "Kỹ năng thấu cảm and vốn kiến thức về tâm lý, xã hội giúp bạn kết nối mọi người một cách kỳ diệu. Sự chân thành trong truyền đạt là công cụ mạnh mẽ nhất giúp bạn gây dựng lòng tin and dẫn dắt cộng đồng.",
+                'E': "Kỹ năng quyết đoán, khả năng thuyết phục and kiến thức quản trị chiến lược là động cơ thúc đẩy bạn tiến về phía trước. Bạn có tố chất của một người dẫn đầu, luôn biết cách truyền cảm hứng để đạt được mục tiêu lớn.",
                 'C': "Kỹ năng tổ chức khoa học, sự tỉ mỉ and kiến thức quản trị rủi ro là nền tảng vững chắc cho sự nghiệp của bạn. Bạn là 'xương sống' của mọi tổ chức nhờ khả năng kiểm soát vận hành tuyệt đối."
             };
 
