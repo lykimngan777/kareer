@@ -210,6 +210,27 @@ body {
     transition: var(--transition-smooth);
 }
 
+.btn-premium:hover {
+    background-color: #333;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.btn-text {
+    font-family: var(--font-heading);
+    letter-spacing: 0.02em;
+    font-weight: 700;
+}
+
+.btn-icon {
+    font-size: 1.2rem;
+    transition: transform 0.3s ease;
+}
+
+.btn-premium:hover .btn-icon {
+    transform: translateX(5px);
+}
+
 /* Steps Section */
 .steps-section {
     padding: 80px 2rem 20px 2rem;
