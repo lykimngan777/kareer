@@ -15,7 +15,7 @@
             padding: 8rem 2rem 4rem;
             display: flex; flex-direction: column; align-items: center;
         }
-        .timeline-header { text-align: center; margin-bottom: 3rem; animation: fadeIn 1s ease; }
+        .timeline-header { text-align: center; margin-bottom: 2rem; animation: fadeIn 1s ease; }
         .timeline-header h1 { font-family: var(--font-heading); font-size: 2.5rem; margin-bottom: 0.5rem; color: #111; }
         .timeline-header p { font-family: var(--font-main); color: #666; font-size: 1.1rem; max-width: 600px; }
         .progress-timeline {
@@ -68,6 +68,24 @@
             .step-label { text-align: left; max-width: none; }
             .detail-card { padding: 2rem 1.5rem; }
         }
+        .filter-box {
+            background: #fff; padding: 1.5rem 2rem; border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.06);
+            display: flex; align-items: flex-end; gap: 1.5rem;
+            margin-bottom: 3rem; flex-wrap: wrap; justify-content: center;
+            width: 100%; max-width: 600px; border: 1px solid #f0f0f0;
+            animation: fadeIn 1s ease;
+        }
+        .select-group { display: flex; flex-direction: column; gap: 0.5rem; min-width: 300px; }
+        .select-group label { font-size: 0.8rem; font-weight: 800; color: #999; text-transform: uppercase; letter-spacing: 1px; }
+        .select-group select {
+            padding: 0.8rem 1.2rem; border-radius: 12px;
+            border: 2px solid #eee; font-size: 1rem; color: #111;
+            font-weight: 700; outline: none; transition: all 0.3s ease;
+            appearance: none; background: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e") no-repeat right 1rem center;
+            background-size: 1em;
+        }
+        .select-group select:focus { border-color: #000; box-shadow: 0 0 0 4px rgba(0,0,0,0.05); }
     </style>
 </head>
 <body>
@@ -87,6 +105,20 @@
         <div class="timeline-header">
             <h1>Lộ trình thăng tiến sự nghiệp</h1>
             <p id="career-subtitle">Khám phá các cột mốc quan trọng và những kỹ năng cần thiết để đạt được đỉnh cao trong nghề nghiệp.</p>
+        </div>
+
+        <div class="filter-box">
+            <div class="select-group">
+                <label>Chọn vị trí nghề nghiệp</label>
+                <select id="career-select">
+                    <option value="UI Designer">UI Designer</option>
+                    <option value="UX Researcher">UX Researcher</option>
+                    <option value="Frontend Dev">Frontend Developer</option>
+                    <option value="Product Manager">Product Manager</option>
+                    <option value="Graphic Designer">Graphic Designer</option>
+                    <option value="Data Analyst">Data Analyst</option>
+                </select>
+            </div>
         </div>
 
         <div class="progress-timeline" id="timeline">
@@ -187,10 +219,32 @@
         }
 
         const urlParams = new URLSearchParams(window.location.search);
-        const careerName = urlParams.get('career') || localStorage.getItem('selectedCareer');
+        const careerName = urlParams.get('career') || localStorage.getItem('selectedCareer') || "UI Designer";
+        
+        const careerSelect = document.getElementById('career-select');
+        
+        function updateCareerUI(name) {
+            document.querySelector('.timeline-header h1').innerText = `Lộ trình thăng tiến: ${name}`;
+            document.getElementById('career-subtitle').innerText = `Khám phá các cột mốc quan trọng và những kỹ năng cần thiết để đạt được đỉnh cao trong nghề ${name}.`;
+            
+            // Set dropdown value if it exists
+            const option = Array.from(careerSelect.options).find(opt => opt.value === name || opt.text === name);
+            if (option) careerSelect.value = option.value;
+            
+            localStorage.setItem('selectedCareer', name);
+            showStep(0);
+        }
+
+        careerSelect.addEventListener('change', (e) => {
+            updateCareerUI(e.target.value);
+            // Update URL without refresh
+            const newUrl = new URL(window.location);
+            newUrl.searchParams.set('career', e.target.value);
+            window.history.pushState({}, '', newUrl);
+        });
+
         if (careerName) {
-            document.querySelector('.timeline-header h1').innerText = `Lộ trình thăng tiến: ${careerName}`;
-            document.getElementById('career-subtitle').innerText = `Khám phá các cột mốc quan trọng và những kỹ năng cần thiết để đạt được đỉnh cao trong nghề ${careerName}.`;
+            updateCareerUI(careerName);
         }
 
         showStep(0);
