@@ -102,14 +102,6 @@
                     <option value="Data Analyst">Data Analyst</option>
                 </select>
             </div>
-            <div class="select-group">
-                <label>Giai đoạn mục tiêu</label>
-                <select id="level-filter">
-                    <option value="intern">Intern / Junior</option>
-                    <option value="middle">Middle Level</option>
-                    <option value="senior">Senior / Lead</option>
-                </select>
-            </div>
         </div>
 
         <div class="course-grid" id="course-grid"></div>
@@ -117,7 +109,7 @@
 
     <script>
         const roadmapData = {
-            'UI Designer': {
+            'ui-designer': {
                 'intern': [
                     { title: "Design Fundamentals: UI/UX Essentials", provider: "Interaction Design Foundation", desc: "Nắm vững nguyên lý cơ bản về màu sắc, layout và typography trong thiết kế giao diện.", tag: "Nền tảng" },
                     { title: "Mastering Figma for Beginners", provider: "Udemy", desc: "Sử dụng thành thạo công cụ thiết kế Figma từ các tính năng cơ bản đến nâng cao.", tag: "Công cụ" }
@@ -135,8 +127,13 @@
         function renderCourses() {
             const grid = document.getElementById('course-grid');
             const role = document.getElementById('role-filter').value;
-            const level = document.getElementById('level-filter').value;
-            const courses = roadmapData[role]?.[level] || roadmapData['UI Designer'][level] || [];
+            // Default to 'intern' level since filter was removed
+            const level = 'intern';
+            
+            // Normalize role key for lookup
+            const roleKey = role.toLowerCase().replace(/ /g, '-');
+            const courses = roadmapData[roleKey]?.[level] || roadmapData['ui-designer'][level] || [];
+            
             grid.innerHTML = courses.map(c => `
                 <div class="course-card">
                     <div class="course-tag">${c.tag}</div>
@@ -169,6 +166,7 @@
             document.querySelector('.roadmap-header h1').innerText = `Lộ trình đào tạo: ${name}`;
             document.getElementById('career-subtitle').innerText = `Dựa trên bản sắc nghề nghiệp và các kỹ năng bạn đang sở hữu cho vị trí ${name}, đây là lộ trình học tập tối ưu.`;
             
+            // Set dropdown value
             const option = Array.from(roleFilter.options).find(opt => opt.value === name || opt.text === name);
             if (option) roleFilter.value = option.value;
             
@@ -178,6 +176,7 @@
 
         roleFilter.addEventListener('change', (e) => {
             updateRoadmapUI(e.target.value);
+            // Update URL
             const newUrl = new URL(window.location);
             newUrl.searchParams.set('career', e.target.value);
             window.history.pushState({}, '', newUrl);
@@ -187,7 +186,6 @@
             updateRoadmapUI(careerName);
         }
 
-        document.getElementById('level-filter').addEventListener('change', renderCourses);
         renderCourses();
     </script>
 </body>
