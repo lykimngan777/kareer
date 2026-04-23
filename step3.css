@@ -50,6 +50,26 @@ a { text-decoration: none; color: inherit; }
     box-shadow: 0 15px 45px rgba(0,0,0,0.1);
     cursor: pointer; transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
     animation: gentle-float 4s ease-in-out infinite;
+    overflow: hidden;
+}
+
+.central-hub::before {
+    content: '';
+    position: absolute;
+    top: 75%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 38%;
+    animation: wave-motion 10s infinite linear;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.hub-content {
+    position: relative;
+    z-index: 2;
 }
 
 .central-hub:hover { 
@@ -92,6 +112,11 @@ a { text-decoration: none; color: inherit; }
     0% { transform: translateY(0); }
     50% { transform: translateY(-8px); }
     100% { transform: translateY(0); }
+}
+
+@keyframes wave-motion {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
 }
 
 .career-node {
