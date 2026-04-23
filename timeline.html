@@ -4,7 +4,40 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lộ trình thăng tiến | Matrix</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="step3.css">
+    <style>
+        body { overflow-y: auto !important; overflow-x: hidden !important; }
+        .timeline-view { min-height: 100vh; background: #f8f9fa; padding: 4rem 2rem; display: flex; flex-direction: column; align-items: center; }
+        .timeline-header { text-align: center; margin-bottom: 3rem; animation: fadeIn 1s ease; }
+        .timeline-header h1 { font-family: var(--font-heading); font-size: 2.5rem; margin-bottom: 0.5rem; color: #111; }
+        .timeline-header p { font-family: var(--font-main); color: #666; font-size: 1.1rem; max-width: 600px; }
+        .progress-timeline { display: flex; justify-content: space-between; align-items: flex-start; width: 100%; max-width: 1100px; margin: 2rem 0 4rem; position: relative; }
+        .progress-line { position: absolute; top: 12px; left: 12.5%; right: 12.5%; height: 4px; background: #e5e7eb; z-index: 1; }
+        .progress-line-fill { position: absolute; top: 12px; left: 12.5%; height: 4px; background: #000; z-index: 1; transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1); width: 0%; }
+        .timeline-step { display: flex; flex-direction: column; align-items: center; flex: 1; position: relative; z-index: 2; cursor: pointer; }
+        .step-marker { width: 28px; height: 28px; background: #fff; border: 4px solid #e5e7eb; border-radius: 50%; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); margin-bottom: 1.5rem; }
+        .timeline-step.active .step-marker { border-color: #000; background: #000; transform: scale(1.2); box-shadow: 0 0 15px rgba(0,0,0,0.2); }
+        .step-label { font-size: 0.85rem; font-weight: 800; text-transform: uppercase; color: #999; transition: color 0.4s ease; text-align: center; max-width: 140px; line-height: 1.4; letter-spacing: 0.05em; }
+        .timeline-step.active .step-label { color: #111; }
+        .detail-card { width: 100%; max-width: 800px; background: #fff; border-radius: 24px; padding: 3rem; box-shadow: 0 20px 60px rgba(0,0,0,0.05); border: 1px solid #f0f0f0; opacity: 0; transform: translateY(20px); transition: all 0.5s ease; position: relative; }
+        .detail-card.show { opacity: 1; transform: translateY(0); }
+        .detail-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid #f5f5f5; }
+        .detail-title h2 { font-size: 1.8rem; font-weight: 800; color: #111; }
+        .detail-time { font-size: 0.9rem; font-weight: 700; color: #666; background: #f8f9fa; padding: 0.5rem 1rem; border-radius: 50px; }
+        .detail-body h3 { font-size: 1.1rem; font-weight: 800; margin-bottom: 1rem; text-transform: uppercase; color: #333; }
+        .detail-body p { color: #555; line-height: 1.8; margin-bottom: 2rem; }
+        .task-list { list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.2rem; }
+        .task-item { display: flex; align-items: center; gap: 0.8rem; font-size: 0.95rem; color: #444; padding: 1rem; background: #fafafa; border-radius: 12px; border: 1px solid #f0f0f0; }
+        .task-icon { color: #000; font-weight: 900; }
+        .filter-box { background: #fff; padding: 1.5rem 2rem; border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.06); display: flex; align-items: flex-end; gap: 1.5rem; margin-bottom: 3rem; flex-wrap: wrap; justify-content: center; width: 100%; max-width: 600px; border: 1px solid #f0f0f0; animation: fadeIn 1s ease; }
+        .select-group { display: flex; flex-direction: column; gap: 0.5rem; min-width: 300px; }
+        .select-group label { font-size: 0.8rem; font-weight: 800; color: #999; text-transform: uppercase; letter-spacing: 1px; }
+        .select-group select { padding: 0.8rem 1.2rem; border-radius: 12px; border: 2px solid #eee; font-size: 1rem; color: #111; font-weight: 700; outline: none; transition: all 0.3s ease; appearance: none; background: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e") no-repeat right 1rem center; background-size: 1em; }
+        .select-group select:focus { border-color: #000; box-shadow: 0 0 0 4px rgba(0,0,0,0.05); }
+    </style>
 </head>
 <body>
     <header class="main-header" style="position: absolute; top: 1.5rem; left: 2rem; z-index: 100;">
@@ -12,8 +45,64 @@
             <img src="KAREER.png" alt="Kareer Logo" style="height: 60px;">
         </a>
     </header>
-    <div id="timeline-container"></div>
+    <div class="timeline-view">
+        <div class="explorer-nav">
+            <div class="nav-tab" onclick="location.href='step3.html'">Mở lối sự nghiệp</div>
+            <div class="nav-tab active" id="tab-detail" onclick="handleNav('timeline.html')">Chi tiết nghề nghiệp</div>
+            <div class="nav-tab" id="tab-roadmap" onclick="handleNav('roadmap.html')">Lộ trình phát triển</div>
+        </div>
+        <div class="timeline-header">
+            <h1>Lộ trình thăng tiến sự nghiệp</h1>
+            <p id="career-subtitle">Khám phá các cột mốc quan trọng và những kỹ năng cần thiết để đạt được đỉnh cao trong nghề nghiệp.</p>
+        </div>
+        <div class="filter-box">
+            <div class="select-group">
+                <label>Chọn vị trí nghề nghiệp</label>
+                <select id="career-select"></select>
+            </div>
+        </div>
+        <div class="progress-timeline" id="timeline">
+            <div class="progress-line"></div>
+            <div class="progress-line-fill" id="progress-fill"></div>
+            <div class="timeline-step active" onclick="showStep(0)"><div class="step-marker"></div><div class="step-label">Học viên / Thực tập</div></div>
+            <div class="timeline-step" onclick="showStep(1)"><div class="step-marker"></div><div class="step-label">Chuyên viên sơ cấp</div></div>
+            <div class="timeline-step" onclick="showStep(2)"><div class="step-marker"></div><div class="step-label">Chuyên viên chính</div></div>
+            <div class="timeline-step" onclick="showStep(3)"><div class="step-marker"></div><div class="step-label">Quản lý / Chuyên gia</div></div>
+        </div>
+        <div class="detail-card" id="detail-card"><div id="detail-content"></div></div>
+    </div>
     <script src="database.js"></script>
-    <script src="timeline.js"></script>
+    <script>
+        const careerSelect = document.getElementById('career-select');
+        function populateDropdown() { careerSelect.innerHTML = careerDatabase.map(c => `<option value="${c.name}">${c.name}</option>`).join(''); }
+        function showStep(index) {
+            const steps = document.querySelectorAll('.timeline-step');
+            const fill = document.getElementById('progress-fill');
+            const content = document.getElementById('detail-content');
+            const currentRole = careerSelect.value;
+            const currentTimeline = getCareerTimeline(currentRole);
+            steps.forEach((s, i) => { if (i <= index) s.classList.add('active'); else s.classList.remove('active'); });
+            const percentage = (index / (steps.length - 1)) * 75;
+            fill.style.width = `${percentage}%`;
+            const data = currentTimeline[index];
+            if (!data) return;
+            content.innerHTML = `<div class="detail-header"><div class="detail-title"><h2>${data.title}</h2></div><span class="detail-time">${data.time}</span></div><div class="detail-body"><h3>Mục tiêu giai đoạn</h3><p>${data.desc}</p><h3>Kỹ năng & Nhiệm vụ cốt lõi</h3><div class="task-list">${data.tasks.map(t => `<div class="task-item"><span class="task-icon">✔</span> ${t}</div>`).join('')}</div></div>`;
+            document.getElementById('detail-card').classList.add('show');
+        }
+        function handleNav(page) { const career = localStorage.getItem('selectedCareer'); if (career) location.href = `${page}?career=${encodeURIComponent(career)}`; else location.href = page; }
+        populateDropdown();
+        const urlParams = new URLSearchParams(window.location.search);
+        const careerName = urlParams.get('career') || localStorage.getItem('selectedCareer') || careerDatabase[0].name;
+        function updateCareerUI(name) {
+            document.querySelector('.timeline-header h1').innerText = `Lộ trình thăng tiến: ${name}`;
+            document.getElementById('career-subtitle').innerText = `Khám phá các cột mốc quan trọng và những kỹ năng cần thiết để đạt được đỉnh cao trong nghề ${name}.`;
+            careerSelect.value = name;
+            localStorage.setItem('selectedCareer', name);
+            showStep(0);
+        }
+        careerSelect.addEventListener('change', (e) => { updateCareerUI(e.target.value); });
+        if (careerName) updateCareerUI(careerName);
+        showStep(0);
+    </script>
 </body>
 </html>
