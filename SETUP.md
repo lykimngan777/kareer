@@ -1,91 +1,64 @@
-# Kareer — Hướng dẫn chạy dự án
+# Kareer Project Setup Guide
 
-## Yêu cầu
+Chào mừng bạn đến với dự án Kareer - Nền tảng định hướng nghề nghiệp thông minh dành cho Gen Z.
 
-- [Node.js](https://nodejs.org/) v18+ đã được cài sẵn
+## 1. Cấu trúc dự án (Đã rút gọn - Flat Structure)
 
-Kiểm tra bằng lệnh:
+Dự án hiện đã được tối ưu hóa vào một thư mục duy nhất để dễ dàng quản lý và triển khai:
+
+- `/`: Toàn bộ các tệp HTML, CSS, JS và cấu hình backend.
+- `index.html`: Trang chủ và onboarding.
+- `step2.html`: Kết quả phân tích (sau khi làm trắc nghiệm).
+- `step3.html`: Ma trận nghề nghiệp (Career Matrix).
+- `roadmap.html` & `timeline.html`: Lộ trình thăng tiến và kế hoạch học tập.
+- `server.js`: Server API (Node.js/Express).
+- `migrate.js` & `migration.sql`: Scripts quản lý database (Supabase).
+- `api-client.js`: Thư viện kết nối frontend với backend.
+- `config.js`: Quản lý URL API tập trung.
+
+## 2. Hướng dẫn cài đặt Backend
+
+Dự án sử dụng **Node.js** và **Supabase** (PostgreSQL).
+
+### Bước 1: Cài đặt dependencies
+Mở terminal tại thư mục gốc và chạy:
 ```bash
-node -v
-```
-
----
-
-## Cách chạy (3 bước)
-
-### Bước 1 — Cài dependencies cho backend
-
-```bash
-cd backend
 npm install
 ```
 
-### Bước 2 — Khởi động server
+### Bước 2: Cấu hình môi trường
+Tạo file `.env` tại thư mục gốc với nội dung:
+```env
+SUPABASE_URL=your_supabase_url
+SUPABASE_ANON_KEY=your_supabase_anon_key
+PORT=3000
+```
 
+### Bước 3: Khởi tạo Database
+Chạy script migration để tạo các bảng cần thiết:
 ```bash
-node server.js
+node migrate.js
+```
+*Lưu ý: Nếu script gặp lỗi quyền RPC, hãy copy nội dung file `migration.sql` và chạy trực tiếp trong SQL Editor của Supabase Dashboard.*
+
+### Bước 4: Chạy Server
+```bash
+npm start
 ```
 
-Khi thấy dòng sau là server đã chạy:
-```
-🚀 Kareer BACKEND
-📡 http://localhost:3000
-```
+## 3. Hướng dẫn cài đặt Frontend
 
-> Giữ terminal này mở trong suốt quá trình dùng.
+### Bước 1: Cập nhật config
+Mở file `config.js` và đảm quả URL trỏ đúng về server của bạn (mặc định là localhost:3000).
 
-### Bước 3 — Mở giao diện
+### Bước 2: Chạy local
+Bạn có thể mở trực tiếp `index.html` hoặc dùng `Live Server`.
 
-Mở file `index.html` trong trình duyệt (Chrome/Edge/Firefox).
+## 4. Deploy
 
-Hoặc dùng VS Code → chuột phải vào `index.html` → **Open with Live Server**.
+- **Frontend**: Deploy lên GitHub Pages, Vercel hoặc Netlify.
+- **Backend**: Deploy lên Render, Railway hoặc Vercel (chuyển đổi sang Serverless).
+- **Database**: Sử dụng Supabase.
 
----
-
-## Cấu trúc dự án
-
-```
-homepage-career-main/
-├── index.html          ← Trang chủ (Step 1: nhập thông tin)
-├── script.js           ← Logic Step 1
-├── style.css           ← Giao diện trang chủ
-├── api-client.js       ← Kết nối backend (tự fallback localStorage)
-├── admin.html          ← Trang quản trị thống kê
-│
-├── Step 2/
-│   └── index.html      ← Bài trắc nghiệm 35 câu (RIASEC + Big Five + Schwartz)
-│
-├── Step 3_Matrix/
-│   ├── index.html      ← Ma trận nghề nghiệp
-│   ├── main.js         ← Logic orbit/satellite
-│   ├── timeline.html   ← Chi tiết nghề nghiệp
-│   └── roadmap.html    ← Lộ trình phát triển
-│
-└── backend/
-    ├── server.js       ← Express API server
-    ├── .env            ← Cấu hình Supabase (đã có sẵn)
-    ├── migration.sql   ← Schema database (đã chạy, không cần chạy lại)
-    └── package.json
-```
-
----
-
-## API Endpoints
-
-| Method | Endpoint | Mô tả |
-|--------|----------|-------|
-| GET | `/api/health` | Kiểm tra server |
-| POST | `/api/users` | Tạo/cập nhật người dùng |
-| GET | `/api/users/:email` | Lấy thông tin người dùng |
-| POST | `/api/assessments` | Lưu kết quả bài test |
-| GET | `/api/assessments/:userId` | Lấy kết quả bài test |
-| POST | `/api/career-selections` | Lưu lựa chọn nghề nghiệp |
-| GET | `/api/stats` | Thống kê tổng quan (dành cho admin) |
-
----
-
-## Lưu ý
-
-- Database đã được tạo sẵn trên Supabase, không cần cấu hình thêm.
-- Nếu không chạy backend, ứng dụng vẫn hoạt động bình thường — dữ liệu sẽ lưu tạm vào localStorage của trình duyệt.
-- Trang admin (`admin.html`) hiển thị thống kê người dùng và nghề nghiệp phổ biến.
+## 5. Liên hệ
+Nếu có bất kỳ thắc mắc nào, vui lòng liên hệ đội ngũ phát triển.

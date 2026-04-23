@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hành Trình Tìm Kiếm Career Path | Mark Twain Quote</title>
+    <title>Hành Trình Tìm Kiếm Career Path | Kareer</title>
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -11,11 +11,13 @@
 </head>
 <body>
     <div class="overlay-grain"></div>
+    
     <header class="main-header">
         <div class="logo-area">
-            <img src="logo.png" alt="Keyreer Logo" class="main-logo" style="mix-blend-mode: multiply;">
+            <img src="Kareer (2).png" alt="Kareer Logo" class="main-logo">
         </div>
     </header>
+
     <main>
         <section class="quote-section">
             <div class="quote-wrapper">
@@ -31,8 +33,47 @@
                 </div>
             </div>
         </section>
-        <!-- Features, Steps... -->
+
+        <section class="features-section" id="features">
+            <div class="features-container">
+                <h2 class="features-title">Kareer có gì?</h2>
+                <div class="features-list">
+                    <div class="feature-item">
+                        <span class="feature-tick">✓</span>
+                        <div class="feature-content"><strong>Thị Trường Việt Nam:</strong> Chuyên biệt cho văn hóa và giá trị bản địa.</div>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-tick">✓</span>
+                        <div class="feature-content"><strong>Đa Mô Hình Khoa Học:</strong> RIASEC, Big Five và Schwartz.</div>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-tick">✓</span>
+                        <div class="feature-content"><strong>Lộ Trình Đột Phá:</strong> Chiến lược nâng cấp năng lực thực tế.</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="footer-cta">
+            <a href="#" class="btn-link" id="start-assessment">
+                <span>Bắt đầu khám phá</span>
+                <span class="arrow">→</span>
+            </a>
+        </div>
     </main>
+
+    <div id="assessment-overlay" class="overlay-container">
+        <div class="assessment-card">
+            <button id="close-assessment" class="btn-close">×</button>
+            <div class="progress-bar"><div id="progress-fill"></div></div>
+            <div id="question-container"></div>
+            <div class="assessment-nav">
+                <button id="prev-btn" class="btn-secondary" disabled>Quay lại</button>
+                <button id="next-btn" class="btn-primary">Tiếp theo</button>
+            </div>
+        </div>
+    </div>
+
     <script src="config.js"></script>
     <script src="api-client.js"></script>
     <script src="script.js"></script>

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kế hoạch học tập | Matrix</title>
+    <link rel="stylesheet" href="step3.css">
+</head>
+<body>
+    <div class="roadmap-view">
+        <a href="step3.html" class="back-btn">← Quay lại ma trận</a>
+        <div class="roadmap-header">
+            <h1 id="career-title">Kế hoạch học tập</h1>
+            <p>Lộ trình đào tạo và phát triển năng lực chuyên môn.</p>
+        </div>
+        <div id="roadmap-content"></div>
+    </div>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const career = urlParams.get('career') || 'Nghề nghiệp';
+        document.getElementById('career-title').textContent = `Lộ trình cho ${career}`;
+    </script>
+</body>
+</html>
