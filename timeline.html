@@ -149,34 +149,53 @@
     </div>
 
     <script>
-        const timelineData = [
-            {
-                title: "Thực tập sinh (Intern)", time: "0 - 6 tháng",
-                desc: "Giai đoạn này bạn tập trung vào việc học hỏi quy trình, làm quen với công cụ và hỗ trợ các dự án nhỏ dưới sự hướng dẫn của mentor.",
-                tasks: ["Nắm vững Figma", "Học quy trình Design Thinking", "Làm quen với Agile/Scrum", "Hỗ trợ UI Audit"]
-            },
-            {
-                title: "Junior Designer", time: "6 tháng - 2 năm",
-                desc: "Bạn bắt đầu đảm nhận các tính năng độc lập, thực hiện nghiên cứu người dùng cơ bản và cộng tác trực tiếp với đội ngũ kỹ thuật.",
-                tasks: ["Thiết kế User Flow", "Tạo Wireframe độ phân giải cao", "Thực hiện Usability Testing", "Xây dựng Component Library"]
-            },
-            {
-                title: "Middle Designer", time: "2 - 5 năm",
-                desc: "Giai đoạn này bạn cần có tư duy sản phẩm sâu sắc hơn, có khả năng giải quyết các bài toán UX phức tạp và định hướng cho Junior.",
-                tasks: ["Xây dựng Design System", "Phân tích dữ liệu người dùng", "Tối ưu hóa trải nghiệm chuyển đổi", "Phản biện và bảo vệ thiết kế"]
-            },
-            {
-                title: "Senior / Lead Designer", time: "5 năm +",
-                desc: "Bạn đóng vai trò chiến lược, định hướng tầm nhìn sản phẩm và dẫn dắt đội ngũ thiết kế đạt được các mục tiêu kinh doanh.",
-                tasks: ["Định hướng trải nghiệm thương hiệu", "Quản lý nguồn lực thiết kế", "Xây dựng chiến lược sản phẩm", "Đào tạo và phát triển đội ngũ"]
-            }
-        ];
+        const careerData = {
+            'UI Designer': [
+                { title: "Intern", time: "0-6 tháng", desc: "Học Figma, Design Thinking và UI Audit.", tasks: ["Nắm vững Figma", "Học Design Thinking", "Làm quen Agile", "Hỗ trợ UI Audit"] },
+                { title: "Junior", time: "6-24 tháng", desc: "Thiết kế User Flow và Wireframe.", tasks: ["Thiết kế User Flow", "Tạo Wireframe", "Usability Testing", "Component Library"] },
+                { title: "Senior", time: "2-5 năm", desc: "Xây dựng Design System phức tạp.", tasks: ["Xây dựng Design System", "Phân tích dữ liệu", "Tối ưu chuyển đổi", "Phản biện thiết kế"] },
+                { title: "Lead", time: "5 năm+", desc: "Định hướng chiến lược thiết kế.", tasks: ["Chiến lược sản phẩm", "Quản lý nguồn lực", "Đào tạo đội ngũ", "Tầm nhìn thương hiệu"] }
+            ],
+            'UX Researcher': [
+                { title: "Intern", time: "0-6 tháng", desc: "Học phương pháp nghiên cứu định tính.", tasks: ["User Interview", "Take note phỏng vấn", "Sắp xếp dữ liệu", "Học công cụ survey"] },
+                { title: "Junior", time: "6-24 tháng", desc: "Thực hiện khảo sát và phân tích cơ bản.", tasks: ["Xây dựng kịch bản", "Phân tích Survey", "Tạo Persona", "User Journey Map"] },
+                { title: "Senior", time: "2-5 năm", desc: "Nghiên cứu chiến lược và định lượng.", tasks: ["Quantitative Research", "Phân tích tâm lý", "Chiến lược trải nghiệm", "Đo lường chỉ số UX"] },
+                { title: "Lead", time: "5 năm+", desc: "Quản lý quy trình nghiên cứu toàn cầu.", tasks: ["Xây dựng Lab nghiên cứu", "Định hướng sản phẩm", "Tối ưu hóa quy trình", "Lãnh đạo đội ngũ"] }
+            ],
+            'Frontend Dev': [
+                { title: "Intern", time: "0-6 tháng", desc: "Nắm vững HTML, CSS và JS cơ bản.", tasks: ["Cắt layout HTML/CSS", "Học Javascript cơ bản", "Làm quen Git/Github", "Sửa lỗi giao diện nhỏ"] },
+                { title: "Junior", time: "6-24 tháng", desc: "Làm việc với React/Vue/Angular.", tasks: ["Phát triển Component", "Kết nối API", "State Management", "Responsive Design"] },
+                { title: "Senior", time: "2-5 năm", desc: "Tối ưu hiệu năng và kiến trúc app.", tasks: ["Kiến trúc Micro-frontend", "Tối ưu Performance", "Viết Unit Test", "Review Code"] },
+                { title: "Tech Lead", time: "5 năm+", desc: "Quyết định công nghệ và dẫn dắt team.", tasks: ["Lựa chọn Tech Stack", "Đào tạo kỹ sư", "Quản lý hệ thống", "Định hướng kỹ thuật"] }
+            ],
+            'Product Manager': [
+                { title: "Associate", time: "0-1 năm", desc: "Hỗ trợ quản lý backlog và viết tài liệu.", tasks: ["Viết User Story", "Quản lý Backlog", "Hỗ trợ User Test", "Phân tích đối thủ"] },
+                { title: "Junior PM", time: "1-3 năm", desc: "Chủ trì một tính năng của sản phẩm.", tasks: ["Lập kế hoạch Sprint", "Ưu tiên tính năng", "Theo dõi Roadmap", "Phân tích số liệu"] },
+                { title: "Senior PM", time: "3-6 năm", desc: "Quản lý toàn bộ vòng đời sản phẩm.", tasks: ["Chiến lược sản phẩm", "Quản lý P&L", "Phát triển thị trường", "Quản lý stakeholder"] },
+                { title: "Director", time: "6 năm+", desc: "Định hướng tầm nhìn sản phẩm công ty.", tasks: ["Tầm nhìn dài hạn", "Xây dựng văn hóa", "Cân đối kinh doanh", "Lãnh đạo PM team"] }
+            ],
+            'Graphic Designer': [
+                { title: "Intern", time: "0-6 tháng", desc: "Học Photoshop, AI và bố cục cơ bản.", tasks: ["Chỉnh sửa ảnh", "Vẽ vector cơ bản", "Học về màu sắc", "Thiết kế social post"] },
+                { title: "Junior", time: "6-24 tháng", desc: "Thiết kế bộ nhận diện thương hiệu nhỏ.", tasks: ["Thiết kế Logo", "Layout tạp chí", "Banner quảng cáo", "Typography"] },
+                { title: "Senior", time: "2-5 năm", desc: "Sáng tạo concept cho các chiến dịch lớn.", tasks: ["Key Visual chiến dịch", "Art Direction", "Motion Graphics", "Brand Identity"] },
+                { title: "Art Director", time: "5 năm+", desc: "Quản lý thẩm mỹ toàn bộ dự án.", tasks: ["Dẫn dắt sáng tạo", "Phê duyệt thiết kế", "Quản lý Agency", "Định hướng phong cách"] }
+            ],
+            'Data Analyst': [
+                { title: "Intern", time: "0-6 tháng", desc: "Học SQL và các công cụ bảng tính.", tasks: ["Viết SQL cơ bản", "Sử dụng Excel/Sheets", "Làm sạch dữ liệu", "Học Tableau/PowerBI"] },
+                { title: "Junior", time: "6-24 tháng", desc: "Phân tích số liệu và làm báo cáo.", tasks: ["Xây dựng Dashboard", "Phân tích xu hướng", "Báo cáo định kỳ", "Giải thích dữ liệu"] },
+                { title: "Senior", time: "2-5 năm", desc: "Dự báo và phân tích chuyên sâu.", tasks: ["Dự báo doanh thu", "A/B Testing", "Mô hình hóa dữ liệu", "Tư vấn chiến lược"] },
+                { title: "Head of Data", time: "5 năm+", desc: "Xây dựng hệ thống dữ liệu doanh nghiệp.", tasks: ["Chiến lược dữ liệu", "Quản lý hạ tầng", "Bảo mật dữ liệu", "Lãnh đạo team Data"] }
+            ]
+        };
 
         function showStep(index) {
             const steps = document.querySelectorAll('.timeline-step');
             const fill = document.getElementById('progress-fill');
             const card = document.getElementById('detail-card');
             const content = document.getElementById('detail-content');
+            
+            const currentRole = document.getElementById('career-select').value;
+            const currentTimeline = careerData[currentRole] || careerData['UI Designer'];
 
             steps.forEach((s, i) => {
                 if (i <= index) s.classList.add('active');
@@ -186,7 +205,7 @@
             const percentage = (index / (steps.length - 1)) * 75;
             fill.style.width = `${percentage}%`;
 
-            const data = timelineData[index];
+            const data = currentTimeline[index];
             card.classList.remove('show');
 
             setTimeout(() => {
