@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Matrix | Định Hướng Nghề Nghiệp Gen Z</title>
-    <meta name="description" content="Website định hướng nghề nghiệp phong cách tối giản dành cho thế hệ Gen Z. Khám phá bản thân và tìm kiếm lộ trình sự nghiệp phù hợp.">
+    <title>Kareer | Khám phá bản thân</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="step3.css">
 </head>
-
 <body>
+    <div class="matrix-grid"></div>
+
     <header class="main-header" style="position: absolute; top: 1.5rem; left: 2rem; z-index: 100;">
         <a href="index.html">
             <img src="Kareer (2).png" alt="Kareer Logo" style="height: 60px; mix-blend-mode: multiply;">
@@ -22,52 +22,70 @@
         <section id="explorer" class="explorer-view">
             <div class="explorer-nav">
                 <div class="nav-tab active" onclick="location.href='step3.html'">Mở lối sự nghiệp</div>
-                <div class="nav-tab" id="tab-detail">Chi tiết nghề nghiệp</div>
-                <div class="nav-tab" id="tab-roadmap">Lộ trình phát triển</div>
+                <div class="nav-tab" id="tab-detail" onclick="handleNav('timeline.html')">Chi tiết nghề nghiệp</div>
+                <div class="nav-tab" id="tab-roadmap" onclick="handleNav('roadmap.html')">Lộ trình phát triển</div>
             </div>
 
             <div class="matrix-canvas" id="matrix-canvas">
-                <div class="matrix-grid"></div>
-                
-                <div class="orbits-container">
-                    <div class="orbit-ring tier-1"></div>
-                    <div class="orbit-ring tier-2"></div>
-                    <div class="orbit-ring tier-3"></div>
-                    <div class="orbit-ring tier-4"></div>
-                    <div class="orbit-ring tier-5"></div>
-                </div>
-
-                <!-- Central Hub -->
-                <div class="central-hub">
-                    <div class="hub-content">
-                        <p>Mô tả <br> chi tiết</p>
-                        <div class="hub-arrow">↓</div>
+                <div class="central-hub-container">
+                    <div class="central-hub">
+                        <div class="hub-text">Mô tả chi tiết</div>
+                        <div class="hub-subtext">Xem phân tích</div>
                     </div>
-                    <div class="hub-glow"></div>
                 </div>
+                <!-- Career nodes injected by JS -->
+            </div>
+        </section>
+    </main>
 
-                <div id="career-nodes"></div>
+    <div id="matrix-tooltip" class="matrix-tooltip"></div>
 
-                <div id="strengths-modal" class="modal">
-                    <div class="modal-content-fullscreen">
-                        <button class="close-modal-btn">&times;</button>
-                        <div class="analysis-text-wrapper">
-                            <div id="analysis-paragraph" class="analysis-paragraph"></div>
-                        </div>
+    <div id="details-modal" class="details-modal">
+        <div class="close-modal">&times;</div>
+        <div class="analysis-grid">
+            <div class="personality-block">
+                <div class="personality-tag">Nhóm Nghệ thuật (A)</div>
+                <h1>Người Sáng Tạo Đầy Cảm Hứng</h1>
+                <p style="font-size: 1.2rem; color: #555; line-height: 1.6; margin-bottom: 2rem;">
+                    Bạn sở hữu trí tưởng tượng phong phú và khả năng biểu đạt cảm xúc mạnh mẽ thông qua các phương tiện hình ảnh và ngôn từ. Bạn không thích sự gò bó của quy trình cứng nhắc.
+                </p>
+                <div class="riasec-scores">
+                    <div class="score-row">
+                        <div class="score-label">Nghệ thuật</div>
+                        <div class="score-bar-bg"><div class="score-bar-fill"></div></div>
+                    </div>
+                    <div class="score-row">
+                        <div class="score-label">Nghiên cứu</div>
+                        <div class="score-bar-bg"><div class="score-bar-fill"></div></div>
+                    </div>
+                    <div class="score-row">
+                        <div class="score-label">Xã hội</div>
+                        <div class="score-bar-bg"><div class="score-bar-fill"></div></div>
                     </div>
                 </div>
             </div>
-        </section>
-        
-        <a href="step2.html" class="back-to-results">
-            <span class="back-icon">←</span>
-            <span class="back-text">Kết quả phân tích</span>
-        </a>
-    </main>
+            <div class="insight-block">
+                <div style="background: #fafafa; border: 3px solid #000; padding: 2.5rem; border-radius: 20px;">
+                    <h3 style="font-weight: 900; margin-bottom: 1.5rem; text-transform: uppercase;">Điểm mạnh cốt lõi</h3>
+                    <ul style="list-style: none; display: flex; flex-direction: column; gap: 1rem;">
+                        <li style="display: flex; gap: 1rem; align-items: center; font-weight: 700;">
+                            <span style="background: #000; color: #fff; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-size: 0.7rem;">1</span>
+                            Tư duy thiết kế trực quan
+                        </li>
+                        <li style="display: flex; gap: 1rem; align-items: center; font-weight: 700;">
+                            <span style="background: #000; color: #fff; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-size: 0.7rem;">2</span>
+                            Khả năng thấu cảm người dùng
+                        </li>
+                        <li style="display: flex; gap: 1rem; align-items: center; font-weight: 700;">
+                            <span style="background: #000; color: #fff; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-size: 0.7rem;">3</span>
+                            Thích nghi với sự thay đổi
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <script src="config.js"></script>
-    <script src="api-client.js"></script>
     <script src="step3.js"></script>
 </body>
-
 </html>
