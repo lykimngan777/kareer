@@ -118,7 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
             items.forEach((career) => {
                 let bestX = 50, bestY = 50, bestDir = 'node-right';
                 let maxMinDist = -1;
-                const labelWidthPx = career.name.length * 8 + 40;
+                const labelWidthPx = career.name.length * 10 + 40;
 
                 for (let i = 0; i < 800; i++) {
                     const angle = Math.random() * Math.PI * 2;
@@ -144,7 +144,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
 
                     const labelWPct = (labelWidthPx / width) * 100;
-                    let lMargin = 5, rMargin = 5, tMargin = 18, bMargin = 8;
+                    let lMargin = 10, rMargin = 12, tMargin = 18, bMargin = 8;
                     if (dir === 'node-left') lMargin = labelWPct + 2;
                     if (dir === 'node-right') rMargin = labelWPct + 2;
 
