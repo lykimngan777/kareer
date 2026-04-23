@@ -3,21 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hành Trình Tìm Kiếm Career Path | Kareer</title>
+    <title>Hành Trình Tìm Kiếm Career Path | Mark Twain Quote</title>
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <meta name="description" content="Khám phá hành trình tìm kiếm sự nghiệp và mục đích sống của bạn thông qua câu nói truyền cảm hứng của Mark Twain.">
 </head>
 <body>
     <div class="overlay-grain"></div>
-    
     <header class="main-header">
         <div class="logo-area">
             <img src="Kareer (2).png" alt="Kareer Logo" class="main-logo">
         </div>
     </header>
-
     <main>
         <section class="quote-section">
             <div class="quote-wrapper">
@@ -33,7 +32,6 @@
                 </div>
             </div>
         </section>
-
         <section class="features-section" id="features">
             <div class="features-container">
                 <h2 class="features-title">Kareer có gì?</h2>
@@ -44,16 +42,15 @@
                     </div>
                     <div class="feature-item">
                         <span class="feature-tick">✓</span>
-                        <div class="feature-content"><strong>Đa Mô Hình Khoa Học:</strong> RIASEC, Big Five và Schwartz.</div>
+                        <div class="feature-content"><strong>Đa Mô Hình Khoa Học:</strong> Kết hợp RIASEC, Big Five và Schwartz.</div>
                     </div>
                     <div class="feature-item">
                         <span class="feature-tick">✓</span>
-                        <div class="feature-content"><strong>Lộ Trình Đột Phá:</strong> Chiến lược nâng cấp năng lực thực tế.</div>
+                        <div class="feature-content"><strong>Lộ Trình Đột Phá:</strong> Chiến lược nâng cấp năng lực chi tiết.</div>
                     </div>
                 </div>
             </div>
         </section>
-
         <div class="footer-cta">
             <a href="#" class="btn-link" id="start-assessment">
                 <span>Bắt đầu khám phá</span>
@@ -61,7 +58,6 @@
             </a>
         </div>
     </main>
-
     <div id="assessment-overlay" class="overlay-container">
         <div class="assessment-card">
             <button id="close-assessment" class="btn-close">×</button>
@@ -73,7 +69,17 @@
             </div>
         </div>
     </div>
-
+    <div id="results-overlay" class="overlay-container">
+        <div class="results-card">
+            <h2 class="results-title">Bản Đồ Bản Sắc Cá Nhân</h2>
+            <div class="results-grid">
+                <div class="result-section" id="riasec-result"><h3>RIASEC (Hứng thú)</h3><div class="chart-container" id="riasec-chart"></div></div>
+                <div class="result-section" id="bigfive-result"><h3>Big Five (Tính cách)</h3><div class="chart-container" id="bigfive-chart"></div></div>
+                <div class="result-section" id="schwartz-result"><h3>Schwartz (Giá trị)</h3><div class="chart-container" id="schwartz-chart"></div></div>
+            </div>
+            <button id="restart-assessment" class="btn-premium">Thực hiện lại</button>
+        </div>
+    </div>
     <script src="config.js"></script>
     <script src="api-client.js"></script>
     <script src="script.js"></script>
