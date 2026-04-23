@@ -34,40 +34,55 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const characters = quoteElement.querySelectorAll('.char');
         let currentIndex = 0;
+        let typingTimeout;
+        let isFinished = false;
         const typingSpeed = 30; 
 
+        function finishTyping() {
+            if (isFinished) return;
+            isFinished = true;
+            clearTimeout(typingTimeout);
+            
+            // Show all characters
+            characters.forEach(char => char.classList.add('visible'));
+            
+            // Show quote icons and UI
+            quoteIconTop.classList.add('visible');
+            quoteIconBottom.classList.add('visible');
+            
+            setTimeout(() => {
+                authorElement.style.opacity = '1';
+                authorElement.style.transform = 'translateY(0)';
+                
+                buttonWrapper.style.transition = 'all 1.2s cubic-bezier(0.16, 1, 0.3, 1)';
+                buttonWrapper.style.opacity = '1';
+                buttonWrapper.style.transform = 'translateY(0)';
+
+                document.body.style.overflowY = 'auto';
+                if (featuresSection) featuresSection.classList.add('visible');
+                if (stepsSection) {
+                    stepsSection.style.opacity = '1';
+                    stepsSection.style.transform = 'translateY(0)';
+                }
+            }, 300);
+        }
+
+        // Click to skip typing
+        document.addEventListener('click', (e) => {
+            // Only skip if we are not clicking a button or link
+            if (!isFinished && !e.target.closest('button') && !e.target.closest('a')) {
+                finishTyping();
+            }
+        });
+
         function drawText() {
+            if (isFinished) return;
             if (currentIndex < characters.length) {
                 characters[currentIndex].classList.add('visible');
                 currentIndex++;
-                setTimeout(drawText, charTypeDelay(characters[currentIndex-1].textContent));
+                typingTimeout = setTimeout(drawText, charTypeDelay(characters[currentIndex-1].textContent));
             } else {
-                // FINISHED DRAWING
-                quoteIconBottom?.classList.add('visible');
-                setTimeout(() => {
-                    // Show Author
-                    if (authorElement) {
-                        authorElement.style.opacity = '1';
-                        authorElement.style.transform = 'translateY(0)';
-                    }
-                    
-                    // Show Button
-                    if (buttonWrapper) {
-                        buttonWrapper.style.transition = 'all 1.2s cubic-bezier(0.16, 1, 0.3, 1)';
-                        buttonWrapper.style.opacity = '1';
-                        buttonWrapper.style.transform = 'translateY(0)';
-                    }
-
-                    // UNLOCK SCROLL & SHOW FEATURES
-                    document.body.style.overflowY = 'auto';
-                    if (featuresSection) {
-                        featuresSection.classList.add('visible');
-                    }
-                    if (stepsSection) {
-                        stepsSection.style.opacity = '1';
-                        stepsSection.style.transform = 'translateY(0)';
-                    }
-                }, 600);
+                finishTyping();
             }
         }
 
@@ -79,8 +94,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Start Sequence
         setTimeout(() => {
-            quoteIconTop?.classList.add('visible');
-            setTimeout(drawText, 800);
+            if (!isFinished) quoteIconTop.classList.add('visible');
+            setTimeout(() => {
+                if (!isFinished) drawText();
+            }, 800);
         }, 400);
     }
 
@@ -116,7 +133,7 @@ document.addEventListener('DOMContentLoaded', () => {
         cardObserver.observe(card);
     });
 
-    // --- ASSESSMENT LOGIC ---
+    // --- ASSESSMENT LOGIC (RESTORED) ---
     const assessmentOverlay = document.getElementById('assessment-overlay');
     const resultsOverlay = document.getElementById('results-overlay');
     const startBtn = document.getElementById('start-assessment');
@@ -141,6 +158,7 @@ document.addEventListener('DOMContentLoaded', () => {
             text: 'Bạn hiện đang là:', 
             options: ['Học sinh', 'Sinh viên', 'Người đi làm'] 
         },
+        // Conditional: Student
         { 
             id: 'subjects',
             model: 'HỌC TẬP', 
@@ -148,6 +166,7 @@ document.addEventListener('DOMContentLoaded', () => {
             text: 'Các môn học bạn thấy mình học tốt là gì?',
             condition: (ans) => ans.role === 'Học sinh'
         },
+        // Conditional: Student/Student
         { 
             id: 'major',
             model: 'CHUYÊN NGÀNH', 
@@ -155,6 +174,7 @@ document.addEventListener('DOMContentLoaded', () => {
             text: 'Bạn đang học ngành gì?',
             condition: (ans) => ans.role === 'Sinh viên'
         },
+        // Conditional: Professional
         { 
             id: 'position',
             model: 'CÔNG VIỆC', 
@@ -170,6 +190,7 @@ document.addEventListener('DOMContentLoaded', () => {
             options: ['Tiểu học', 'THCS', 'THPT', 'Trung cấp', 'Cao đẳng', 'Đại học', 'Thạc sĩ', 'Tiến sĩ'],
             condition: (ans) => ans.role === 'Người đi làm'
         },
+        // General Questions
         { 
             id: 'skills',
             model: 'KỸ NĂNG', 
@@ -224,7 +245,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (questionContainer) {
             let content = `
-                <div style="animation: questionFadeIn 0.3s ease-out">
+                <div class="question-fade">
                     <span class="model-tag">${q.model}</span>
                     <h2 class="question-text">${q.text}</h2>
                     <div class="content-area">`;
@@ -232,7 +253,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (q.type === 'profile') {
                 const saved = userAnswers[q.id] || {};
                 content += `
-                    <div class="profile-inputs" style="display:flex;flex-direction:column;gap:20px;margin-top:10px;">
+                    <div class="profile-inputs">
                         <div class="profile-field">
                             <label class="assessment-label">Email</label>
                             <input type="email" id="profile-email" class="assessment-input"
@@ -247,6 +268,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="options-group">
                         ${q.options.map((opt, i) => `
                             <div class="option-item ${userAnswers[q.id] === opt ? 'selected' : ''}" data-value="${opt}">
+                                <div class="option-circle"></div>
                                 <span class="option-label">${opt}</span>
                             </div>
                         `).join('')}
