@@ -68,7 +68,8 @@ a { text-decoration: none; color: inherit; }
     cursor: pointer; white-space: nowrap;
 }
 
-.node-wrapper { position: absolute; pointer-events: none; }
+.node-wrapper { position: absolute; pointer-events: none; z-index: 20; }
+.node-wrapper:hover { z-index: 100000; }
 .node-wrapper * { pointer-events: auto; }
 
 .node-dot {
@@ -103,7 +104,7 @@ a { text-decoration: none; color: inherit; }
 .node-tooltip.flipped { bottom: auto; top: 140%; transform: translateX(-50%) translateY(-10px); }
 .node-tooltip.flipped::after { top: auto; bottom: 100%; border-color: transparent transparent #ffffff transparent; }
 
-.career-node:hover .node-tooltip { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
+.career-node:hover .node-tooltip { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); pointer-events: auto; }
 .career-node:hover .node-tooltip.flipped { transform: translateX(-50%) translateY(0); }
 .career-node:hover .node-dot { transform: scale(1.4); box-shadow: 0 0 20px rgba(0,0,0,0.2); }
 .career-node:hover .node-label { opacity: 1; }

@@ -181,12 +181,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 wrapper.style.top = `${bestY}%`;
 
                 const fitClass = fitData.level.toLowerCase().replace(' ', '-');
+                const isFlipped = bestY < 40; // Flip tooltip to bottom if node is in top 40% of screen
+                
                 wrapper.innerHTML = `
                     <div class="node-animator" style="animation: float ${8 + Math.random() * 6}s ease-in-out infinite;">
                         <div class="career-node ${bestDir}">
                             <div class="node-dot ${fitClass}"></div>
                             <div class="node-label">${career.name}</div>
-                            <div class="node-tooltip">
+                            <div class="node-tooltip ${isFlipped ? 'flipped' : ''}">
                                 <div class="tooltip-header">
                                     <span class="tooltip-fit ${fitClass}">Phù hợp: ${fitData.label}</span>
                                     <span class="tooltip-code">Mã QĐ34: ${career.code}</span>
