@@ -248,7 +248,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const analysisData = {
                 'R': "Bạn sở hữu bộ kỹ năng thao tác thực tế xuất sắc cùng nền tảng kiến thức logic sắc bén. Sự kiên trì trong việc giải quyết các vấn đề kỹ thuật là vũ khí mạnh nhất giúp bạn vượt qua thử thách. Tuy nhiên, hãy lưu ý cân bằng giữa chuyên môn kỹ thuật và yếu tố cảm xúc trong giao tiếp.",
                 'I': "Kiến thức chuyên sâu, tư duy phản biện và khả năng quan sát nhạy bén là những giá trị cốt lõi làm nên con người bạn. Bạn có kỹ năng nhìn thấu gốc rễ của vấn đề, dù đôi khi có thể sa lầy vào việc nghiên cứu quá mức.",
-                'A': "Sự sáng tạo không giới hạn và bộ kỹ năng thiết kế, biểu đạt cảm xúc giúp bạn luôn có những góc nhìn độc đáo. Bạn có kiến thức phong phú về thẩm mỹ và khả năng truyền tải ý tưởng một cách tự nhiên.",
+                'A': "Sự sáng tạo không giới hạn và bộ kỹ năng thiết kế, biểu đạt cảm xúc giúp bạn luôn có những cặp nhìn độc đáo. Bạn có kiến thức phong phú về thẩm mỹ và khả năng truyền tải ý tưởng một cách tự nhiên.",
                 'S': "Kỹ năng thấu cảm và vốn kiến thức về tâm lý, xã hội giúp bạn kết nối mọi người một cách kỳ diệu. Sự chân thành trong truyền đạt là công cụ mạnh mẽ nhất giúp bạn gây dựng lòng tin và dẫn dắt cộng đồng.",
                 'E': "Kỹ năng quyết đoán, khả năng thuyết phục và kiến thức quản trị chiến lược là động cơ thúc đẩy bạn tiến về phía trước. Bạn có tố chất của một người dẫn đầu, luôn biết cách truyền cảm hứng để đạt được mục tiêu lớn.",
                 'C': "Kỹ năng tổ chức khoa học, sự tỉ mỉ and kiến thức quản trị rủi ro là nền tảng vững chắc cho sự nghiệp của bạn. Bạn là 'xương sống' của mọi tổ chức nhờ khả năng kiểm soát vận hành tuyệt đối."
@@ -266,12 +266,13 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
             
             const rect = hub.getBoundingClientRect();
+            modal.style.display = 'flex'; 
             modal.style.top = `${rect.top}px`;
             modal.style.left = `${rect.left}px`;
             modal.style.width = `${rect.width}px`;
             modal.style.height = `${rect.height}px`;
             modal.style.borderRadius = '50%';
-            modal.style.opacity = '1';
+            modal.style.opacity = '0';
             modal.offsetHeight;
 
             document.getElementById('analysis-paragraph').innerHTML = fullAnalysis;
@@ -285,13 +286,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const modal = document.getElementById('strengths-modal');
             modal.classList.remove('active');
             setTimeout(() => {
+                modal.style.display = 'none';
                 modal.style.top = '';
                 modal.style.left = '';
                 modal.style.width = '';
                 modal.style.height = '';
                 modal.style.borderRadius = '';
                 modal.style.opacity = '';
-            }, 550);
+            }, 600);
         };
     }
 });
