@@ -10,28 +10,14 @@
     <link rel="stylesheet" href="step3.css">
     <style>
         body { overflow-y: auto !important; overflow-x: hidden !important; }
-
         .roadmap-view {
             min-height: 100vh; background: #f8f9fa;
-            padding: 4rem 2rem;
+            padding: 8rem 2rem 4rem;
             display: flex; flex-direction: column; align-items: center;
         }
-
         .roadmap-header { text-align: center; margin-bottom: 3rem; animation: fadeIn 1s ease; }
         .roadmap-header h1 { font-family: var(--font-heading); font-size: 2.5rem; margin-bottom: 0.5rem; color: #111; }
         .roadmap-header p { font-family: var(--font-main); color: #666; font-size: 1.1rem; max-width: 600px; }
-
-        .back-btn {
-            position: absolute; top: 2rem; left: 2rem;
-            padding: 0.8rem 1.5rem; background: #fff; color: #111;
-            border-radius: 50px; font-family: var(--font-heading);
-            font-weight: 600; font-size: 0.9rem; text-decoration: none;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            display: flex; align-items: center; gap: 0.5rem;
-            transition: all 0.3s ease; z-index: 100;
-        }
-        .back-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0,0,0,0.1); }
-
         .filter-box {
             background: #fff; padding: 2rem; border-radius: 16px;
             box-shadow: 0 10px 40px rgba(0,0,0,0.06);
@@ -39,7 +25,6 @@
             margin-bottom: 3rem; flex-wrap: wrap; justify-content: center;
             width: 100%; max-width: 800px; border: 1px solid #f0f0f0;
         }
-
         .select-group { display: flex; flex-direction: column; gap: 0.5rem; min-width: 250px; }
         .select-group label { font-size: 0.9rem; font-weight: 600; color: #555; }
         .select-group select {
@@ -48,12 +33,10 @@
             outline: none; transition: border-color 0.3s ease;
         }
         .select-group select:focus { border-color: #000; }
-
         .course-grid {
             display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 2rem; width: 100%; max-width: 1100px;
         }
-
         .course-card {
             background: #fff; border-radius: 20px; padding: 2rem;
             box-shadow: 0 10px 30px rgba(0,0,0,0.04);
@@ -62,7 +45,6 @@
             display: flex; flex-direction: column;
         }
         .course-card:hover { transform: translateY(-10px); box-shadow: 0 20px 50px rgba(0,0,0,0.1); }
-
         .course-tag {
             font-size: 0.7rem; font-weight: 800; text-transform: uppercase;
             padding: 4px 12px; background: #f0f0f0; border-radius: 50px;
@@ -70,7 +52,6 @@
         }
         .course-card h3 { font-size: 1.25rem; font-weight: 800; margin-bottom: 1rem; line-height: 1.4; color: #111; }
         .course-desc { font-size: 0.9rem; color: #666; margin-bottom: 1.5rem; line-height: 1.6; }
-
         .course-meta {
             margin-top: auto; padding-top: 1.5rem;
             border-top: 1px solid #f5f5f5;
@@ -83,23 +64,30 @@
             display: flex; align-items: center; gap: 0.4rem;
         }
         .course-link:hover { text-decoration: underline; }
-
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
         @media (max-width: 768px) {
-            .roadmap-view { padding: 4rem 1rem; }
-            .back-btn { top: 1rem; left: 1rem; }
+            .roadmap-view { padding: 6rem 1rem 4rem; }
             .filter-box { flex-direction: column; align-items: stretch; }
         }
     </style>
 </head>
 <body>
+    <header class="main-header" style="position: absolute; top: 1.5rem; left: 2rem; z-index: 100;">
+        <a href="index.html">
+            <img src="Kareer (2).png" alt="Kareer Logo" style="height: 60px; mix-blend-mode: multiply;">
+        </a>
+    </header>
+
     <div class="roadmap-view">
-        <a href="step3.html" class="back-btn"><span>← Quay lại</span></a>
+        <div class="explorer-nav">
+            <div class="nav-tab" onclick="location.href='step3.html'">Mở lối sự nghiệp</div>
+            <div class="nav-tab" id="tab-detail" onclick="handleNav('timeline.html')">Chi tiết nghề nghiệp</div>
+            <div class="nav-tab active" id="tab-roadmap" onclick="handleNav('roadmap.html')">Lộ trình phát triển</div>
+        </div>
 
         <div class="roadmap-header">
             <h1>Lộ trình đào tạo đề xuất</h1>
-            <p>Dựa trên bản sắc nghề nghiệp và các kỹ năng bạn đang sở hữu, đây là lộ trình học tập tối ưu để bạn tiến xa hơn.</p>
+            <p id="career-subtitle">Dựa trên bản sắc nghề nghiệp và các kỹ năng bạn đang sở hữu, đây là lộ trình học tập tối ưu để bạn tiến xa hơn.</p>
         </div>
 
         <div class="filter-box">
@@ -158,6 +146,23 @@
                     </div>
                 </div>
             `).join('');
+        }
+
+        function handleNav(page) {
+            const urlParams = new URLSearchParams(window.location.search);
+            const career = urlParams.get('career') || localStorage.getItem('selectedCareer');
+            if (career) {
+                location.href = `${page}?career=${encodeURIComponent(career)}`;
+            } else {
+                location.href = page;
+            }
+        }
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const careerName = urlParams.get('career') || localStorage.getItem('selectedCareer');
+        if (careerName) {
+            document.querySelector('.roadmap-header h1').innerText = `Lộ trình đào tạo: ${careerName}`;
+            document.getElementById('career-subtitle').innerText = `Dựa trên bản sắc nghề nghiệp và các kỹ năng bạn đang sở hữu cho vị trí ${careerName}, đây là lộ trình học tập tối ưu.`;
         }
 
         document.getElementById('role-filter').addEventListener('change', renderCourses);

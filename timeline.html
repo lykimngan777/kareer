@@ -10,57 +10,37 @@
     <link rel="stylesheet" href="step3.css">
     <style>
         body { overflow-y: auto !important; overflow-x: hidden !important; }
-
         .timeline-view {
             min-height: 100vh; background: #f8f9fa;
-            padding: 4rem 2rem;
+            padding: 8rem 2rem 4rem;
             display: flex; flex-direction: column; align-items: center;
         }
-
         .timeline-header { text-align: center; margin-bottom: 3rem; animation: fadeIn 1s ease; }
         .timeline-header h1 { font-family: var(--font-heading); font-size: 2.5rem; margin-bottom: 0.5rem; color: #111; }
         .timeline-header p { font-family: var(--font-main); color: #666; font-size: 1.1rem; max-width: 600px; }
-
-        .back-btn {
-            position: absolute; top: 2rem; left: 2rem;
-            padding: 0.8rem 1.5rem; background: #fff; color: #111;
-            border-radius: 50px; font-family: var(--font-heading);
-            font-weight: 600; font-size: 0.9rem; text-decoration: none;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            display: flex; align-items: center; gap: 0.5rem;
-            transition: all 0.3s ease; z-index: 100;
-        }
-        .back-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0,0,0,0.1); }
-
         .progress-timeline {
             display: flex; justify-content: space-between; align-items: flex-start;
             width: 100%; max-width: 1100px;
             margin: 2rem 0 4rem; position: relative;
         }
-
         .progress-line { position: absolute; top: 12px; left: 12.5%; right: 12.5%; height: 4px; background: #e5e7eb; z-index: 1; }
         .progress-line-fill { position: absolute; top: 12px; left: 12.5%; height: 4px; background: #000; z-index: 1; transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1); width: 0%; }
-
         .timeline-step {
             display: flex; flex-direction: column; align-items: center;
             flex: 1; position: relative; z-index: 2; cursor: pointer;
         }
-
         .step-marker {
             width: 28px; height: 28px; background: #fff;
             border: 4px solid #e5e7eb; border-radius: 50%;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); margin-bottom: 1.5rem;
         }
-
         .timeline-step.active .step-marker { border-color: #000; background: #000; transform: scale(1.2); box-shadow: 0 0 15px rgba(0,0,0,0.2); }
-
         .step-label {
             font-size: 0.85rem; font-weight: 800; text-transform: uppercase;
             color: #999; transition: color 0.4s ease;
             text-align: center; max-width: 140px; line-height: 1.4; letter-spacing: 0.05em;
         }
         .timeline-step.active .step-label { color: #111; }
-
         .detail-card {
             width: 100%; max-width: 800px; background: #fff;
             border-radius: 24px; padding: 3rem;
@@ -70,21 +50,17 @@
             transition: all 0.5s ease; position: relative;
         }
         .detail-card.show { opacity: 1; transform: translateY(0); }
-
         .detail-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid #f5f5f5; }
         .detail-title h2 { font-size: 1.8rem; font-weight: 800; color: #111; }
         .detail-time { font-size: 0.9rem; font-weight: 700; color: #666; background: #f8f9fa; padding: 0.5rem 1rem; border-radius: 50px; }
         .detail-body h3 { font-size: 1.1rem; font-weight: 800; margin-bottom: 1rem; text-transform: uppercase; color: #333; }
         .detail-body p { color: #555; line-height: 1.8; margin-bottom: 2rem; }
-
         .task-list { list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.2rem; }
         .task-item { display: flex; align-items: center; gap: 0.8rem; font-size: 0.95rem; color: #444; padding: 1rem; background: #fafafa; border-radius: 12px; border: 1px solid #f0f0f0; }
         .task-icon { color: #000; font-weight: 900; }
-
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
         @media (max-width: 768px) {
-            .timeline-view { padding: 4rem 1rem; }
+            .timeline-view { padding: 6rem 1rem 4rem; }
             .progress-timeline { flex-direction: column; align-items: flex-start; gap: 2rem; padding-left: 2rem; }
             .progress-line, .progress-line-fill { left: 32px; width: 4px !important; top: 0; bottom: 0; height: auto; }
             .timeline-step { flex-direction: row; gap: 1.5rem; align-items: center; }
@@ -95,12 +71,22 @@
     </style>
 </head>
 <body>
+    <header class="main-header" style="position: absolute; top: 1.5rem; left: 2rem; z-index: 100;">
+        <a href="index.html">
+            <img src="Kareer (2).png" alt="Kareer Logo" style="height: 60px; mix-blend-mode: multiply;">
+        </a>
+    </header>
+
     <div class="timeline-view">
-        <a href="step3.html" class="back-btn"><span>← Quay lại</span></a>
+        <div class="explorer-nav">
+            <div class="nav-tab" onclick="location.href='step3.html'">Mở lối sự nghiệp</div>
+            <div class="nav-tab active" id="tab-detail" onclick="handleNav('timeline.html')">Chi tiết nghề nghiệp</div>
+            <div class="nav-tab" id="tab-roadmap" onclick="handleNav('roadmap.html')">Lộ trình phát triển</div>
+        </div>
 
         <div class="timeline-header">
             <h1>Lộ trình thăng tiến sự nghiệp</h1>
-            <p>Khám phá các cột mốc quan trọng và những kỹ năng cần thiết để đạt được đỉnh cao trong nghề nghiệp.</p>
+            <p id="career-subtitle">Khám phá các cột mốc quan trọng và những kỹ năng cần thiết để đạt được đỉnh cao trong nghề nghiệp.</p>
         </div>
 
         <div class="progress-timeline" id="timeline">
@@ -188,6 +174,23 @@
                 `;
                 card.classList.add('show');
             }, 300);
+        }
+
+        function handleNav(page) {
+            const urlParams = new URLSearchParams(window.location.search);
+            const career = urlParams.get('career') || localStorage.getItem('selectedCareer');
+            if (career) {
+                location.href = `${page}?career=${encodeURIComponent(career)}`;
+            } else {
+                location.href = page;
+            }
+        }
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const careerName = urlParams.get('career') || localStorage.getItem('selectedCareer');
+        if (careerName) {
+            document.querySelector('.timeline-header h1').innerText = `Lộ trình thăng tiến: ${careerName}`;
+            document.getElementById('career-subtitle').innerText = `Khám phá các cột mốc quan trọng và những kỹ năng cần thiết để đạt được đỉnh cao trong nghề ${careerName}.`;
         }
 
         showStep(0);
