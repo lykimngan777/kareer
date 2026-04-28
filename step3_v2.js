@@ -323,43 +323,40 @@ function showAnalysis(nodes, userScores) {
                 <div class="career-split-view">
                     <div class="career-sidebar-card">
                         <div class="career-list-left">
-                            \${allCareers.map((c, i) => \`
-                                <div class="career-item \${i === 0 ? 'active' : ''}" onclick="showCareerWhy(\${i})">
-                                    <div class="item-name">\${c.name}</div>
+                            ${allCareers.map((c, i) => `
+                                <div class="career-item ${i === 0 ? 'active' : ''}" onclick="showCareerWhy(${i})">
+                                    <div class="item-name">${c.name}</div>
                                 </div>
-                            \`).join('')}
+                            `).join('')}
                         </div>
                     </div>
                     <div class="career-content-card">
                         <div class="career-why-right">
-                            \${allCareers.map((c, i) => {
+                            ${allCareers.map((c, i) => {
                                 const spec = (typeof specializedData !== 'undefined') ? specializedData[c.name] : null;
-                                return \`
-                                <div id="why-content-\${i}" class="why-content \${i === 0 ? 'active' : ''}">
+                                return `
+                                <div id="why-content-${i}" class="why-content ${i === 0 ? 'active' : ''}">
                                     
-                                    <div class="simple-section">
-                                        <h4>TẦM NHÌN & SỨ MỆNH</h4>
-                                        <p>\${spec ? spec.mission : (c.description || 'Chưa có mô tả chi tiết.')}</p>
-                                    </div>
+
 
                                     <div class="simple-section">
                                         <h4>PHÂN TÍCH SỰ PHÙ HỢP CHI TIẾT</h4>
                                         <div class="detailed-analysis-content">
-                                            <p>Kết quả phân tích cho thấy bạn sở hữu nhóm đặc điểm <strong>\${c.traits.map(t => traitLabels[t]).join(', ')}</strong> cực kỳ tương thích with vị trí này. Điểm số cao ở các nhóm kỹ năng này là nền tảng giúp bạn tiếp cận công việc một cách tự nhiên và nhạy bén.</p>
+                                            <p>Kết quả phân tích cho thấy bạn sở hữu nhóm đặc điểm <strong>${c.traits.map(t => traitLabels[t]).join(', ')}</strong> cực kỳ tương thích với vị trí này. Điểm số cao ở các nhóm kỹ năng này là nền tảng giúp bạn tiếp cận công việc một cách tự nhiên và nhạy bén.</p>
                                             
-                                            <p>Vị trí này đòi hỏi sự kết hợp giữa tư duy hệ thống và khả năng thực thi quyết liệt. Dựa trên dữ liệu thu thập được, bạn có xu hướng giải quyết các thử thách đặc thù của ngành thông qua góc nhìn sáng tạo nhưng vẫn đảm bảo tính thực tiễn cao - một tố chất hiếm có của một <strong>\${c.name}</strong> chuyên nghiệp.</p>
+                                            <p>Vị trí này đòi hỏi sự kết hợp giữa tư duy hệ thống và khả năng thực thi quyết liệt. Dựa trên dữ liệu thu thập được, bạn có xu hướng giải quyết các thử thách đặc thù của ngành thông qua góc nhìn sáng tạo nhưng vẫn đảm bảo tính thực tiễn cao - một tố chất hiếm có của một <strong>${c.name}</strong> chuyên nghiệp.</p>
                                             
                                             <p>Bạn không chỉ làm tốt vai trò chuyên môn mà còn có khả năng kiến tạo những giá trị mới cho tổ chức nhờ vào sự am hiểu sâu sắc về quy trình và tâm lý con người trong môi trường làm việc.</p>
                                         </div>
                                     </div>
 
                                     <div class="action-footer">
-                                        <button class="primary-roadmap-btn" onclick="localStorage.setItem('selectedCareer','\${c.name}'); window.location.href='timeline.html';">
+                                        <button class="primary-roadmap-btn" onclick="localStorage.setItem('selectedCareer','${c.name}'); window.location.href='timeline.html';">
                                             XEM CHI TIẾT NGHỀ NGHIỆP <i class="fas fa-chevron-right"></i>
                                         </button>
                                     </div>
                                 </div>
-                            \`}).join('')}
+                            `}).join('')}
                         </div>
                     </div>
                     </div>
@@ -380,42 +377,42 @@ function showAnalysis(nodes, userScores) {
                             </tr>
                         </thead>
                         <tbody>
-                            \${allCareers.map(c => {
+                            ${allCareers.map(c => {
                                 const spec = (typeof specializedData !== 'undefined') ? specializedData[c.name] : null;
-                                return \`
+                                return `
                                     <tr>
                                         <td>
-                                            <div class="comp-job-name">\${c.name}</div>
+                                            <div class="comp-job-name">${c.name}</div>
                                         </td>
-                                        <td class="comp-salary">\${c.salary || '40M - 80M'}</td>
+                                        <td class="comp-salary">${c.salary || '40M - 80M'}</td>
                                         <td>
                                             <ul class="comp-list">
-                                                \${(spec ? spec.responsibilities : ["Quản lý vận hành", "Tối ưu hóa quy trình"]).slice(0, 2).map(r => \`<li>\${r}</li>\`).join('')}
+                                                ${(spec ? spec.responsibilities : ["Quản lý vận hành", "Tối ưu hóa quy trình"]).slice(0, 2).map(r => `<li>${r}</li>`).join('')}
                                             </ul>
                                         </td>
                                         <td>
                                             <ul class="comp-list">
-                                                \${spec ? \`
-                                                    <li>\${spec.requirements.degree.split(' - ')[0]}</li>
-                                                    <li>\${spec.requirements.professional.split(', ')[0]}</li>
-                                                \` : \`
+                                                ${spec ? `
+                                                    <li>${spec.requirements.degree.split(' - ')[0]}</li>
+                                                    <li>${spec.requirements.professional.split(', ')[0]}</li>
+                                                ` : `
                                                     <li>Đại học chuyên ngành</li>
                                                     <li>5-10 năm kinh nghiệm</li>
-                                                \`}
+                                                `}
                                             </ul>
                                         </td>
                                         <td>
-                                            <span class="comp-fit-tag" style="background: \${c.fit.color}; color: \${c.fit.textColor};">\${c.fit.label}</span>
+                                            <span class="comp-fit-tag" style="background: ${c.fit.color}; color: ${c.fit.textColor};">${c.fit.label}</span>
                                         </td>
                                     </tr>
-                                \`;
+                                `;
                             }).join('')}
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
-    \`;
+    `;
 
     paragraph.innerHTML = html;
 
