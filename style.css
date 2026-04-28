@@ -798,3 +798,132 @@ body::-webkit-scrollbar {
         margin-bottom: 1.5rem;
     }
 }
+
+.select-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 300px;
+}
+
+.builder-select {
+    width: 100%;
+    padding: 12px 16px;
+    font-size: 1rem;
+    font-weight: 600;
+    font-family: inherit;
+    color: var(--text-primary);
+    background: #fff;
+    border: 2px solid #eee;
+    border-radius: 12px;
+    cursor: pointer;
+    appearance: none;
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+.builder-select:hover {
+    border-color: #ddd;
+}
+
+.builder-select:focus {
+    border-color: #000;
+    box-shadow: 0 0 0 4px rgba(0,0,0,0.05);
+}
+
+.select-wrapper::after {
+    content: '▼';
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    font-size: 0.8rem;
+    color: #999;
+}
+
+/* Showcase Section Styles */
+.showcase-section {
+    padding: 100px 2rem;
+    background: rgba(255, 255, 255, 0.3);
+    position: relative;
+    z-index: 5;
+}
+
+.showcase-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.showcase-title {
+    font-family: "Dancing Script", cursive;
+    font-size: 3.5rem;
+    margin-bottom: 4rem;
+    text-align: center;
+    color: var(--text-primary);
+    font-weight: 700;
+}
+
+.showcase-title span {
+    color: #000;
+    position: relative;
+    display: inline-block;
+}
+
+.showcase-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 4rem;
+}
+
+.showcase-item {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.showcase-image-wrapper {
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+    border: 3px solid #000;
+    box-shadow: 15px 15px 0px #ffde59;
+    transition: transform 0.4s ease;
+    aspect-ratio: 16/10;
+    background: #f0f0f0;
+}
+
+.showcase-image-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.showcase-item:hover .showcase-image-wrapper {
+    transform: translate(-5px, -5px);
+    box-shadow: 20px 20px 0px #000;
+}
+
+.showcase-info h3 {
+    font-family: var(--font-serif);
+    font-size: 1.8rem;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+}
+
+.showcase-info p {
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+@media (max-width: 900px) {
+    .showcase-grid {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+    }
+    .showcase-title {
+        font-size: 2.5rem;
+    }
+}
