@@ -114,6 +114,23 @@
             }
         }
 
+        .main-logo {
+            height: 55px;
+            width: auto;
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .main-header {
+                left: 50%;
+                transform: translateX(-50%);
+                top: 0.5rem;
+            }
+            .main-logo {
+                height: 35px;
+            }
+        }
+
         h1 {
             font-size: 3.5rem;
             font-weight: 800;
@@ -429,7 +446,7 @@
     <header class="main-header" style="position: fixed; top: 1.5rem; left: 2rem; z-index: 9999;">
         <div class="logo-area">
             <a href="index.html">
-                <img src="KAREER.png" alt="Kareer Logo" style="height: 40px;">
+                <img src="KAREER.png" alt="Kareer Logo" class="main-logo">
             </a>
         </div>
     </header>
@@ -803,169 +820,101 @@
             }
 
             scoredRoles.sort((a, b) => b.score - a.score);
-            roleFilter.innerHTML = scoredRoles.map(item => `<option value="${item.role}">${item.role}</option>`).join('');
             
-            const selected = localStorage.getItem('selectedCareer');
-            if (selected && scoredRoles.some(r => r.role === selected)) {
-                roleFilter.value = selected;
+            roleFilter.innerHTML = scoredRoles.map(r => `<option value="${r.role}">${r.role}</option>`).join('');
+            
+            const saved = localStorage.getItem('selectedCareer');
+            if (saved && scoredRoles.some(r => r.role === saved)) {
+                roleFilter.value = saved;
+            } else {
+                roleFilter.value = scoredRoles[0]?.role || "";
             }
+
+            roleFilter.onchange = (e) => {
+                localStorage.setItem('selectedCareer', e.target.value);
+                renderRoadmap(e.target.value);
+            };
+
+            renderRoadmap(roleFilter.value);
         }
 
-        function renderTimeline(isManual = false) {
-            try {
-                const flow = document.getElementById('timeline-flow');
-                const roleSelect = document.getElementById('role-filter');
-                if (!flow || !roleSelect) return;
-
-                const targetRole = roleSelect.value;
-                const profileStr = localStorage.getItem('kareer_profile');
-                const profile = profileStr ? JSON.parse(profileStr) : { position: "Người dùng mới", experience: "Chưa có kinh nghiệm" };
+        function renderRoadmap(targetRole, customPrompt = "") {
+            const profile = JSON.parse(localStorage.getItem('kareer_profile') || '{}');
+            const steps = generateCustomPath(targetRole, profile, customPrompt);
+            const container = document.getElementById('timeline-flow');
+            
+            let html = '<div class="timeline-line"></div>';
+            
+            steps.forEach((step, idx) => {
+                const isTarget = idx === steps.length - 1;
+                const isStart = idx === 0;
                 
-                const customPrompt = localStorage.getItem('kareer_custom_roadmap_prompt') || "";
-                const path = generateCustomPath(targetRole, profile, customPrompt);
-                
-                const quizResultStr = localStorage.getItem('kareer_result');
-                const quizResult = quizResultStr ? JSON.parse(quizResultStr) : { scores: {} };
-                const userScores = quizResult.scores || {};
-                const riasecKeys = ['realistic', 'investigative', 'artistic', 'social', 'enterprising', 'conventional'];
-                const topTraits = Object.entries(userScores)
-                    .filter(([trait]) => riasecKeys.includes(trait))
-                    .sort(([, a], [, b]) => b - a)
-                    .slice(0, 2)
-                    .map(([trait]) => trait);
-
-                const traitLabels = {
-                    realistic: 'Thực tế (R)', investigative: 'Nghiên cứu (I)', artistic: 'Nghệ thuật (A)',
-                    social: 'Xã hội (S)', enterprising: 'Quản lý (E)', conventional: 'Nghiệp vụ (C)'
-                };
-
-                localStorage.setItem('selectedCareer', targetRole);
-
-                const headerTitle = document.getElementById('roadmap-main-title');
-                const headerSubtitle = document.getElementById('roadmap-subtitle');
-                if (headerTitle) {
-                    const prefix = "Lộ trình chinh phục";
-                    const roleParts = targetRole.split('/');
-                    
-                    if (roleParts.length > 1) {
-                        headerTitle.innerHTML = `
-                            ${prefix}<br>
-                            <span>${roleParts[0].trim()} /</span><br>
-                            <span>${roleParts[1].trim()}</span>
-                        `;
-                    } else {
-                        headerTitle.innerHTML = `
-                            ${prefix}<br>
-                            <span>${targetRole}</span>
-                        `;
-                    }
-                }
-                if (headerSubtitle) {
-                    const traitText = topTraits.length > 0 
-                        ? `Chiến lược cá nhân hóa theo thế mạnh ${topTraits.map(t => traitLabels[t]).join(' & ')}`
-                        : "Cá nhân hóa cho lộ trình sự nghiệp của bạn";
-                    headerSubtitle.innerText = traitText;
-                }
-                
-                let html = '<div class="timeline-line"></div>';
-
-                path.forEach((step, index) => {
-                    const isStart = index === 0;
-                    const isTarget = index === path.length - 1;
-                    const itemClass = isStart ? 'timeline-item start' : (isTarget ? 'timeline-item target' : 'timeline-item');
-                    
-                    const currentSkills = [...(step.skills || [])];
-                    if (index === 1) currentSkills.push(wefSkills[0].name, wefSkills[2].name); 
-                    if (index === 2) currentSkills.push(wefSkills[1].name); 
-
-                    html += `
-                        <div class="timeline-item ${itemClass}" style="animation-delay: ${index * 0.2}s">
-                            <div class="timeline-dot"></div>
-                            <div class="timeline-content">
-                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                                    <span class="timeline-step-label">${step.phase}: ${step.stage}</span>
-                                    <span style="font-size: 0.8rem; font-weight: 800; color: #ffde59; background: #000; padding: 4px 12px; border-radius: 20px;">${step.time}</span>
-                                </div>
-                                <div class="timeline-role">
-                                    ${step.role}
-                                    ${isStart ? `<span class="base-badge">Current Position</span>` : ''}
-                                </div>
-                                
-                                <p style="font-size:0.95rem; color:#444; margin: 1rem 0; line-height:1.6; padding: 1.2rem; background: #f8f9fa; border-left: 5px solid ${isTarget ? '#ffde59' : '#000'}; border-radius: 6px;">
-                                    ${step.desc}
-                                </p>
-
-                                <div style="margin-bottom: 1.5rem;">
-                                    <h4 style="font-size: 0.85rem; text-transform: uppercase; color: #666; margin-bottom: 0.8rem;">🎯 Nhiệm vụ thực hành:</h4>
-                                    <ul style="padding-left: 1.2rem; font-size: 0.9rem; color: #333; line-height: 1.5;">
-                                        ${step.tasks.map(t => `<li style="margin-bottom: 0.5rem;">${t}</li>`).join('')}
+                html += `
+                    <div class="timeline-item ${isTarget ? 'target' : ''} ${isStart ? 'start' : ''}">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <span class="timeline-step-label">${step.phase} • ${step.time}</span>
+                            <div class="timeline-role">
+                                ${step.role}
+                                ${isTarget ? '<span class="base-badge" style="background:#ffde59; color:#000">ĐÍCH ĐẾN</span>' : ''}
+                            </div>
+                            <p style="margin-bottom: 1.5rem; color: #444; font-size: 1rem;">${step.desc}</p>
+                            
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                                <div>
+                                    <h4 style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 1rem; color: #999;">Nhiệm vụ trọng tâm</h4>
+                                    <ul style="padding-left: 1.2rem; font-size: 0.9rem;">
+                                        ${step.tasks.map(t => `<li style="margin-bottom:0.5rem">${t}</li>`).join('')}
                                     </ul>
                                 </div>
-
-                                <div class="skill-list" style="margin-bottom: 1.5rem;">
-                                    ${currentSkills.map(s => {
-                                        const isWef = wefSkills.some(w => w.name === s);
-                                        return `<span class="skill-chip ${isWef ? 'skill-future' : ''}">${s}${isWef ? ' ✨' : ''}</span>`;
-                                    }).join('')}
-                                </div>
-                                
-                                ${step.courses && step.courses.length > 0 ? `
-                                <div class="course-suggestion">
-                                    <h4>Khóa học & Chứng chỉ đề xuất</h4>
-                                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem;">
-                                        ${step.courses.map(c => `
-                                            <a href="${c.url}" target="_blank" class="course-link-card" style="margin-bottom: 0;">
-                                                <span class="provider-logo">${c.p}</span>
-                                                <div style="flex:1">
-                                                    <div style="font-weight:700; font-size:0.85rem">${c.n}</div>
-                                                    <div style="font-size:0.7rem; opacity:0.7">Chương trình đào tạo uy tín</div>
-                                                </div>
-                                                <span style="font-size:1.1rem">→</span>
-                                            </a>
-                                        `).join('')}
+                                <div>
+                                    <h4 style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 1rem; color: #999;">Kỹ năng WEF 2025+</h4>
+                                    <div class="skill-list">
+                                        ${step.skills.map(s => `<span class="skill-chip">${s}</span>`).join('')}
+                                        ${idx >= 2 ? wefSkills.slice(0, 2).map(ws => `<span class="skill-chip skill-future">${ws.name}</span>`).join('') : ''}
                                     </div>
                                 </div>
-                                ` : ''}
+                            </div>
+
+                            <div class="course-suggestion">
+                                <h4>Khóa học đề xuất từ Kareer AI</h4>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                                    ${step.courses.map(c => `
+                                        <a href="${c.url}" target="_blank" class="course-link-card">
+                                            <div class="provider-logo">${c.p}</div>
+                                            <div style="font-size: 0.85rem; font-weight: 700;">${c.n}</div>
+                                        </a>
+                                    `).join('')}
+                                </div>
                             </div>
                         </div>
-                    `;
-
-                    if (!isTarget && step.transition) {
-                        html += `
-                            <div class="timeline-transition" style="animation-delay: ${(index * 0.2) + 0.1}s">
-                                ${step.transition}
-                            </div>
-                        `;
-                    }
-                });
-                
-                flow.innerHTML = html;
-            } catch (err) {
-                console.error("Roadmap Render Error:", err);
-                document.getElementById('timeline-flow').innerHTML = `<p style="padding: 2rem; color: red;">Đã xảy ra lỗi khi tải lộ trình: ${err.message}</p>`;
-            }
+                    </div>
+                    ${!isTarget ? `<div class="timeline-transition">${step.transition}</div>` : ''}
+                `;
+            });
+            
+            container.innerHTML = html;
         }
 
-        document.getElementById('role-filter').addEventListener('change', renderTimeline);
-        initDropdown();
-        renderTimeline();
         function showEditPrompt() {
-            const area = document.getElementById('edit-prompt-area');
-            area.style.display = area.style.display === 'block' ? 'none' : 'block';
-            if (area.style.display === 'block') {
-                document.getElementById('user-edit-prompt').focus();
-            }
+            document.getElementById('edit-prompt-area').style.display = 'block';
+            document.getElementById('user-edit-prompt').focus();
         }
 
         function submitEditRequest() {
             const prompt = document.getElementById('user-edit-prompt').value;
-            if (!prompt.trim()) return;
+            const role = document.getElementById('role-filter').value;
+            if (!prompt) return;
             
-            localStorage.setItem('kareer_custom_roadmap_prompt', prompt);
-            alert(`Yêu cầu của bạn: "${prompt}" đã được ghi nhận. Đang tái cấu trúc lộ trình...`);
-            renderTimeline(true); 
+            // Re-render with custom prompt logic
+            renderRoadmap(role, prompt);
+            
+            // Reset UI
+            document.getElementById('user-edit-prompt').value = "";
             document.getElementById('edit-prompt-area').style.display = 'none';
         }
+
+        window.onload = initDropdown;
     </script>
 </body>
 </html>

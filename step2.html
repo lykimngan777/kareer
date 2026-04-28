@@ -67,7 +67,7 @@
     }
 
     .main-logo {
-      height: 40px;
+      height: 55px;
       width: auto;
       display: block;
       transition: var(--transition);
@@ -84,7 +84,7 @@
       }
 
       .main-logo {
-        height: 25px;
+        height: 35px;
       }
     }
 
@@ -644,7 +644,7 @@
       }
 
       .main-logo {
-        height: 25px; /* Extra shrunken */
+        height: 35px; /* Extra shrunken */
       }
 
       .tab-container {
@@ -667,7 +667,7 @@
         background: transparent !important;
         border: none !important;
         box-shadow: none !important;
-      }
+        }
 
       .q-item {
         display: flex;
@@ -801,490 +801,73 @@
       </div>
 
       <div class="footer" id="quizFooter">
-        <div></div>
-        <button class="btn btn-primary" onclick="goNext()">Hoàn tất bài test →</button>
+        <button class="btn btn-ghost" id="prevBtn" disabled>← Quay lại</button>
+        <button class="btn btn-primary" id="nextBtn">Tiếp theo →</button>
       </div>
 
+      <!-- Results Screen -->
       <div id="resultScreen" class="result-screen">
         <div class="result-hdr">
-          <h1 class="result-title" id="resultTitle">KẾT QUẢ PHÂN TÍCH</h1>
+          <p class="model-tag">Báo cáo khoa học</p>
+          <h2 class="result-title">HỒ SƠ BẢN SẮC CỦA BẠN</h2>
+          <p id="userNameResult" style="font-size: 1.2rem; font-weight: 700; margin-top: 10px;"></p>
         </div>
-        <div id="resultBody"></div>
+
+        <div class="theory-box">
+            <h2 class="theory-title">PHÂN TÍCH TỔNG HỢP (RIASEC & BIG FIVE)</h2>
+            <div id="narrative-summary" style="font-size: 1.1rem; line-height: 1.8; color: #333;">
+                <!-- Narrative summary will be injected here -->
+            </div>
+            
+            <div class="model-summary-box">
+                <button id="toggle-narrative-btn" class="btn-toggle-narrative">
+                    <span>XEM CHI TIẾT CÁC CHỈ SỐ</span>
+                </button>
+                
+                <div id="narrative-details" class="narrative-content" style="display: none; margin-top: 2rem;">
+                    <div id="theory-details-content">
+                        <!-- Detailed model breakdowns will be injected here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="recommendation-box">
+          <h2 class="theory-title">Đề xuất nghề nghiệp</h2>
+          <div class="rec-grid">
+            <div class="rec-item rec-suitable">
+              <h3 class="rec-title">🟢 Nhóm ngành phù hợp</h3>
+              <ul class="insight-list" id="suitableList"></ul>
+            </div>
+            <div class="rec-item rec-unsuitable">
+              <h3 class="rec-title">🔴 Cân nhắc kỹ</h3>
+              <ul class="insight-list" id="unsuitableList"></ul>
+            </div>
+          </div>
+          
+          <div style="text-align: center; margin-top: 40px;">
+            <a href="step3.html" class="btn btn-primary" style="padding: 1.5rem 4rem; font-size: 1.1rem;">
+                KHÁM PHÁ CHI TIẾT LỘ TRÌNH →
+            </a>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 
-  <div id="toast" class="toast"></div>
+  <div class="toast" id="toast">Vui lòng chọn một đáp án</div>
 
-  <script src="api-client.js"></script>
+  <script src="database.js"></script>
+  <script src="step2.js"></script>
   <script>
-    const questions = [
-      { text: "Tôi thích dành thời gian để thiết kế ứng dụng, đồ họa, video hoặc tạo nội dung sáng tạo.", group: "artistic" },
-      { text: "Tôi cảm thấy hào hứng khi thử nghiệm những ý tưởng mới dù chưa chắc chắn sẽ thành công.", group: "artistic" },
-      { text: "Tôi thích viết lách, vẽ tranh, chụp ảnh hoặc sáng tác theo phong cách riêng của mình.", group: "artistic" },
-      { text: "Tôi thích dẫn dắt nhóm và thuyết phục mọi người thực hiện ý tưởng của mình.", group: "enterprising" },
-      { text: "Tôi cảm thấy động lực khi đạt được thành tích cao và được người khác công nhận.", group: "enterprising" },
-      { text: "Tôi thích tổ chức sự kiện, gây quỹ hoặc bán hàng.", group: "enterprising" },
-      { text: "Tôi thích làm việc với các con số, dữ liệu và đảm bảo mọi thứ được sắp xếp chính xác.", group: "conventional" },
-      { text: "Tôi ưu tiên sự ổn định, an toàn và các quy trình làm việc rõ ràng.", group: "conventional" },
-      { text: "Tôi thích lập kế hoạch chi tiết và tuân thủ lịch trình đã đề ra.", group: "conventional" },
-      { text: "Tôi thích giúp đỡ, lắng nghe và tư vấn cho người khác giải quyết vấn đề của họ.", group: "social" },
-      { text: "Tôi quan tâm đến các vấn đề xã hội và muốn đóng góp giá trị cho cộng đồng.", group: "social" },
-      { text: "Tôi thích làm việc trong môi trường tập thể và kết nối mọi người lại với nhau.", group: "social" },
-      { text: "Tôi thích làm việc với máy móc, công cụ kỹ thuật hoặc các hoạt động ngoài trời.", group: "realistic" },
-      { text: "Tôi thích tự tay lắp ráp, sửa chữa hoặc chế tạo các đồ vật hữu hình.", group: "realistic" },
-      { text: "Tôi thích nghiên cứu khoa học, phân tích các hiện tượng và tìm lời giải cho những câu hỏi hóc búa.", group: "investigative" },
-      { text: "Tôi thích dành hàng giờ để tìm hiểu sâu về một chủ đề chuyên môn mà mình quan tâm.", group: "investigative" },
-      { text: "Tôi thường đặt câu hỏi 'tại sao' và tìm kiếm bằng chứng logic trước khi tin vào điều gì đó.", group: "investigative" },
-      { text: "Sự tự do trong suy nghĩ và hành động là điều tối quan trọng đối với tôi.", group: "artistic" },
-      { text: "Tôi muốn có tầm ảnh hưởng và quyền quyết định trong công việc.", group: "enterprising" },
-      { text: "Tôi thích sự ngăn nắp và tối ưu hóa các quy trình sẵn có.", group: "conventional" },
-      { text: "Tôi coi trọng sự tôn trọng và gìn giữ các giá trị truyền thống.", group: "conventional" },
-      { text: "Tôi thấy hạnh phúc khi những người xung quanh tôi thành công và vui vẻ.", group: "social" },
-      { text: "Tôi thường bắt đầu cuộc trò chuyện trong các sự kiện đông người.", group: "extraversion" },
-      { text: "Tôi có xu hướng lo lắng khi đối mặt với những thay đổi đột ngột.", group: "neuroticism" },
-      { text: "Tôi luôn sẵn lòng chia sẻ kiến thức và hỗ trợ đồng nghiệp.", group: "social" },
-      { text: "Tôi thích những hoạt động mang tính thử thách và trải nghiệm mới lạ.", group: "openness" },
-      { text: "Tôi thường tìm kiếm niềm vui và sự tận hưởng trong công việc hàng ngày.", group: "hedonism" },
-      { text: "Tôi thích thể hiện bản sắc cá nhân thông qua phong cách làm việc.", group: "artistic" },
-      { text: "Tôi coi trọng sự công bằng và bình đẳng trong mọi mối quan hệ.", group: "universalism" },
-      { text: "Tôi thích làm việc với các thiết bị công nghệ hiện đại.", group: "realistic" },
-      { text: "Tôi thường dành thời gian để suy ngẫm về mục tiêu dài hạn của mình.", group: "conscientiousness" },
-      { text: "Tôi tự tin khi trình bày ý tưởng trước đám đông.", group: "enterprising" },
-      { text: "Tôi là người kiên trì và luôn hoàn thành công việc đúng hạn.", group: "conscientiousness" },
-      { text: "Tôi thích tìm tòi các giải pháp công nghệ để tối ưu hóa năng suất.", group: "investigative" },
-      { text: "Tôi coi trọng sự an toàn tài chính và công việc ổn định.", group: "security" }
-    ];
-
-    const groupInfo = {
-      realistic: { name: "Thực tế (Realistic)", narrative: "Bạn là người hành động, thích làm việc với các công cụ, máy móc và vật thể hữu hình. Bạn coi trọng tính thực tiễn và sự ổn định.", traits: ["Kỹ thuật", "Thực tế"], strengths: ["Kỹ năng vận hành", "Sửa chữa"], weaknesses: ["Giao tiếp xã hội"], potential: ["Chuyên gia kỹ thuật"] },
-      investigative: { name: "Nghiên cứu (Investigative)", narrative: "Bạn là người quan sát, thích tìm tòi, nghiên cứu và giải quyết các vấn đề phức tạp. Bạn coi trọng trí tuệ và tư duy logic.", traits: ["Phân tích", "Tò mò"], strengths: ["Giải quyết vấn đề", "Nghiên cứu"], weaknesses: ["Hành động thực tế"], potential: ["Nhà khoa học/Phân tích"] },
-      artistic: { name: "Nghệ thuật (Artistic)", narrative: "Bạn là người sáng tạo, trực giác và thích thể hiện bản thân qua các hình thức nghệ thuật. Bạn coi trọng sự tự do và đổi mới.", traits: ["Sáng tạo", "Trực giác"], strengths: ["Đổi mới", "Thiết kế"], weaknesses: ["Quy trình cứng nhắc"], potential: ["Nhà sáng tạo nội dung"] },
-      social: { name: "Xã hội (Social)", narrative: "Bạn là người thấu cảm, thích giúp đỡ, giảng dạy và chăm sóc người khác. Bạn coi trọng các mối quan hệ và giá trị cộng đồng.", traits: ["Thấu cảm", "Kết nối"], strengths: ["Giao tiếp", "Hỗ trợ"], weaknesses: ["Kỹ thuật khô khan"], potential: ["Quản trị nhân sự/Đào tạo"] },
-      enterprising: { name: "Quản lý (Enterprising)", narrative: "Bạn là người năng động, thích dẫn dắt, thuyết phục và đạt được các mục tiêu kinh doanh. Bạn coi trọng thành tựu và tầm ảnh hưởng.", traits: ["Quyết đoán", "Năng lượng"], strengths: ["Lãnh đạo", "Thuyết phục"], weaknesses: ["Chi tiết nhỏ"], potential: ["Lãnh đạo doanh nghiệp"] },
-      conventional: { name: "Nghiệp vụ (Conventional)", narrative: "Bạn là người ngăn nắp, cẩn thận và thích làm việc với dữ liệu theo các quy trình rõ ràng. Bạn coi trọng sự chính xác và hiệu quả.", traits: ["Cẩn thận", "Ngăn nắp"], strengths: ["Quản lý dữ liệu", "Quy trình"], weaknesses: ["Sự thay đổi đột ngột"], potential: ["Chuyên gia vận hành"] },
-      extraversion: { name: "Hướng ngoại", narrative: "Năng lượng từ giao tiếp", traits: ["Năng động"], strengths: ["Giao tiếp"], weaknesses: ["Độc lập"], potential: ["Kết nối"] },
-      neuroticism: { name: "Nhạy cảm", narrative: "Cảm xúc sâu sắc", traits: ["Nhạy cảm"], strengths: ["Thấu hiểu"], weaknesses: ["Áp lực"], potential: ["Nhạy bén"] },
-      openness: { name: "Cởi mở", narrative: "Yêu cái mới", traits: ["Sáng tạo"], strengths: ["Thích nghi"], weaknesses: ["Mất tập trung"], potential: ["Khám phá"] },
-      hedonism: { name: "Tận hưởng", narrative: "Yêu cuộc sống", traits: ["Vui vẻ"], strengths: ["Năng lượng tích cực"], weaknesses: ["Kỷ luật"], potential: ["Truyền cảm hứng"] },
-      universalism: { name: "Bình đẳng", narrative: "Vì cộng đồng", traits: ["Công bằng"], strengths: ["Tầm nhìn xa"], weaknesses: ["Cá nhân"], potential: ["Hoạt động xã hội"] },
-      conscientiousness: { name: "Tận tâm", narrative: "Trách nhiệm cao", traits: ["Kỷ luật"], strengths: ["Đúng hạn"], weaknesses: ["Sáng tạo"], potential: ["Quản lý"] },
-      security: { name: "An toàn", narrative: "Ổn định là trên hết", traits: ["Thận trọng"], strengths: ["Bảo mật"], weaknesses: ["Mạo hiểm"], potential: ["Bảo vệ"] }
-    };
-
-    const dimDesc = {
-      riasec: {
-        realistic: ["Bạn ít quan tâm đến việc làm việc với công cụ vật lý.", "Bạn có khả năng vận hành máy móc cơ bản.", "Bạn là một chuyên gia về kỹ thuật và vận hành thực tế."],
-        investigative: ["Bạn thích các giải pháp có sẵn hơn là nghiên cứu sâu.", "Bạn có tư duy phân tích ở mức ổn định.", "Bạn có khả năng nghiên cứu và giải quyết vấn đề cực kỳ xuất sắc."],
-        artistic: ["Bạn thích sự ổn định và quy trình truyền thống.", "Bạn có khả năng sáng tạo trong công việc hàng ngày.", "Bạn là người có tư duy đổi mới và khả năng sáng tạo vượt trội."],
-        social: ["Bạn ưu tiên làm việc độc lập và tập trung vào chuyên môn.", "Bạn có kỹ năng làm việc nhóm và thấu hiểu ở mức tốt.", "Bạn là người có khả năng kết nối và hỗ trợ cộng đồng mạnh mẽ."],
-        investigative: ["Bạn thích các vị trí hỗ trợ hơn là dẫn dắt.", "Bạn có tố chất lãnh đạo và khả năng thuyết phục.", "Bạn là người quyết đoán với khả năng dẫn dắt tổ chức xuất sắc."],
-        conventional: ["Bạn thích sự linh hoạt và không muốn bị ràng buộc bởi quy trình.", "Bạn là người ngăn nắp và làm việc có kế hoạch.", "Bạn có khả năng quản trị nghiệp vụ và dữ liệu vô cùng chính xác."]
-      },
-      bigFive: {
-        openness: ["Bạn thích những gì quen thuộc và an toàn.", "Bạn sẵn sàng đón nhận những thay đổi mới.", "Bạn luôn tìm kiếm những trải nghiệm và ý tưởng đột phá."],
-        conscientiousness: ["Bạn làm việc theo cảm hứng và sự linh hoạt.", "Bạn là người có trách nhiệm và kỷ luật trong công việc.", "Bạn cực kỳ tận tâm và luôn hoàn thành xuất sắc mọi cam kết."],
-        extraversion: ["Bạn thích môi trường làm việc yên tĩnh và độc lập.", "Bạn thoải mái khi giao tiếp và làm việc với mọi người.", "Bạn tràn đầy năng lượng và luôn là tâm điểm trong các hoạt động nhóm."],
-        agreeableness: ["Bạn ưu tiên mục tiêu cá nhân và sự cạnh tranh.", "Bạn là người hòa đồng và dễ hợp tác.", "Bạn vô cùng thấu cảm và luôn đặt lợi ích tập thể lên trên."],
-        neuroticism: ["Bạn giữ được sự bình tĩnh tuyệt vời dưới áp lực.", "Bạn có sự nhạy cảm nhất định với môi trường xung quanh.", "Bạn có nội tâm sâu sắc và cảm xúc phong phú."]
-      },
-      schwartz: {
-        selfDirection: ["Thích hướng dẫn", "Tự chủ tốt", "Độc lập tuyệt đối"],
-        stimulation: ["Yêu ổn định", "Thích đổi mới", "Yêu mạo hiểm"],
-        hedonism: ["Kỷ luật cao", "Biết tận hưởng", "Yêu cuộc sống"],
-        achievement: ["Ít tham vọng", "Cầu tiến", "Khát khao thành công"],
-        power: ["Thích hỗ trợ", "Có ảnh hưởng", "Khát khao quyền lực"],
-        security: ["Thích mạo hiểm", "Coi trọng an toàn", "Ưu tiên ổn định"],
-        conformity: ["Thích phá cách", "Tuân thủ tốt", "Kỷ luật thép"],
-        tradition: ["Thích đổi mới", "Trân trọng quá khứ", "Gìn giữ truyền thống"],
-        benevolence: ["Tập trung cá nhân", "Tốt bụng", "Vị tha vô điều kiện"],
-        universalism: ["Thực dụng", "Công bằng", "Lý tưởng hóa"]
-      }
-    };
-
-    const conclusionData = {
-      realistic: { 
-        conclusion: "Bạn là người của hành động, thực tiễn và sự bền bỉ. Bản sắc nghề nghiệp của bạn gắn liền với khả năng làm việc với các công cụ, máy móc và tạo ra những kết quả hữu hình. Bạn tin vào logic của đôi bàn tay và sự chính xác của quy trình kỹ thuật. Bạn thường cảm thấy hài lòng nhất khi thấy sản phẩm cụ thể từ công sức của mình, thay vì những ý tưởng trừu tượng trên giấy tờ.", 
-        suitable: [
-          "Các vị trí kỹ thuật, vận hành máy móc phức tạp hoặc bảo trì hệ thống",
-          "Môi trường làm việc thực địa, ngoài trời hoặc các không gian xưởng sản xuất",
-          "Lĩnh vực xây dựng, chế tạo, nông nghiệp công nghệ cao hoặc vận tải",
-          "Môi trường đề cao tính thực tế, kỷ luật và kết quả có thể đo lường trực tiếp",
-          "Các công việc đòi hỏi sự khéo léo của đôi bàn tay và khả năng phối hợp vận động",
-          "Lập trình nhúng hoặc các công việc IT liên quan mật thiết đến phần cứng",
-          "Quản lý kho bãi, logictics và điều phối vật tư"
-        ], 
-        unsuitable: [
-          "Công việc mang tính trừu tượng cao, thiếu đi sự tương tác vật lý",
-          "Môi trường làm việc quá thiên về lý thuyết suông hoặc thủ tục hành chính rườm rà",
-          "Các lĩnh vực đòi hỏi sự tinh tế cực cao trong giao tiếp xã hội và ngoại giao",
-          "Môi trường thiếu đi sự vận động, yêu cầu ngồi một chỗ trong thời gian quá dài",
-          "Các công việc yêu cầu phải đối mặt với những thay đổi về cảm xúc liên tục của người khác",
-          "Lĩnh vực đòi hỏi sự sáng tạo nghệ thuật không có quy chuẩn hoặc mục đích thực tế"
-        ] 
-      },
-      investigative: { 
-        conclusion: "Bạn là người thám hiểm kiến thức với tư duy phân tích sắc bén. Bản sắc nghề nghiệp của bạn được xây dựng trên sự tò mò, khao khát tìm lời giải cho những câu hỏi hóc búa và niềm đam mê nghiên cứu chuyên sâu. Bạn tin vào bằng chứng khoa học và sức mạnh của trí tuệ. Bạn có khả năng tập trung cao độ vào những chi tiết mà người khác thường bỏ qua.", 
-        suitable: [
-          "Các vị trí nghiên cứu khoa học, phân tích dữ liệu và dự báo xu hướng",
-          "Môi trường làm việc độc lập, yên tĩnh và mang tính học thuật cao",
-          "Lĩnh vực công nghệ thông tin (đặc biệt là AI, Big Data), y tế chuyên sâu hoặc tài chính định lượng",
-          "Môi trường tôn trọng tư duy phản biện, logic và các quyết định dựa trên bằng chứng",
-          "Giải quyết các bài toán kỹ thuật phức tạp hoặc tối ưu hóa thuật toán",
-          "Viết lách chuyên môn, soạn thảo tài liệu kỹ thuật hoặc phản biện chính sách",
-          "Các công việc liên quan đến kiểm toán, điều tra hoặc giám định pháp y"
-        ], 
-        unsuitable: [
-          "Công việc lặp đi lặp lại một cách máy móc, thiếu tính thử thách trí tuệ",
-          "Môi trường làm việc quá coi trọng các mối quan hệ xã hội hơn là hiệu quả công việc",
-          "Các vị trí yêu cầu đưa ra quyết định dựa trên cảm tính hoặc sự bộc phát",
-          "Môi trường thiếu tài nguyên thông tin, dữ liệu hoặc các công cụ nghiên cứu cần thiết",
-          "Công việc yêu cầu kỹ năng bán hàng trực tiếp hoặc thuyết phục đám đông liên tục",
-          "Môi trường có quá nhiều tiếng ồn và sự xao nhãng gây mất tập trung"
-        ] 
-      },
-      artistic: { 
-        conclusion: "Bạn là người kiến tạo cảm hứng với tâm hồn tự do và đầy màu sắc. Bản sắc nghề nghiệp của bạn được xây dựng trên sự trực giác, trí tưởng tượng phong phú và nhu cầu mãnh liệt được thể hiện cái tôi cá nhân. Bạn tin vào cái đẹp và sức mạnh của sự đổi mới. Bạn không chấp nhận sự gò bó và luôn tìm cách phá vỡ những quy chuẩn cũ kỹ để tạo ra giá trị mới.", 
-        suitable: [
-          "Công việc sáng tạo nội dung, thiết kế đồ họa, thời trang hoặc kiến trúc",
-          "Môi trường làm việc linh hoạt, cho phép tự chủ về thời gian và không gian",
-          "Lĩnh vực truyền thông, marketing, giải trí hoặc tổ chức sự kiện sáng tạo",
-          "Môi trường khuyến khích sự khác biệt, cái tôi cá nhân và những ý tưởng đột phá",
-          "Phát triển sản phẩm mới, UI/UX design hoặc xây dựng thương hiệu",
-          "Viết lách nghệ thuật, kịch bản hoặc sản xuất âm nhạc/video",
-          "Các công việc tư vấn thẩm mỹ, trang trí nội thất hoặc phong cách sống"
-        ], 
-        unsuitable: [
-          "Công việc rập khuôn, tuân thủ nghiêm ngặt các quy tắc và quy trình hành chính",
-          "Môi trường làm việc cứng nhắc về giờ giấc và các báo cáo chi tiết vụn vặt",
-          "Các vị trí thiếu đi sự tự do trong suy nghĩ, hành động và phong cách cá nhân",
-          "Môi trường coi thường giá trị thẩm mỹ và sự cảm nhận tinh tế",
-          "Làm việc với các con số và dữ liệu khô khan mà không có sự liên hệ với hình ảnh/cảm xúc",
-          "Môi trường có tính phân cấp quân đội hoặc quá kỷ luật thép"
-        ] 
-      },
-      social: { 
-        conclusion: "Trái tim bạn luôn hướng về giá trị con người. Bản sắc nghề nghiệp của bạn được xây dựng trên sự thấu cảm, lòng trắc ẩn và khả năng kết nối tuyệt vời. Bạn là chất keo gắn kết mọi tổ chức, người luôn lắng nghe và tìm cách nâng đỡ người khác. Hạnh phúc của bạn gắn liền với sự tiến bộ và hạnh phúc của cộng đồng xung quanh.", 
-        suitable: [
-          "Công việc tương tác trực tiếp, tham vấn và hỗ trợ con người",
-          "Môi trường làm việc mang tính hợp tác, chia sẻ và tôn trọng lẫn nhau",
-          "Lĩnh vực giáo dục, đào tạo, tâm lý học, y tế hoặc dịch vụ khách hàng cao cấp",
-          "Môi trường đề cao các giá trị đạo đức, nhân văn và trách nhiệm xã hội",
-          "Quản trị nhân sự, xây dựng văn hóa doanh nghiệp hoặc điều phối cộng đồng",
-          "Các hoạt động thiện nguyện, phi lợi nhuận hoặc công tác xã hội",
-          "Vị trí hòa giải, đàm phán dựa trên sự thấu hiểu và kết nối lợi ích"
-        ], 
-        unsuitable: [
-          "Làm việc hoàn toàn độc lập with máy móc hoặc dữ liệu trong thời gian dài",
-          "Môi trường cạnh tranh khốc liệt, đặt lợi nhuận lên trên hết mà bất chấp giá trị con người",
-          "Công việc thiếu đi sự tương tác xã hội và ý nghĩa phục vụ cộng đồng",
-          "Môi trường làm việc lạnh lùng, thiếu sự đồng cảm và giao tiếp nội bộ",
-          "Các vị trí yêu cầu phải thực hiện những quyết định sa thải hoặc trừng phạt cứng nhắc",
-          "Công việc có tính chất cô lập, không có cơ hội được lắng nghe hoặc giúp đỡ người khác"
-        ] 
-      },
-      enterprising: { 
-        conclusion: "Bạn là nhà lãnh đạo đầy năng lượng với khả năng thuyết phục bẩm sinh. Bản sắc nghề nghiệp của bạn được xây dựng trên sự quyết đoán, tham vọng và tầm nhìn chiến lược. Bạn là người dẫn dắt, luôn khao khát đạt được thành tựu và tạo ra tầm ảnh hưởng rộng lớn. Bạn không sợ rủi ro nếu thấy được cơ hội để khẳng định giá trị bản thân.", 
-        suitable: [
-          "Các vị trí quản trị, điều hành, kinh doanh hoặc lãnh đạo dự án",
-          "Môi trường làm việc năng động, có tính thách thức và cạnh tranh cao",
-          "Lĩnh vực bán hàng, phát triển kinh doanh, chính trị hoặc khởi nghiệp (Startup)",
-          "Môi trường đề cao kết quả (KPI), quyền lực và sự công nhận xứng đáng",
-          "Đàm phán thương mại, thuyết trình trước đám đông và xây dựng mạng lưới quan hệ (Networking)",
-          "Quản trị rủi ro, đưa ra các quyết định chiến lược trong điều kiện không chắc chắn",
-          "Các vai trò đại sứ thương hiệu, người truyền cảm hứng hoặc diễn giả"
-        ], 
-        unsuitable: [
-          "Công việc mang tính hỗ trợ âm thầm, thiếu đi sự nổi bật và ghi nhận cá nhân",
-          "Môi trường làm việc chậm chạp, thiếu tính chiến đấu và cơ hội thăng tiến",
-          "Các công việc yêu cầu sự kiên nhẫn tỉ mỉ với dữ liệu khô khan mà không có quyền quyết định",
-          "Môi trường thiếu đi không gian để khẳng định tầm ảnh hưởng và uy tín",
-          "Công việc lặp lại hằng ngày mà không có mục tiêu chinh phục rõ ràng",
-          "Làm việc dưới quyền những người thiếu tầm nhìn hoặc quá kiểm soát chi tiết (Micromanagement)"
-        ] 
-      },
-      conventional: { 
-        conclusion: "Bạn là kiến trúc sư của sự ổn định, chính xác và trật tự. Bản sắc nghề nghiệp của bạn được xây dựng trên sự cẩn trọng, khả năng tổ chức tuyệt vời và tinh thần trách nhiệm cao. Bạn là người đảm bảo cho mọi hệ thống vận hành trơn tru và hiệu quả nhất. Bạn tìm thấy sự an tâm trong những quy trình rõ ràng và dữ liệu chuẩn xác.", 
-        suitable: [
-          "Công việc quản lý dữ liệu, kiểm toán, tài chính và nghiệp vụ hành chính",
-          "Môi trường làm việc có cấu trúc rõ ràng, kỷ luật và quy chuẩn cao",
-          "Lĩnh vực kế toán, ngân hàng, lưu trữ hoặc quản trị quy trình doanh nghiệp",
-          "Môi trường tôn trọng sự chuẩn mực, tính minh bạch và bảo mật thông tin",
-          "Lập kế hoạch chi tiết, điều phối lịch trình và theo dõi tiến độ dự án",
-          "Kiểm soát chất lượng (QA/QC), quản lý rủi ro pháp lý hoặc tuân thủ",
-          "Các công việc yêu cầu sự tập trung cao độ vào tính chính xác của các con số"
-        ], 
-        unsuitable: [
-          "Công việc thiếu tính tổ chức, lộn xộn, mơ hồ và không có hướng dẫn rõ ràng",
-          "Môi trường làm việc quá biến động, thay đổi kế hoạch liên tục mà không báo trước",
-          "Các vị trí yêu cầu sự sáng tạo ngẫu hứng, mạo hiểm và phá vỡ quy tắc",
-          "Môi trường coi nhẹ các quy định, tính kỷ luật và sự ngăn nắp",
-          "Lĩnh vực đòi hỏi phải đưa ra các quyết định dựa trên trực giác mơ hồ",
-          "Môi trường làm việc đòi hỏi sự bay bổng nghệ thuật quá mức mà thiếu tính thực tiễn"
-        ] 
-      }
-    };
-
-    function renderPage() {
-      // Check for saved results first
-      const savedAnswers = localStorage.getItem('kareer_answers');
-      if (savedAnswers) {
-        try {
-          answers = JSON.parse(savedAnswers);
-          if (answers.length === 35 && !answers.includes(null)) {
-            showResult();
-            return;
-          }
-        } catch (e) {
-          console.error("Error loading saved answers:", e);
+    // Initialize results if we're on results mode
+    const checkResult = () => {
+        if(localStorage.getItem('kareer_result')) {
+            document.getElementById('main-nav-tabs').style.display = 'flex';
         }
-      }
-
-      const area = document.getElementById('questionArea');
-      const names = { 1: "KHÔNG ĐÚNG", 2: "ÍT ĐÚNG", 3: "BÌNH THƯỜNG", 4: "KHÁ ĐÚNG", 5: "RẤT ĐÚNG" };
-      let html = `<div class="scale-header">${['KHÔNG ĐÚNG', 'ÍT ĐÚNG', 'BÌNH THƯỜNG', 'KHÁ ĐÚNG', 'RẤT ĐÚNG'].map(l => `<div class="scale-label">${l.split(' ').map(s => `<span>${s}</span>`).join('')}</div>`).join('')}</div><div class="questions-list">`;
-      questions.forEach((q, i) => {
-        html += `<div class="q-item" id="q-${i}"><div class="q-text">${q.text}</div><div class="options-row">${[1, 2, 3, 4, 5].map(s => `<label class="opt-label" data-tooltip="${names[s]}"><input type="radio" name="q-${i}" value="${s}" ${answers[i] === s ? 'checked' : ''} onchange="saveAns(${i}, ${s})"><div class="mobile-label" style="display:none;">${names[s]}</div><div class="opt-circle"></div></label>`).join('')}</div></div>`;
-      });
-      area.innerHTML = html + `</div>`;
-    }
-
-    let answers = new Array(35).fill(null);
-
-    function saveAns(i, s) { answers[i] = s; document.getElementById(`q-${i}`).classList.add('answered'); updateProgress(); }
-    function updateProgress() { document.getElementById('progressFill').style.width = (answers.filter(a => a !== null).length / 35 * 100) + '%'; }
-
-    function goNext() {
-      const missing = answers.map((a, i) => a === null ? i : -1).filter(i => i !== -1);
-      if (missing.length > 0) {
-        showToast(`Bạn còn ${missing.length} câu chưa làm`);
-        const first = document.getElementById(`q-${missing[0]}`);
-        if (first) { first.scrollIntoView({ behavior: 'smooth', block: 'center' }); first.classList.add('error'); setTimeout(() => first.classList.remove('error'), 800); }
-        return;
-      }
-      showResult();
-    }
-
-    function showResult() {
-      try {
-        const a = answers;
-        localStorage.setItem('kareer_answers', JSON.stringify(a));
-
-        const scoreModel = (items) => {
-          let raw = 0, max = 0;
-          items.forEach(it => { raw += (it.w > 0 ? a[it.qi] : (6 - a[it.qi])); max += 5; });
-          return Math.round((raw / max) * 100);
-        };
-        const getLv = (pct) => {
-          if (pct >= 70) return { text: 'Cao', class: 'val-vhigh', pct };
-          if (pct >= 40) return { text: 'Trung bình', class: 'val-med', pct };
-          return { text: 'Thấp', class: 'val-low', pct };
-        };
-
-        const riasec = {
-          realistic: getLv(scoreModel([{ qi: 12, w: 1 }, { qi: 13, w: 1 }])),
-          investigative: getLv(scoreModel([{ qi: 14, w: 1 }, { qi: 15, w: 1 }, { qi: 16, w: 1 }, { qi: 1, w: 1 }])),
-          artistic: getLv(scoreModel([{ qi: 0, w: 1 }, { qi: 1, w: 1 }, { qi: 2, w: 1 }, { qi: 17, w: 1 }, { qi: 25, w: 1 }, { qi: 27, w: 1 }])),
-          social: getLv(scoreModel([{ qi: 9, w: 1 }, { qi: 10, w: 1 }, { qi: 11, w: 1 }, { qi: 21, w: 1 }, { qi: 24, w: 1 }])),
-          enterprising: getLv(scoreModel([{ qi: 3, w: 1 }, { qi: 4, w: 1 }, { qi: 5, w: 1 }, { qi: 18, w: 1 }, { qi: 32, w: 1 }])),
-          conventional: getLv(scoreModel([{ qi: 6, w: 1 }, { qi: 7, w: 1 }, { qi: 8, w: 1 }, { qi: 19, w: 1 }, { qi: 20, w: 1 }]))
-        };
-
-        const bigFive = {
-          openness: getLv(scoreModel([{ qi: 0, w: 1 }, { qi: 1, w: 1 }, { qi: 2, w: 1 }, { qi: 15, w: 1 }, { qi: 25, w: 1 }])),
-          conscientiousness: getLv(scoreModel([{ qi: 6, w: 1 }, { qi: 7, w: 1 }, { qi: 8, w: 1 }, { qi: 33, w: 1 }])),
-          extraversion: getLv(scoreModel([{ qi: 3, w: 1 }, { qi: 5, w: 1 }, { qi: 22, w: 1 }, { qi: 32, w: 1 }])),
-          agreeableness: getLv(scoreModel([{ qi: 9, w: 1 }, { qi: 11, w: 1 }, { qi: 24, w: 1 }, { qi: 31, w: 1 }])),
-          neuroticism: getLv(scoreModel([{ qi: 23, w: 1 }]))
-        };
-
-        const schwartz = {
-          selfDirection: getLv(scoreModel([{ qi: 0, w: 1 }, { qi: 17, w: 1 }])),
-          stimulation: getLv(scoreModel([{ qi: 1, w: 1 }, { qi: 25, w: 1 }])),
-          hedonism: getLv(scoreModel([{ qi: 26, w: 1 }])),
-          achievement: getLv(scoreModel([{ qi: 4, w: 1 }, { qi: 18, w: 1 }])),
-          power: getLv(scoreModel([{ qi: 3, w: 1 }, { qi: 32, w: 1 }])),
-          security: getLv(scoreModel([{ qi: 6, w: 1 }, { qi: 19, w: 1 }])),
-          conformity: getLv(scoreModel([{ qi: 20, w: 1 }, { qi: 7, w: 1 }])),
-          tradition: getLv(scoreModel([{ qi: 20, w: 1 }])),
-          benevolence: getLv(scoreModel([{ qi: 9, w: 1 }, { qi: 24, w: 1 }])),
-          universalism: getLv(scoreModel([{ qi: 11, w: 1 }, { qi: 10, w: 1 }]))
-        };
-
-        const scores = {};
-        const counts = {};
-        questions.forEach((q, i) => {
-            scores[q.group] = (scores[q.group] || 0) + a[i];
-            counts[q.group] = (counts[q.group] || 0) + 1;
-        });
-        Object.keys(scores).forEach(group => { scores[group] = scores[group] / counts[group]; });
-
-        const riasecGroups = ['realistic', 'investigative', 'artistic', 'social', 'enterprising', 'conventional'];
-        const sorted = riasecGroups.sort((a, b) => (scores[b] || 0) - (scores[a] || 0));
-        const top = sorted[0], secondary = sorted[1] || top;
-
-        const quizResult = {
-          scores: scores, riasec: riasec, bigFive: bigFive, schwartz: schwartz,
-          sorted: sorted, topGroup: top, secondGroup: secondary, timestamp: new Date().toISOString()
-        };
-        localStorage.setItem('kareer_result', JSON.stringify(quizResult));
-        
-        // Save to backend if possible
-        if (typeof KareerAPI !== 'undefined') {
-            KareerAPI.saveAssessment(quizResult).catch(err => console.error('[KareerAPI] Failed to save assessment:', err));
-        }
-
-        const translations = {
-          realistic: "Thực tế", investigative: "Nghiên cứu", artistic: "Nghệ thuật", social: "Xã hội", enterprising: "Quản lý", conventional: "Nghiệp vụ",
-          openness: "Cởi mở", conscientiousness: "Tận tâm", extraversion: "Hướng ngoại", agreeableness: "Hòa đồng", neuroticism: "Nhạy cảm",
-          selfDirection: "Tự chủ", stimulation: "Đổi mới", hedonism: "Tận hưởng", achievement: "Thành tựu", power: "Quyền lực",
-          security: "An toàn", conformity: "Tuân thủ", tradition: "Truyền thống", benevolence: "Nhân ái", universalism: "Công bằng"
-        };
-
-        const generateModelNarrative = (modelName, data) => {
-          const s = Object.entries(data).sort((a,b) => b[1].pct - a[1].pct);
-          const t = s[0], sc = s[1], l = s[s.length-1];
-          let p = "";
-          if (modelName === "RIASEC") {
-            p = `Dựa trên phân tích mô hình RIASEC, bạn thể hiện một bản sắc nghề nghiệp vô cùng độc đáo và rõ nét. Điểm số cao nhất ở nhóm ${translations[t[0]]} cho thấy bạn là người luôn ưu tiên ${t[0]==='realistic'?'hành động thực tế':t[0]==='investigative'?'tư duy phân tích':t[0]==='artistic'?'sự sáng tạo':t[0]==='social'?'sự kết nối con người':t[0]==='enterprising'?'khát vọng lãnh đạo':'tính quy trình'} trong mọi công việc. Sự kết hợp với nhóm ${translations[sc[0]]} tạo nên một thế mạnh kép, giúp bạn không chỉ giỏi chuyên môn mà còn có khả năng thích nghi tốt với các môi trường làm việc hiện đại. Bạn thường có xu hướng tìm kiếm những thử thách đòi hỏi sự vận dụng linh hoạt của trí tuệ và kỹ năng cá nhân. Trong các dự án nhóm, bạn đóng vai trò là người ${t[0]==='social'?'gắn kết':'định hướng'} và luôn nỗ lực vì mục tiêu chung. Tuy nhiên, mức độ thấp ở nhóm ${translations[l[0]]} gợi ý rằng bạn có thể cảm thấy không thoải mái trong các công việc quá ${l[0]==='conventional'?'gò bó':l[0]==='artistic'?'tự do':l[0]==='realistic'?'nặng về kỹ thuật':'cạnh tranh'}. Điều này hoàn toàn bình thường và giúp bạn định vị rõ hơn những gì mình thực sự đam mê. Bạn nên tập trung vào những lĩnh vực cho phép mình phát huy tối đa sở trường hiện có thay vì cố gắng bù đắp những điểm yếu không cần thiết. Khả năng tư duy của bạn là một tài sản quý giá cho bất kỳ tổ chức nào. Bạn cũng là người có cái nhìn khá sâu sắc về các xu hướng nghề nghiệp trong tương lai. Sự tự tin và quyết đoán sẽ là khóa mở ra những cánh cửa thành công mới cho bạn. Hãy tiếp tục nuôi dưỡng niềm đam mê và không ngừng học hỏi từ những trải nghiệm thực tế. Bạn có tiềm năng trở thành một chuyên gia xuất sắc trong lĩnh vực đã chọn. Đây là thời điểm tuyệt vời để bạn bắt đầu xây dựng lộ trình phát triển dài hạn cho bản thân.`;
-          } else if (modelName === "BIG FIVE") {
-            p = `Phân tích theo mô hình Big Five cung cấp một cái nhìn sâu sắc về cấu trúc nhân cách và hành vi của bạn trong cuộc sống. Đặc điểm nổi trội nhất là sự ${translations[t[0]]}, điều này phản ánh bạn là một cá nhân có ${t[0]==='openness'?'tầm nhìn rộng mở':t[0]==='conscientiousness'?'tinh thần trách nhiệm cao':t[0]==='extraversion'?'năng lượng dồi dào':t[0]==='agreeableness'?'tấm lòng nhân hậu':'sự nhạy cảm tinh tế'}. Khả năng ${translations[sc[0]]} của bạn cũng là một yếu tố quan trọng giúp bạn duy trì sự cân bằng và hiệu quả trong công việc. Bạn thường tiếp cận các vấn đề with một thái độ ${t[1].pct > 60 ? 'tích cực và chủ động' : 'cẩn trọng và thấu đáo'}. Trong các mối quan hệ xã hội, bạn luôn được đánh giá cao nhờ sự chân thành và khả năng thấu hiểu người khác. Việc bạn sở hữu chỉ số ${translations[l[0]]} ở mức thấp cho thấy bạn có xu hướng ${l[0]==='neuroticism'?'giữ được sự bình tĩnh':l[0]==='extraversion'?'thích sự yên tĩnh':l[0]==='openness'?'ưa chuộng sự ổn định':'quyết đoán trong quan điểm'}. Điều này giúp bạn tránh được những căng thẳng không đáng có và tập trung vào mục tiêu cốt lõi. Bạn là người có khả năng tự nhận thức cao và luôn nỗ lực hoàn thiện bản thân mỗi ngày. Sự kiên trì và bền bỉ sẽ giúp bạn vượt qua những rào cản tâm lý trong những giai đoạn khó khăn. Bạn cũng có khả năng truyền cảm hứng và tạo động lực cho những người xung quanh bằng chính lối sống của mình. Hãy chú ý dành thời gian để tái tạo năng lượng và chăm sóc sức khỏe tinh thần thường xuyên. Một tâm thế vững vàng sẽ là bệ phóng vững chắc cho sự nghiệp tương lai. Bạn có đầy đủ những tố chất cần thiết để trở thành một hình mẫu tích cực trong cộng đồng. Đừng ngần ngại bước ra khỏi vùng an toàn để khám phá những giới hạn mới của bản thân. Tương lai đang rộng mở với những cơ hội mà bạn hoàn toàn có thể nắm bắt.`;
-          } else {
-            p = `Hệ thống giá trị Schwartz tiết lộ những động cơ ngầm định và lý tưởng sống mà bạn hằng theo đuổi. Việc bạn đặt giá trị ${translations[t[0]]} lên hàng đầu chứng tỏ bạn là người luôn hướng tới ${t[0]==='universalism'?'sự công bằng và lợi ích cộng đồng':t[0]==='benevolence'?'sự tử tế và lòng nhân ái':t[0]==='security'?'sự ổn định và an toàn':t[0]==='tradition'?'những giá trị chuẩn mực truyền thống':'sự tự do và tự chủ'}. Sự kết hợp với giá trị ${translations[sc[0]]} tạo nên một nền tảng đạo đức vững chắc cho mọi quyết định của bạn. Bạn không chỉ quan tâm đến lợi ích cá nhân mà còn luôn trăn trở về những giá trị bền vững cho xã hội. Trong môi trường làm việc, bạn là người luôn đề cao sự ${t[0]==='universalism'?'minh bạch':'trung thực'} và tinh thần trách nhiệm. Khả năng cân đối giữa cái tôi và tập thể giúp bạn nhận được sự tin tưởng tuyệt đối từ đồng nghiệp. Tuy nhiên, việc coi nhẹ giá trị ${translations[l[0]]} có thể khiến bạn đôi khi thiếu đi sự ${l[0]==='security'?'thận trọng':l[0]==='tradition'?'kỷ luật':'mạo hiểm'} cần thiết. Điều này nhắc nhở bạn cần có cái nhìn đa chiều hơn trước những bước ngoặt quan trọng của cuộc đời. Bạn là một mảnh ghép quan trọng trong việc xây dựng một văn hóa tổ chức lành mạnh và nhân văn. Sự nhất quán giữa suy nghĩ và hành động là thế mạnh lớn nhất giúp bạn khẳng định uy tín cá nhân. Bạn cũng là người có khả năng thích nghi nhanh với những thay đổi về mặt đạo đức và xã hội. Hãy luôn giữ vững niềm tin vào những giá trị tốt đẹp mà mình đang theo đuổi. Sự kiên định với lý tưởng sẽ mang lại cho bạn cảm giác hạnh phúc và thành đạt thực sự. Bạn có khả năng đóng góp tích cực vào sự phát triển chung của nhân loại bằng chính những lựa chọn hàng ngày. Đây chính là kim chỉ nam giúp bạn không bao giờ lạc lối trên hành trình sự nghiệp. Hãy tự hào về hệ giá trị nhân văn mà mình đang sở hữu.`;
-          }
-          return `
-            <div class="model-summary-box">
-              <button class="btn-toggle-narrative" onclick="toggleNarrative(this)">Xem nhận xét chi tiết</button>
-              <div class="narrative-content" style="display: none; margin-top: 20px;">
-                <h4 style="margin-bottom:15px; font-weight:900; color:#111;">NHẬN XÉT CHI TIẾT</h4>
-                <p style="line-height:1.8; color:#333; text-align:justify; font-size:1.05rem;">${p}</p>
-              </div>
-            </div>`;
-        };
-
-        const renderSection = (title, data, descKey) => {
-          const modelTitle = title.replace("Mô hình ", "");
-          return `
-            <div class="theory-section">
-              <div class="theory-section-hdr"><span>${title}</span></div>
-              <div class="dim-list">
-                ${Object.entries(data).map(([key, val]) => {
-                  const descIdx = val.pct >= 70 ? 2 : (val.pct >= 40 ? 1 : 0);
-                  const desc = dimDesc[descKey][key][descIdx];
-                  const vnName = translations[key] || "";
-                  return `<div class="dim-item"><div class="dim-item-top"><span class="dim-label">${key.toUpperCase()} <span style="font-weight: 400; opacity: 0.7;">(${vnName})</span></span><span class="dim-badge ${val.class}">${val.text} (${val.pct}%)</span></div><div class="dim-bar-track"><div class="dim-bar-fill" style="width: ${val.pct}%"></div></div><p class="dim-desc">${desc}</p></div>`;
-                }).join('')}
-              </div>
-              ${generateModelNarrative(modelTitle, data)}
-            </div>`;
-        };
-
-        const generateFullIdentityNarrative = (top, secondary, riasec, bigFive, schwartz) => {
-          const intros = {
-            realistic: "Bạn là một cá nhân có bản sắc cốt lõi gắn liền với tính thực tiễn, sự bền bỉ và tinh thần hành động mãnh liệt.",
-            investigative: "Bản sắc cốt lõi của bạn được định hình bởi sự tò mò vô hạn và khao khát khám phá những tri thức sâu sắc nhất của thế giới.",
-            artistic: "Bạn sở hữu một bản sắc nghệ thuật độc đáo, nơi sự tự do sáng tạo và nhu cầu đổi mới luôn là kim chỉ nam cho mọi hành động.",
-            social: "Giá trị cốt lõi của bạn nằm ở sự thấu cảm sâu sắc và mong muốn chân thành được mang lại tác động tích cực cho cuộc sống của con người.",
-            enterprising: "Bạn là một cá nhân mạnh mẽ với bản sắc của một nhà lãnh đạo, luôn tràn đầy năng lượng và khát khao chinh phục những đỉnh cao mới.",
-            conventional: "Bản sắc nghề nghiệp của bạn gắn liền with tính trật tự, sự chính xác tuyệt đối và khả năng duy trì sự ổn định cho mọi hệ thống."
-          };
-          const workStyles = {
-            realistic: "Điểm mạnh của bạn nằm ở khả năng vận hành kỹ thuật và giải quyết các vấn đề hữu hình một cách hiệu quả nhất. Cách bạn tiếp cận công việc luôn đi thẳng vào thực tế, ưu tiên những giải pháp có thể đo lường và thực hiện ngay lập tức bằng đôi tay và khối óc của mình.",
-            investigative: "Kỹ năng tự nhiên của bạn là tư duy logic và khả năng bóc tách các hệ thống phức tạp thành những mảnh ghép có thể hiểu được. Bạn giải quyết vấn đề bằng sự kiên nhẫn, dựa trên bằng chứng và không bao giờ chấp nhận những kết luận thiếu căn cứ khoa học.",
-            artistic: "Phong cách làm việc của bạn mang đậm tính trực giác, luôn tìm kiếm những góc nhìn mới lạ mà người khác thường bỏ qua. Bạn đối mặt với thử thách bằng sự linh hoạt, coi mỗi vấn đề là một cơ hội để thể hiện bản sắc cá nhân và tạo ra những giá trị thẩm mỹ mới.",
-            social: "Bạn có kỹ năng giao tiếp và lắng nghe tuyệt vời, tạo ra sự tin tưởng tự nhiên với những người xung quanh. Phong cách làm việc của bạn thiên về sự hỗ trợ và kết nối, luôn nỗ lực tìm kiếm sự đồng thuận và tạo ra môi trường làm việc hài hòa cho tất cả mọi người.",
-            enterprising: "Cách bạn tiếp cận công việc là sự chủ động tấn công, tập trung vào mục tiêu cuối cùng và không ngần ngại đối mặt với rủi ro. Bạn có khả năng dẫn dắt nhóm, truyền cảm hứng và thuyết phục mọi người tin tưởng vào tầm nhìn chiến lược mà bạn đã đề ra.",
-            conventional: "Bạn tiếp cận công việc một cách có hệ thống, luôn đảm bảo mọi chi tiết nhỏ nhất đều được kiểm soát và tối ưu hóa theo quy chuẩn. Kỹ năng tổ chức và tinh thần trách nhiệm giúp bạn luôn hoàn thành công việc một cách hoàn hảo, đáng tin cậy trong mọi tình huống."
-          };
-          const motivations = {
-            realistic: "Động cơ sâu xa của bạn là sự an toàn và tính thực dụng, bạn tin tưởng vào giá trị của lao động cụ thể và những thành quả có thể chạm vào được. Bạn tìm thấy ý nghĩa khi biến những ý tưởng trên giấy thành những sản phẩm thực tế phục vụ đời sống.",
-            investigative: "Bạn tin vào sức mạnh của trí tuệ và lấy sự khám phá chân lý làm mục đích lớn nhất để phấn đấu. Động lực của bạn không đến từ phần thưởng bên ngoài mà từ niềm vui khi hiểu rõ bản chất của vạn vật và giải quyết được những bài toán hóc búa.",
-            artistic: "Sự tự do và đổi mới là những điều bạn tin tưởng tuyệt đối. Bạn coi việc được thể hiện cái tôi cá nhân thông qua công việc là mục đích sống cao nhất, luôn khao khát được phá vỡ những rào cản cũ kỹ để kiến tạo nên những điều chưa từng có.",
-            social: "Mục đích sâu xa của bạn là giúp đỡ người khác và kiến tạo một cộng đồng nhân văn, công bằng hơn. Bạn lấy sự hạnh phúc và tiến bộ của người khác làm động lực để làm việc mỗi ngày, tin rằng mỗi cá nhân đều có trách nhiệm với tập thể.",
-            enterprising: "Bạn khao khát tầm ảnh hưởng và sự thành đạt, lấy sự công nhận và những thành tựu thực tế làm thước đo giá trị bản thân. Động lực của bạn là được đứng ở vị trí dẫn đầu, kiến tạo nên những thay đổi lớn lao và có sức lan tỏa rộng khắp.",
-            conventional: "Bạn tin vào sự chuẩn mực, tính kỷ luật và truyền thống. Bạn lấy việc duy trì sự ổn định, minh bạch và hiệu quả làm nền tảng cho sự nghiệp, tin rằng một hệ thống tốt là chìa khóa cho mọi sự phát triển bền vững."
-          };
-          const environments = {
-            realistic: "Bạn yêu thích những môi trường có cấu trúc rõ ràng, nơi bạn có thể làm việc độc lập hoặc tương tác trực tiếp with máy móc và công nghệ. Một không gian làm việc ngoài trời hoặc thực địa luôn khiến bạn cảm thấy tràn đầy năng lượng hơn là ngồi trong văn phòng.",
-            investigative: "Môi trường làm việc lý tưởng của bạn là không gian học thuật, phòng thí nghiệm hoặc những nơi mang tính nghiên cứu cao. Bạn cần một nơi yên tĩnh để tập trung sâu, nơi ý kiến chuyên môn của bạn được tôn trọng và bạn có đủ dữ liệu để làm việc.",
-            artistic: "Bạn cần một không gian làm việc linh hoạt, sáng tạo và không bị gò bó bởi những quy định hành chính cứng nhắc. Môi trường lý tưởng là nơi khuyến khích sự khác biệt, cho phép bạn tự do quản lý thời gian và phong cách thực hiện dự án của riêng mình.",
-            social: "Làm việc nhóm và tương tác trực tiếp with con người là nơi bạn tỏa sáng nhất. Bạn phù hợp with những môi trường đề cao sự chia sẻ, cộng tác và có mục tiêu hướng tới cộng đồng hoặc chăm sóc khách hàng một cách tận tâm.",
-            enterprising: "Bạn thuộc về những môi trường năng động, có tính cạnh tranh cao và cho phép bạn nắm quyền quyết định. Những nơi có lộ trình thăng tiến rõ ràng, đòi hỏi sự linh hoạt trong giao tiếp và khả năng chớp lấy cơ hội kinh doanh là nơi bạn thành công nhất.",
-            conventional: "Bạn phù hợp nhất with những môi trường chuyên nghiệp, ngăn nắp và có quy trình làm việc chuẩn mực. Một tổ chức coi trọng tính kỷ luật, sự chính xác trong số liệu và có hệ thống phân cấp rõ ràng sẽ giúp bạn phát huy tối đa năng lực quản trị."
-          };
-          const futures = {
-            realistic: "Trong tương lai, bạn sẽ đóng góp giá trị thông qua việc tạo ra các sản phẩm bền vững và các hệ thống vận hành thực tế. Mục tiêu dài hạn của bạn là trở thành một bậc thầy trong lĩnh vực kỹ thuật, người luôn đảm bảo mọi thứ được vận hành một cách hoàn hảo nhất.",
-            investigative: "Bạn có tiềm năng trở thành một chuyên gia tư vấn hoặc nhà nghiên cứu đầu ngành, người mang lại những giải pháp đột phá cho xã hội. Mục tiêu dài hạn của bạn là đóng góp những kiến thức giá trị, giúp nhân loại hiểu sâu hơn về những lĩnh vực phức tạp.",
-            artistic: "Mục tiêu dài hạn của bạn là để lại những dấu ấn sáng tạo riêng biệt trong ngành công nghiệp của mình. Bạn sẽ đóng góp giá trị bằng cách không ngừng đổi mới thẩm mỹ và tư duy, trở thành người dẫn dắt xu hướng và truyền cảm hứng cho thế hệ tiếp theo.",
-            social: "Bạn sẽ là người kiến tạo các giá trị xã hội bền vững, nâng cao chất lượng cuộc sống cho những người yếu thế. Mục tiêu dài hạn của bạn là xây dựng nên những tổ chức hoặc chương trình có sức lan tỏa nhân văn, để lại một di sản về tình yêu thương.",
-            enterprising: "Hướng phát triển của bạn là trở thành nhà lãnh đạo chiến lược hoặc chủ doanh nghiệp thành đạt. Bạn sẽ tạo ra giá trị bằng cách xây dựng những hệ thống kinh doanh mạnh mẽ, tạo ra việc làm và dẫn dắt tổ chức vươn ra tầm quốc tế.",
-            conventional: "Bạn sẽ là người bảo vệ sự thịnh vượng bền vững cho tổ chức thông qua khả năng quản trị tài chính và quy trình xuất sắc. Mục tiêu dài hạn của bạn là xây dựng những bộ máy vận hành hoàn hảo, là chỗ dựa tin cậy cho mọi sự phát triển lâu dài."
-          };
-          return `${intros[top]} ${workStyles[top]} ${motivations[top]} ${environments[top]} ${futures[top]}`;
-        };
-
-        document.getElementById('resultBody').innerHTML = `
-          <div class="theory-box">
-            <h2 class="theory-title">PHÂN TÍCH THEO MÔ HÌNH KHOA HỌC</h2>
-            ${renderSection("Mô hình RIASEC", riasec, "riasec")}
-            ${renderSection("Mô hình BIG FIVE", bigFive, "bigFive")}
-            ${renderSection("Mô hình SCHWARTZ", schwartz, "schwartz")}
-          </div>
-
-          <div class="recommendation-box">
-            <h2 class="theory-title" style="border-bottom:3px solid #000;">KẾT LUẬN & KHUYẾN NGHỊ</h2>
-            <div style="margin-bottom: 30px;">
-              <h3 style="font-weight: 900; text-transform: uppercase; margin-bottom: 15px; font-size: 1.1rem;">Bản sắc nghề nghiệp của bạn</h3>
-              <p style="font-size: 1.05rem; line-height: 1.8; color: #333; text-align: justify;">${generateFullIdentityNarrative(top, secondary, riasec, bigFive, schwartz)}</p>
-            </div>
-            <div class="rec-grid">
-              <div class="rec-item rec-suitable">
-                <div class="rec-title" style="color: #2e7d32;"><span>✅ PHÙ HỢP NHẤT VỚI</span></div>
-                <ul class="insight-list">${conclusionData[top].suitable.map(it => `<li style="color: #333;">${it}</li>`).join('')}</ul>
-              </div>
-              <div class="rec-item rec-unsuitable">
-                <div class="rec-title" style="color: #c62828;"><span>❌ KHÔNG PHÙ HỢP VỚI</span></div>
-                <ul class="insight-list">${conclusionData[top].unsuitable.map(it => `<li style="color: #333;">${it}</li>`).join('')}</ul>
-              </div>
-            </div>
-          </div>
-
-          <div class="result-actions" style="display: flex; justify-content: space-between; align-items: center; margin-top: 40px; width: 100%;">
-            <button class="btn btn-ghost" onclick="retakeTest()">Làm lại</button>
-            <button class="btn btn-primary" style="background: #111; color: white;" onclick="window.location.href='step3.html'">Khám phá ma trận nghề nghiệp</button>
-          </div>`;
-
-        document.getElementById('hdrBlock').style.display = 'none';
-        document.getElementById('questionArea').style.display = 'none';
-        document.getElementById('quizFooter').style.display = 'none';
-        document.getElementById('progressShell').style.display = 'none';
-        document.getElementById('resultScreen').style.display = 'block';
-        
-        const navTabs = document.getElementById('main-nav-tabs');
-        if (navTabs) navTabs.style.display = 'flex';
-        const quizContainer = document.querySelector('.quiz-container');
-        if (quizContainer) quizContainer.style.marginTop = '160px';
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      } catch (err) { console.error(err); showToast("Có lỗi xảy ra. Vui lòng thử lại."); }
-    }
-
-    function retakeTest() {
-      if (confirm("Bạn có chắc chắn muốn làm lại bài test? Kết quả hiện tại sẽ bị xóa.")) {
-        localStorage.removeItem('kareer_answers');
-        location.reload();
-      }
-    }
-
-    function showToast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 3000); }
-    function toggleNarrative(btn) {
-      btn.classList.toggle('active');
-      const content = btn.nextElementSibling;
-      const isHidden = content.style.display === 'none' || content.style.display === '';
-      content.style.display = isHidden ? 'block' : 'none';
-      btn.innerHTML = isHidden ? 'Ẩn bớt' : 'Xem nhận xét chi tiết';
-    }
-
-    renderPage();
+    };
+    window.addEventListener('storage', checkResult);
+    checkResult();
   </script>
 </body>
 

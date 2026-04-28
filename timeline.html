@@ -264,13 +264,30 @@
             .tab-item { padding: 0.6rem 1rem; font-size: 0.7rem; }
             .detail-card { padding: 1.5rem; }
         }
+
+        .main-logo {
+            height: 55px;
+            width: auto;
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .main-header {
+                left: 50%;
+                transform: translateX(-50%);
+                top: 0.5rem;
+            }
+            .main-logo {
+                height: 35px;
+            }
+        }
     </style>
 </head>
 <body>
     <header class="main-header" style="position: fixed; top: 1.5rem; left: 2rem; z-index: 9999;">
         <div class="logo-area">
             <a href="index.html">
-                <img src="KAREER.png" alt="Kareer Logo" style="height: 40px;">
+                <img src="KAREER.png" alt="Kareer Logo" class="main-logo">
             </a>
         </div>
     </header>
