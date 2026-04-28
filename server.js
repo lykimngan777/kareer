@@ -13,20 +13,36 @@ const { createClient } = require('@supabase/supabase-js');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// ── Supabase Client ──
-const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_ANON_KEY
-);
+// ── Supabase Client (Safe Initialization) ──
+let supabase;
+if (process.env.SUPABASE_URL && process.env.SUPABASE_ANON_KEY) {
+  supabase = createClient(
+    process.env.SUPABASE_URL,
+    process.env.SUPABASE_ANON_KEY
+  );
+} else {
+  console.warn('⚠️ WARNING: SUPABASE_URL or SUPABASE_ANON_KEY not set.');
+  // Mock supabase for preventing immediate crashes if env vars are missing
+  supabase = {
+    from: () => ({
+      select: () => ({ eq: () => ({ maybeSingle: () => Promise.resolve({ data: null, error: null }) }) }),
+      insert: () => ({ select: () => ({ single: () => Promise.resolve({ data: null, error: new Error('Database not configured') }) }) }),
+      update: () => ({ eq: () => ({ select: () => ({ single: () => Promise.resolve({ data: null, error: new Error('Database not configured') }) }) }) })
+    })
+  };
+}
 
 // ── Middleware ──
 app.use(cors());
 app.use(express.json({ limit: '1mb' }));
 
+// Serve static files from current directory
+app.use(express.static(__dirname));
+
 // Request logging
 app.use((req, res, next) => {
   const timestamp = new Date().toISOString().slice(11, 19);
-  console.log(`[${timestamp}] ${req.method} ${req.path}`);
+  console.log(`[\${timestamp}] \${req.method} \${req.path}`);
   next();
 });
 
@@ -59,7 +75,7 @@ app.post('/api/users', async (req, res) => {
       // If no email provided, generate a dummy one based on timestamp/random
       // This satisfies the UNIQUE NOT NULL constraint in DB without asking the user
       const anonId = Math.random().toString(36).substring(2, 10);
-      email = `anon_${Date.now()}_${anonId}@kareer.local`;
+      email = `anon_\${Date.now()}_\${anonId}@kareer.local`;
     }
 
     // Check if user already exists (upsert by email)
@@ -440,8 +456,8 @@ app.listen(PORT, () => {
   console.log('');
   console.log('═══════════════════════════════════════');
   console.log('  🚀 Kareer BACKEND');
-  console.log(`  📡 http://localhost:${PORT}`);
-  console.log(`  🗄️  Supabase: ${process.env.SUPABASE_URL}`);
+  console.log(`  📡 http://localhost:\${PORT}`);
+  console.log(`  🗄️  Supabase: \${process.env.SUPABASE_URL}`);
   console.log('═══════════════════════════════════════');
   console.log('');
   console.log('Endpoints:');
