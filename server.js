@@ -22,14 +22,21 @@ if (process.env.SUPABASE_URL && process.env.SUPABASE_ANON_KEY) {
   );
 } else {
   console.warn('⚠️ WARNING: SUPABASE_URL or SUPABASE_ANON_KEY not set.');
-  // Mock supabase for preventing immediate crashes if env vars are missing
-  supabase = {
-    from: () => ({
-      select: () => ({ eq: () => ({ maybeSingle: () => Promise.resolve({ data: null, error: null }) }) }),
-      insert: () => ({ select: () => ({ single: () => Promise.resolve({ data: null, error: new Error('Database not configured') }) }) }),
-      update: () => ({ eq: () => ({ select: () => ({ single: () => Promise.resolve({ data: null, error: new Error('Database not configured') }) }) }) })
-    })
-  };
+  // Robust mock to prevent runtime crashes
+  const mockQuery = () => ({
+    select: mockQuery,
+    from: mockQuery,
+    eq: mockQuery,
+    order: mockQuery,
+    limit: mockQuery,
+    range: mockQuery,
+    insert: mockQuery,
+    update: mockQuery,
+    single: () => Promise.resolve({ data: null, error: new Error('Database not configured') }),
+    maybeSingle: () => Promise.resolve({ data: null, error: null }),
+    then: (resolve) => resolve({ data: null, error: new Error('Database not configured'), count: 0 })
+  });
+  supabase = { from: mockQuery };
 }
 
 // ── Middleware ──
