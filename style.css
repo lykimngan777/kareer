@@ -29,18 +29,22 @@ body {
     font-family: var(--font-sans);
     min-height: 100vh;
     overflow-x: hidden;
-    overflow-y: hidden;
-    /* Locked initially */
+    overflow-y: auto;
     position: relative;
     -webkit-font-smoothing: antialiased;
-    
-    /* Hide scrollbar */
-    -ms-overflow-style: none;
-    scrollbar-width: none;
 }
 
 body::-webkit-scrollbar {
-    display: none;
+    width: 8px;
+}
+
+body::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+body::-webkit-scrollbar-thumb {
+    background: rgba(0,0,0,0.1);
+    border-radius: 10px;
 }
 
 /* Layout & Header */
@@ -841,89 +845,132 @@ body::-webkit-scrollbar {
     color: #999;
 }
 
-/* Showcase Section Styles */
-.showcase-section {
+/* Journey Section Styles (Vertical Flow) */
+.journey-section {
     padding: 100px 2rem;
-    background: rgba(255, 255, 255, 0.3);
+    background: transparent;
     position: relative;
     z-index: 5;
 }
 
-.showcase-container {
-    max-width: 1200px;
+.journey-container {
+    max-width: 1000px;
     margin: 0 auto;
 }
 
-.showcase-title {
+.journey-main-title {
     font-family: "Dancing Script", cursive;
-    font-size: 3.5rem;
-    margin-bottom: 4rem;
+    font-size: 4rem;
+    margin-bottom: 6rem;
     text-align: center;
     color: var(--text-primary);
     font-weight: 700;
 }
 
-.showcase-title span {
+.journey-main-title span {
     color: #000;
-    position: relative;
-    display: inline-block;
 }
 
-.showcase-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 4rem;
-}
-
-.showcase-item {
+.journey-steps {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 120px;
 }
 
-.showcase-image-wrapper {
+.journey-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+    opacity: 0;
+    transform: translateY(40px);
+    transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.journey-item.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.journey-info {
     position: relative;
-    border-radius: 20px;
-    overflow: hidden;
-    border: 3px solid #000;
-    box-shadow: 15px 15px 0px #ffde59;
-    transition: transform 0.4s ease;
-    aspect-ratio: 16/10;
-    background: #f0f0f0;
+    padding-left: 80px;
 }
 
-.showcase-image-wrapper img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-}
-
-.showcase-item:hover .showcase-image-wrapper {
-    transform: translate(-5px, -5px);
-    box-shadow: 20px 20px 0px #000;
-}
-
-.showcase-info h3 {
+.journey-number {
+    position: absolute;
+    left: 0;
+    top: -10px;
     font-family: var(--font-serif);
-    font-size: 1.8rem;
-    margin-bottom: 0.5rem;
+    font-size: 4rem;
+    color: rgba(0, 0, 0, 0.05);
+    font-weight: 900;
+    line-height: 1;
+}
+
+.journey-info h3 {
+    font-family: var(--font-serif);
+    font-size: 2.2rem;
+    margin-bottom: 1rem;
     font-weight: 700;
+    color: var(--text-primary);
 }
 
-.showcase-info p {
+.journey-info p {
     font-family: var(--font-sans);
-    font-size: 1rem;
+    font-size: 1.1rem;
     color: var(--text-secondary);
-    line-height: 1.6;
+    line-height: 1.7;
+    max-width: 700px;
 }
 
-@media (max-width: 900px) {
-    .showcase-grid {
-        grid-template-columns: 1fr;
-        gap: 3rem;
+.journey-frame {
+    width: 100%;
+    background: #fff;
+    border: 4px solid #000;
+    border-radius: 30px;
+    overflow: hidden;
+    box-shadow: 20px 20px 0px #ffde59;
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+.journey-frame img {
+    width: 100%;
+    height: auto;
+    display: block;
+    filter: grayscale(10%);
+    transition: filter 0.4s ease;
+}
+
+.journey-item:hover .journey-frame {
+    transform: translate(-10px, -10px);
+    box-shadow: 30px 30px 0px #000;
+}
+
+.journey-item:hover .journey-frame img {
+    filter: grayscale(0%);
+}
+
+@media (max-width: 768px) {
+    .journey-main-title {
+        font-size: 2.8rem;
+        margin-bottom: 4rem;
     }
-    .showcase-title {
-        font-size: 2.5rem;
+    .journey-info {
+        padding-left: 0;
+        text-align: center;
+    }
+    .journey-number {
+        position: relative;
+        display: block;
+        margin-bottom: 1rem;
+    }
+    .journey-info h3 {
+        font-size: 1.8rem;
+    }
+    .journey-steps {
+        gap: 80px;
+    }
+    .journey-frame {
+        box-shadow: 10px 10px 0px #ffde59;
     }
 }
