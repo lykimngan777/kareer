@@ -192,67 +192,6 @@
             background: #222;
         }
 
-        /* ─── COMPARISON TABLE STYLES ─── */
-        .comparison-section {
-            width: 100%;
-            margin-top: 5rem;
-            padding-top: 5rem;
-            border-top: 3px solid #eee;
-        }
-
-        .comparison-section h2 {
-            font-size: 2.5rem;
-            font-weight: 900;
-            text-align: center;
-            margin-bottom: 3rem;
-        }
-
-        .comparison-table-wrapper {
-            overflow-x: auto;
-            border: 3px solid #000;
-            border-radius: 24px;
-            background: #fff;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            text-align: left;
-        }
-
-        th, td {
-            padding: 1.5rem;
-            border: 1px solid #eee;
-            vertical-align: top;
-        }
-
-        th {
-            background: #f8f9fa;
-            font-weight: 800;
-            text-transform: uppercase;
-            font-size: 0.8rem;
-            letter-spacing: 1px;
-            color: #666;
-            width: 180px;
-        }
-
-        .role-th {
-            background: #000 !important;
-            color: #fff !important;
-            font-size: 1rem !important;
-            text-align: center;
-        }
-
-        .salary-tag {
-            display: inline-block;
-            background: var(--accent);
-            color: #000;
-            padding: 4px 12px;
-            border-radius: 6px;
-            font-weight: 800;
-            font-size: 0.9rem;
-        }
-
         @media (max-width: 992px) {
             .detail-grid { grid-template-columns: 1fr; }
             .timeline-header h1 { font-size: 2.5rem; }
@@ -313,16 +252,6 @@
         </div>
 
         <div id="details-container" style="width: 100%;"></div>
-
-        <!-- BẢNG SO SÁNH -->
-        <section class="comparison-section" id="comparison-section">
-            <h2>Bảng So Sánh Career Matrix</h2>
-            <div class="comparison-table-wrapper">
-                <table id="comparison-table">
-                    <!-- Dynamic comparison rows -->
-                </table>
-            </div>
-        </section>
     </div>
 
     <script>
@@ -450,53 +379,9 @@
                     </div>
                 </div>
             `;
-
-            renderComparisonTable(userScores);
         }
 
-        function renderComparisonTable(userScores) {
-            const table = document.getElementById('comparison-table');
-            const quizResult = JSON.parse(localStorage.getItem('kareer_result') || '{}');
-            const interests = JSON.parse(localStorage.getItem('kareer_profile') || '{}').interests || [];
-            
-            // Find top 3 recommended roles
-            let scoredRoles = careerDatabase.map(career => {
-                let score = 0;
-                (career.traits || []).forEach(t => score += (userScores[t.toLowerCase()] || 0));
-                interests.forEach(interest => { if (career.name.toLowerCase().includes(interest.toLowerCase())) score += 50; });
-                return { ...career, totalScore: score };
-            });
-            scoredRoles.sort((a, b) => b.totalScore - a.totalScore);
-            const top3 = scoredRoles.slice(0, 3);
 
-            let html = `
-                <tr>
-                    <th>Tiêu chí</th>
-                    ${top3.map(r => `<th class="role-th">${r.name}</th>`).join('')}
-                </tr>
-                <tr>
-                    <th>Mức độ phù hợp</th>
-                    ${top3.map(r => `<td style="text-align:center; font-weight:900; font-size:1.5rem; color:#000;">${Math.round(r.totalScore/5)}%</td>`).join('')}
-                </tr>
-                <tr>
-                    <th>Sứ mệnh</th>
-                    ${top3.map(r => `<td>${specializedData[r.name]?.mission || 'N/A'}</td>`).join('')}
-                </tr>
-                <tr>
-                    <th>Lương khởi điểm (VND)</th>
-                    ${top3.map(r => `<td><span class="salary-tag">${r.salary || '35.000.000+'}</span></td>`).join('')}
-                </tr>
-                <tr>
-                    <th>Kỹ năng then chốt</th>
-                    ${top3.map(r => `<td>${specializedData[r.name]?.requirements.itSkills || 'N/A'}</td>`).join('')}
-                </tr>
-                <tr>
-                    <th>KPIs quan trọng</th>
-                    ${top3.map(r => `<td>${(specializedData[r.name]?.kpis || []).join('<br>• ')}</td>`).join('')}
-                </tr>
-            `;
-            table.innerHTML = html;
-        }
 
         const roleFilter = document.getElementById('role-filter');
         if (roleFilter && careerList.length > 0) {
