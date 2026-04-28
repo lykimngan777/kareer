@@ -1,400 +1,165 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const quoteElement = document.getElementById('typewriter-quote');
+    const quoteText = document.getElementById('typewriter-quote');
+    const author = document.querySelector('.author');
+    const buttonWrapper = document.querySelector('.button-wrapper');
     const quoteIconTop = document.querySelector('.quote-icon-top');
     const quoteIconBottom = document.querySelector('.quote-icon-bottom');
-    const authorElement = document.querySelector('.author');
-    const buttonWrapper = document.querySelector('.button-wrapper');
     const ctaButton = document.getElementById('cta-button');
-    const featuresSection = document.getElementById('features');
-    const stepsSection = document.getElementById('steps');
-    const stepCards = document.querySelectorAll('.step-card');
+    const startBtn = document.getElementById('start-assessment');
+    const viewResultsBtn = document.getElementById('view-results-btn');
+    const restartBtn = document.getElementById('restart-assessment');
 
-    // Preparation
-    if (quoteElement) {
-        const textToType = quoteElement.getAttribute('data-text');
-        quoteElement.innerHTML = '';
+    // Typewriter effect
+    if (quoteText) {
+        const text = quoteText.getAttribute('data-text');
+        quoteText.innerHTML = '';
 
-        textToType.split(' ').forEach((word, index, array) => {
+        const words = text.split(' ');
+        words.forEach((word, wordIndex) => {
             const wordSpan = document.createElement('span');
             wordSpan.className = 'word';
-            word.split('').forEach(char => {
+
+            const chars = word.split('');
+            chars.forEach((char, charIndex) => {
                 const charSpan = document.createElement('span');
                 charSpan.className = 'char';
                 charSpan.textContent = char;
                 wordSpan.appendChild(charSpan);
             });
-            quoteElement.appendChild(wordSpan);
-            if (index < array.length - 1) {
-                const space = document.createElement('span');
-                space.className = 'char';
-                space.textContent = '\u00A0';
-                quoteElement.appendChild(space);
+
+            quoteText.appendChild(wordSpan);
+
+            // Add space between words
+            if (wordIndex < words.length - 1) {
+                const space = document.createTextNode(' ');
+                quoteText.appendChild(space);
             }
         });
 
-        const characters = quoteElement.querySelectorAll('.char');
-        let currentIndex = 0;
-        const typingSpeed = 30;
-        let typingTimeout;
-        let isSkipped = false;
-
-        function finishSequence() {
-            if (isSkipped) return;
-            
-            clearTimeout(typingTimeout);
-            isSkipped = true;
-            
-            // Show all characters
-            characters.forEach(char => char.classList.add('visible'));
-            currentIndex = characters.length;
-
-            // Trigger final animations
-            quoteIconBottom.classList.add('visible');
+        const allChars = document.querySelectorAll('.char');
+        allChars.forEach((char, index) => {
             setTimeout(() => {
-                authorElement.style.opacity = '1';
-                authorElement.style.transform = 'translateY(0)';
-
-                buttonWrapper.style.transition = 'all 1.2s cubic-bezier(0.16, 1, 0.3, 1)';
-                buttonWrapper.style.opacity = '1';
-                buttonWrapper.style.transform = 'translateY(0)';
-                buttonWrapper.style.flexDirection = 'column';
-                buttonWrapper.style.alignItems = 'center';
-
-                // Check for saved results to show the view results button
-                const savedResults = localStorage.getItem('kareer_answers');
-                const viewResultsBtn = document.getElementById('view-results-btn');
-                if (savedResults && viewResultsBtn) {
-                    viewResultsBtn.style.display = 'flex';
-                    viewResultsBtn.addEventListener('click', () => {
-                        window.location.href = 'step2.html';
-                    });
-                }
-
-                document.body.style.overflowY = 'auto';
-                if (featuresSection) {
-                    featuresSection.classList.add('visible');
-                }
-                if (stepsSection) {
-                    stepsSection.style.opacity = '1';
-                    stepsSection.style.transform = 'translateY(0)';
-                }
-            }, 600);
-        }
-
-        function drawText() {
-            if (isSkipped) return;
-            
-            if (currentIndex < characters.length) {
-                characters[currentIndex].classList.add('visible');
-                currentIndex++;
-                typingTimeout = setTimeout(drawText, charTypeDelay(characters[currentIndex - 1].textContent));
-            } else {
-                finishSequence();
-            }
-        }
-
-        function charTypeDelay(char) {
-            if (char === '\u00A0') return 80;
-            if (char === ',' || char === '.') return 200;
-            return typingSpeed + (Math.random() * 20);
-        }
-
-        // Skip on click
-        document.addEventListener('click', (e) => {
-            if (currentIndex < characters.length && !isSkipped) {
-                // Ensure we don't skip if clicking specific interactive elements if needed, 
-                // but usually for a hero section skipping is fine on any click.
-                finishSequence();
-            }
+                char.classList.add('visible');
+            }, 1000 + (index * 40));
         });
 
-        // Start Sequence
+        // Show icons, author and button after typewriter
         setTimeout(() => {
             quoteIconTop.classList.add('visible');
-            setTimeout(drawText, 800);
-        }, 400);
+            quoteIconBottom.classList.add('visible');
+            author.style.opacity = '1';
+            author.style.transform = 'translateY(0)';
+            buttonWrapper.style.opacity = '1';
+            buttonWrapper.style.transform = 'translateY(0)';
+        }, 1000 + (allChars.length * 40) + 500);
     }
 
-    // Mouse Tracking Effect
+    // Dynamic Background Gradient
     document.addEventListener('mousemove', (e) => {
         const x = (e.clientX / window.innerWidth) * 100;
         const y = (e.clientY / window.innerHeight) * 100;
         document.body.style.setProperty('--mouse-x', `${x}%`);
         document.body.style.setProperty('--mouse-y', `${y}%`);
-
-        const quoteWrapper = document.querySelector('.quote-wrapper');
-        if (quoteWrapper) {
-            const shiftX = (e.clientX / window.innerWidth - 0.5) * 10;
-            const shiftY = (e.clientY / window.innerHeight - 0.5) * 10;
-            quoteWrapper.style.transform = `translate(${shiftX}px, ${shiftY}px)`;
-        }
     });
 
-    // Step Cards Animation on Scroll
-    const cardObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.style.opacity = '1';
-                entry.target.style.transform = 'translateY(0)';
-            }
+    // Assessment Logic
+    const assessmentOverlay = document.getElementById('results-overlay'); // Using results overlay as placeholder for now
+    const closeBtn = document.querySelector('.btn-close');
+
+    function openAssessment() {
+        // For demonstration, we just show the results overlay
+        // In a real app, this would show the questionnaire
+        if (assessmentOverlay) {
+            assessmentOverlay.classList.add('active');
+            renderCharts();
+        }
+    }
+
+    // Check if results exist in localStorage
+    const savedResults = localStorage.getItem('kareer_result');
+    if (savedResults && viewResultsBtn) {
+        viewResultsBtn.style.display = 'flex';
+        viewResultsBtn.addEventListener('click', () => {
+            openAssessment();
         });
-    }, { threshold: 0.1 });
-
-    stepCards.forEach((card, index) => {
-        card.style.opacity = '0';
-        card.style.transform = 'translateY(30px)';
-        card.style.transition = `all 0.8s cubic-bezier(0.16, 1, 0.3, 1) ${index * 0.2}s`;
-        cardObserver.observe(card);
-    });
-
-    // Assessment Elements
-    const assessmentOverlay = document.getElementById('assessment-overlay');
-    const resultsOverlay = document.getElementById('results-overlay');
-    const startBtn = document.getElementById('start-assessment');
-    const closeBtn = document.getElementById('close-assessment');
-    const nextBtn = document.getElementById('next-btn') || document.getElementById('btn-submit-profile');
-    const restartBtn = document.getElementById('restart-assessment');
-
-    let userAnswers = {};
-
-    const builderCategories = [
-        { id: 'role', title: 'Vai trò', icon: '👤', type: 'choice', options: ['Học sinh', 'Sinh viên', 'Người đi làm'] },
-        { 
-            id: 'experience', 
-            title: 'Kinh nghiệm', 
-            icon: '🌱', 
-            type: 'tags',
-            suggestions: {
-                'Học sinh': ['Câu lạc bộ', 'Hoạt động tình nguyện', 'Ban cán sự lớp', 'Cuộc thi học thuật'],
-                'Sinh viên': ['Thực tập sinh', 'Làm thêm (Part-time)', 'Nghiên cứu khoa học', 'Dự án cá nhân', 'Trưởng nhóm CLB'],
-                'Người đi làm': ['Quản lý dự án', 'Chuyên viên chuyên môn', 'Làm việc tự do (Freelance)', 'Khởi nghiệp (Startup)', 'Đào tạo nhân sự']
-            }
-        },
-        { 
-            id: 'education', 
-            title: 'Học vấn', 
-            icon: '🎓', 
-            type: 'tags',
-            suggestions: {
-                'Học sinh': ['Tiểu học', 'Trung học cơ sở', 'Trung học phổ thông', 'IELTS/SAT'],
-                'Sinh viên': ['Đại học', 'Cao đẳng', 'Trung cấp', 'Nghề nghiệp sơ cấp', 'Khóa học online'],
-                'Người đi làm': ['Đại học', 'Thạc sĩ', 'Tiến sĩ', 'Chứng chỉ cao cấp', 'Đào tạo nội bộ']
-            }
-        },
-        { 
-            id: 'skills', 
-            title: 'Kỹ năng', 
-            icon: '💪', 
-            type: 'tags',
-            suggestions: {
-                'Học sinh': ['Tự học', 'Làm việc nhóm', 'Thuyết trình', 'Tin học cơ bản'],
-                'Sinh viên': ['Phân tích dữ liệu', 'Ngoại ngữ', 'Giao tiếp', 'Giải quyết vấn đề', 'Thiết kế cơ bản'],
-                'Người đi làm': ['Lãnh đạo', 'Tư duy chiến lược', 'Đàm phán', 'Quản trị thời gian', 'Chuyên môn sâu']
-            }
-        },
-        { 
-            id: 'interests', 
-            title: 'Sở thích', 
-            icon: '💕', 
-            type: 'tags',
-            suggestions: {
-                'Học sinh': ['Công nghệ', 'Nghệ thuật', 'Khoa học', 'Ngôn ngữ', 'Thể thao'],
-                'Sinh viên': ['Kinh doanh', 'Truyền thông', 'Tâm lý học', 'Môi trường', 'Tài chính'],
-                'Người đi làm': ['Đầu tư', 'Công nghệ mới', 'Phát triển bền vững', 'Giáo dục', 'Chăm sóc sức khỏe']
-            }
-        }
-    ];
-
-    const openAssessment = () => {
-        // Redirect to the new builder page instead of overlay
-        window.location.href = 'builder.html';
-    };
-
-    // Initialize Builder if on builder.html
-    const isBuilderPage = window.location.pathname.includes('builder.html');
-    
-    if (isBuilderPage) {
-        userAnswers = {
-            role: 'Sinh viên',
-            experience: [],
-            education: [],
-            skills: [],
-            interests: []
-        };
-        // Small delay to ensure DOM is ready
-        setTimeout(renderBuilder, 100);
     }
 
-    function renderBuilder() {
-        const container = document.getElementById('builder-categories');
+    function renderCharts() {
+        const results = JSON.parse(localStorage.getItem('kareer_result')) || {
+            riasec: { R: 85, I: 92, A: 78, S: 65, E: 70, C: 60 },
+            bigfive: { O: 88, C: 75, E: 62, A: 80, N: 40 },
+            schwartz: { SE: 90, CO: 70, TR: 60, BE: 85, UN: 92, SD: 88, ST: 65, HE: 75, AC: 82, PO: 55 }
+        };
+
+        renderBarChart('riasec-chart', results.riasec);
+        renderBarChart('bigfive-chart', results.bigfive);
+        renderBarChart('schwartz-chart', results.schwartz);
+    }
+
+    function renderBarChart(containerId, data) {
+        const container = document.getElementById(containerId);
         if (!container) return;
+        container.innerHTML = '';
 
-        container.innerHTML = builderCategories.map(cat => `
-            <div class="builder-category" id="cat-${cat.id}">
-                <div class="category-header">
-                    <span class="category-title">${cat.title}</span>
-                </div>
-                <div class="tags-container" id="tags-${cat.id}">
-                    ${renderTags(cat)}
-                    ${cat.type === 'choice' ? '' : `
-                        <button class="btn-add-tag" onclick="handleAddTag('${cat.id}')">
-                            Thêm ${cat.title.toLowerCase()} +
-                        </button>
-                    `}
-                </div>
-            </div>
-        `).join('');
+        const maxVal = Math.max(...Object.values(data));
 
-        updateAIStatement();
+        Object.entries(data).forEach(([key, value]) => {
+            const barWrapper = document.createElement('div');
+            barWrapper.className = 'chart-bar-wrapper';
+
+            const bar = document.createElement('div');
+            bar.className = 'chart-bar';
+            bar.style.height = '0%';
+
+            const label = document.createElement('div');
+            label.className = 'chart-bar-label';
+            label.textContent = key;
+
+            const valueLabel = document.createElement('div');
+            valueLabel.className = 'chart-bar-value';
+            valueLabel.textContent = value;
+
+            bar.appendChild(valueLabel);
+            barWrapper.appendChild(bar);
+            barWrapper.appendChild(label);
+            container.appendChild(barWrapper);
+
+            // Animate
+            setTimeout(() => {
+                bar.style.height = `${(value / maxVal) * 100}%`;
+            }, 100);
+        });
     }
 
-    function renderTags(cat) {
-        if (cat.type === 'choice') {
-            return `
-                <div class="select-wrapper">
-                    <select class="builder-select" onchange="handleChoice('${cat.id}', this.value)">
-                        ${cat.options.map(opt => `
-                            <option value="${opt}" ${userAnswers[cat.id] === opt ? 'selected' : ''}>${opt}</option>
-                        `).join('')}
-                    </select>
-                </div>
-            `;
-        }
-        const tags = userAnswers[cat.id] || [];
-        return tags.map((tag, i) => `
-            <div class="tag-item ${cat.id}-tag">
-                <span>${tag}</span>
-                <button class="btn-remove-tag" onclick="handleRemoveTag('${cat.id}', ${i})">×</button>
-            </div>
-        `).join('');
+    // AI Analysis Statement Generator (Dynamic placeholder)
+    const analysisText = document.getElementById('analysis-statement');
+    if (analysisText) {
+        const profile = JSON.parse(localStorage.getItem('kareer_profile')) || {};
+        const results = JSON.parse(localStorage.getItem('kareer_result')) || {};
+
+        generateAnalysisStatement(analysisText, profile, results);
     }
 
-    window.handleChoice = (catId, val) => {
-        userAnswers[catId] = val;
-        renderBuilder();
-    };
+    function generateAnalysisStatement(textEl, profile, results) {
+        const name = profile.name || "Bạn";
+        const role = profile.role || "Người dùng";
+        const interests = profile.interests || [];
 
-    window.handleRemoveTag = (catId, index) => {
-        userAnswers[catId].splice(index, 1);
-        renderBuilder();
-    };
-
-    let currentModalCategory = '';
-
-    window.handleAddTag = (catId) => {
-        currentModalCategory = catId;
-        const cat = builderCategories.find(c => c.id === catId);
-        const modal = document.getElementById('suggestions-modal');
-        const list = document.getElementById('suggestions-list');
-        const title = document.getElementById('modal-title');
-        const input = document.getElementById('custom-tag-input');
-
-        if (!modal || !list || !cat) return;
-
-        title.textContent = `Thêm ${cat.title}`;
-        input.value = '';
-        
-        const suggestions = cat.suggestions[userAnswers.role] || [];
-        list.innerHTML = suggestions.map(s => `
-            <button class="suggestion-btn" onclick="addTagFromSuggestion('${s}')">${s}</button>
-        `).join('');
-
-        modal.classList.add('active');
-        input.focus();
-    };
-
-    window.closeModal = () => {
-        const modal = document.getElementById('suggestions-modal');
-        if (modal) modal.classList.remove('active');
-    };
-
-    window.addTagFromSuggestion = (val) => {
-        if (!userAnswers[currentModalCategory].includes(val)) {
-            userAnswers[currentModalCategory].push(val);
-            renderBuilder();
-        }
-        closeModal();
-    };
-
-    window.addCustomTag = () => {
-        const input = document.getElementById('custom-tag-input');
-        const val = input ? input.value.trim() : '';
-        if (val) {
-            if (!userAnswers[currentModalCategory].includes(val)) {
-                userAnswers[currentModalCategory].push(val);
-                renderBuilder();
-            }
-        }
-        closeModal();
-    };
-
-    // Handle Enter key in custom input
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' && document.activeElement.id === 'custom-tag-input') {
-            addCustomTag();
-        }
-    });
-
-    window.initBuilder = () => {
-        const savedProfile = localStorage.getItem('kareer_profile');
-        if (savedProfile) {
-            try {
-                userAnswers = JSON.parse(savedProfile);
-            } catch (e) {
-                console.error("Error parsing saved profile", e);
-                resetUserAnswers();
-            }
-        } else {
-            resetUserAnswers();
-        }
-        renderBuilder();
-    };
-
-    function resetUserAnswers() {
-        userAnswers = {
-            role: 'Sinh viên',
-            experience: [],
-            education: [],
-            skills: [],
-            interests: []
-        };
-    }
-
-    function updateAIStatement() {
-        const textEl = document.getElementById('ai-statement-text');
-        if (!textEl) return;
-
-        const { role, experience, education, skills, interests } = userAnswers;
-        
-        if (experience.length === 0 && education.length === 0 && skills.length === 0 && interests.length === 0) {
-            textEl.textContent = "Hãy bắt đầu chia sẻ hành trình của bạn để Kareer giúp bạn phác họa bản sắc nghề nghiệp...";
-            return;
-        }
-
-        let intro = "";
+        let intro = `Chào ${name}, phân tích từ Kareer AI cho thấy bạn là một người có bản sắc độc đáo.`;
         let body = "";
         let future = "";
 
-        // 1. Introduction & Education
-        const eduStr = education.length > 0 ? education.join(', ') : "";
-        if (role === 'Học sinh') {
-            intro = `Tôi là một học sinh đầy hoài bão${eduStr ? ` với nền tảng từ ${eduStr}` : ""}, đang trên hành trình khám phá tiềm năng bản thân.`;
-        } else if (role === 'Sinh viên') {
-            intro = `Là một sinh viên ${eduStr ? `chuyên ngành ${eduStr}` : "đầy nhiệt huyết"}, tôi đang nỗ lực xây dựng nền tảng chuyên môn vững chắc để sẵn sàng bước vào thế giới nghề nghiệp.`;
-        } else {
-            intro = `Với tư cách là một nhân sự chuyên nghiệp${eduStr ? ` có nền tảng học vấn về ${eduStr}` : ""}, tôi luôn hướng tới việc tối ưu hóa giá trị bản thân trong môi trường làm việc.`;
+        // 1. RIASEC High points
+        if (results.riasec) {
+            const topTwo = Object.entries(results.riasec)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 2);
+            body = ` Với sự kết hợp mạnh mẽ giữa nhóm ${topTwo[0][0]} và ${topTwo[1][0]}, bạn sở hữu khả năng tư duy chiến lược cùng sự nhạy bén trong việc giải quyết vấn đề thực tế.`;
         }
 
-        // 2. Experience & Skills
-        const expStr = experience.length > 0 ? experience.join(', ') : "";
-        const skillStr = skills.length > 0 ? skills.join(', ') : "";
-
-        if (expStr && skillStr) {
-            body = `Thông qua những trải nghiệm thực tế trong ${expStr}, tôi đã rèn luyện và sở hữu thế mạnh vượt trội về ${skillStr}.`;
-        } else if (expStr) {
-            body = `Tôi đã tích lũy được nhiều kinh nghiệm thực tiễn quý báu thông qua các hoạt động như ${expStr}.`;
-        } else if (skillStr) {
-            body = `Thế mạnh lớn nhất của tôi nằm ở kỹ năng ${skillStr}, giúp tôi tự tin đối mặt với mọi thử thách.`;
+        // 2. Personality
+        if (results.bigfive && results.bigfive.O > 70) {
+            body += " Chỉ số Cởi mở (Openness) cao khẳng định bạn là người luôn sẵn sàng đón nhận những ý tưởng mới và không ngừng sáng tạo.";
         }
 
         // 3. Interests & Future Goal
@@ -437,5 +202,23 @@ document.addEventListener('DOMContentLoaded', () => {
     if (restartBtn) restartBtn.addEventListener('click', () => {
         if (resultsOverlay) resultsOverlay.classList.remove('active');
         openAssessment();
+    });
+
+    // Journey Scroll Animation
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: "0px 0px -50px 0px"
+    };
+
+    const journeyObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, observerOptions);
+
+    document.querySelectorAll('.journey-item').forEach(item => {
+        journeyObserver.observe(item);
     });
 });
