@@ -49,7 +49,7 @@ app.use(express.static(__dirname));
 // Request logging
 app.use((req, res, next) => {
   const timestamp = new Date().toISOString().slice(11, 19);
-  console.log(`[\${timestamp}] \${req.method} \${req.path}`);
+  console.log(`[${timestamp}] ${req.method} ${req.path}`);
   next();
 });
 
@@ -82,7 +82,7 @@ app.post('/api/users', async (req, res) => {
       // If no email provided, generate a dummy one based on timestamp/random
       // This satisfies the UNIQUE NOT NULL constraint in DB without asking the user
       const anonId = Math.random().toString(36).substring(2, 10);
-      email = `anon_\${Date.now()}_\${anonId}@kareer.local`;
+      email = `anon_${Date.now()}_${anonId}@kareer.local`;
     }
 
     // Check if user already exists (upsert by email)
@@ -463,8 +463,8 @@ app.listen(PORT, () => {
   console.log('');
   console.log('═══════════════════════════════════════');
   console.log('  🚀 Kareer BACKEND');
-  console.log(`  📡 http://localhost:\${PORT}`);
-  console.log(`  🗄️  Supabase: \${process.env.SUPABASE_URL}`);
+  console.log(`  📡 http://localhost:${PORT}`);
+  console.log(`  🗄️  Supabase: ${process.env.SUPABASE_URL}`);
   console.log('═══════════════════════════════════════');
   console.log('');
   console.log('Endpoints:');
