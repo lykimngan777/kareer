@@ -193,6 +193,33 @@ const KareerAPI = (() => {
   }
 
   /**
+   * Load latest assessment from backend.
+   * @param {string} userId
+   * @returns {Object|null} assessment data
+   */
+  async function loadLatestAssessment(userId) {
+    const online = await checkBackend();
+    if (!online || !userId) return null;
+    try {
+      const result = await get(`/assessments/latest/${userId}`);
+      if (result.assessment) {
+        localStorage.setItem('kareer_result', JSON.stringify(result.assessment));
+        if (result.assessment.answers) {
+          localStorage.setItem('kareer_answers', JSON.stringify(result.assessment.answers));
+        }
+        if (result.assessment.id) {
+          localStorage.setItem('kareer_assessment_id', result.assessment.id);
+        }
+        return result.assessment;
+      }
+    } catch (err) {
+      console.error('[KareerAPI] loadLatestAssessment error:', err.message);
+    }
+    return null;
+  }
+
+
+  /**
    * Get stats (admin use).
    * @returns {Object} stats data or null
    */
@@ -213,6 +240,7 @@ const KareerAPI = (() => {
     saveAssessment,
     saveCareerSelection,
     loadUser,
+    loadLatestAssessment,
     getStats,
     checkBackend
   };
