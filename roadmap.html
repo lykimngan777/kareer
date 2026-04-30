@@ -1,34 +1,43 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lộ trình phát triển | Kareer</title>
-    <script src="api-client.js"></script>
-    <script src="database.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <title>Lộ trình phát triển sự nghiệp | Kareer AI</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
     <style>
-        * { box-shadow: none !important; }
         :root {
             --primary: #000000;
-            --accent: #ffde59;
-            --bg: #ffffff;
-            --font-main: 'Plus Jakarta Sans', sans-serif;
+            --secondary: #ffffff;
+            --accent: #ff0055;
+            --bg: #f2f2f2;
+            --card-bg: #ffffff;
+            --border: #000000;
         }
 
         body {
-            background: #ffffff;
-            font-family: var(--font-main);
-            margin: 0;
-            padding: 0;
+            background-color: var(--bg);
+            color: var(--primary);
+            font-family: 'Be Vietnam Pro', sans-serif;
             overflow-x: hidden;
-            overflow-y: auto !important;
-            scrollbar-width: none;
         }
 
-        body::-webkit-scrollbar { display: none; }
+        .main-header {
+            position: fixed;
+            top: 1.5rem;
+            left: 2rem;
+            z-index: 1000;
+        }
 
+        .main-logo {
+            height: 45px;
+            width: auto;
+        }
+
+        /* Standardized Tab Navigation */
         .tab-container {
             position: fixed;
             top: 2rem;
@@ -50,24 +59,27 @@
             padding: 0.7rem 1.8rem;
             border-radius: 100px;
             text-decoration: none;
-            font-size: 0.9rem;
-            font-weight: 700;
+            font-size: 0.85rem;
+            font-weight: 800;
             color: #000;
-            background: transparent;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.2s ease;
             text-transform: uppercase;
             letter-spacing: 1px;
-            white-space: nowrap;
         }
 
-        .tab-item:hover { background: #f0f0f0; }
-        .tab-item.active { background: #000; color: #fff; }
+        .tab-item:hover {
+            background: #f0f0f0;
+        }
 
-        .roadmap-view {
-            width: 100%;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 10rem 2rem 5rem;
+        .tab-item.active {
+            background: #000;
+            color: #fff;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 120px auto 100px;
+            padding: 0 2rem;
         }
 
         .roadmap-header {
@@ -76,283 +88,275 @@
         }
 
         .roadmap-header h1 {
-            font-size: 4rem;
+            font-size: 3.5rem;
             font-weight: 900;
-            letter-spacing: -3px;
-            margin-bottom: 1rem;
             text-transform: uppercase;
+            letter-spacing: -2px;
+            margin-bottom: 1rem;
         }
 
-        .roadmap-header span { color: #ffde59; -webkit-text-stroke: 2px #000; }
+        .roadmap-header p {
+            font-size: 1.2rem;
+            opacity: 0.7;
+        }
 
-        .timeline-container {
+        /* Roadmap Timeline */
+        .roadmap-timeline {
             position: relative;
-            padding: 2rem 0;
+            padding-left: 50px;
         }
 
-        .timeline-container::before {
+        .roadmap-timeline::before {
             content: '';
             position: absolute;
-            left: 50px;
+            left: 15px;
             top: 0;
             bottom: 0;
             width: 4px;
-            background: #000;
+            background: var(--primary);
         }
 
-        .phase-card {
+        .roadmap-step {
             position: relative;
-            margin-left: 100px;
             margin-bottom: 4rem;
-            background: #fff;
-            border: 3px solid #000;
-            border-radius: 32px;
-            padding: 3rem;
-            box-shadow: 12px 12px 0px #000;
-            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: slideIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
         }
 
-        .phase-card:hover { transform: translate(-4px, -4px); box-shadow: 16px 16px 0px #000; }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
 
-        .phase-marker {
+        .step-marker {
             position: absolute;
-            left: -65px;
-            top: 40px;
-            width: 30px;
-            height: 30px;
-            background: #ffde59;
+            left: -50px;
+            width: 34px;
+            height: 34px;
+            background: #fff;
             border: 4px solid #000;
             border-radius: 50%;
-            z-index: 10;
+            z-index: 2;
         }
 
-        .phase-badge {
-            display: inline-block;
-            background: #000;
-            color: #fff;
-            padding: 0.5rem 1.5rem;
-            border-radius: 100px;
-            font-weight: 800;
-            font-size: 0.8rem;
+        .step-content {
+            background: #fff;
+            border: 3px solid #000;
+            padding: 2.5rem;
+            border-radius: 24px;
+            box-shadow: 12px 12px 0px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .step-content:hover {
+            transform: translate(-4px, -4px);
+            box-shadow: 16px 16px 0px rgba(0, 0, 0, 0.15);
+        }
+
+        .step-phase {
+            font-weight: 900;
             text-transform: uppercase;
-            letter-spacing: 2px;
+            font-size: 0.9rem;
+            color: #ff0055;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .step-content h3 {
+            font-size: 1.8rem;
+            font-weight: 800;
             margin-bottom: 1.5rem;
         }
 
-        .phase-title { font-size: 2.2rem; font-weight: 900; margin-bottom: 1.5rem; letter-spacing: -1px; }
-
-        .task-list { list-style: none; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+        .task-list {
+            list-style: none;
+            padding: 0;
+        }
 
         .task-item {
+            padding: 1rem;
             background: #f8f9fa;
-            border: 2px solid #000;
-            padding: 1.5rem;
-            border-radius: 20px;
-            position: relative;
-        }
-
-        .task-item h4 { margin: 0 0 0.8rem; font-weight: 800; font-size: 1.1rem; color: #000; }
-        .task-item p { margin: 0; font-size: 0.95rem; color: #444; line-height: 1.5; }
-
-        .main-logo { height: 55px; width: auto; display: block; }
-
-        .ai-assistant-bar {
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            background: #000;
-            color: #fff;
-            padding: 1.5rem 2rem;
-            border-radius: 24px;
+            border: 1px solid #eee;
+            border-radius: 12px;
+            margin-bottom: 0.8rem;
             display: flex;
             align-items: center;
-            gap: 1.5rem;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-            z-index: 3000;
-            cursor: pointer;
-            transition: 0.3s;
+            gap: 15px;
+            font-weight: 600;
         }
 
-        .ai-assistant-bar:hover { transform: scale(1.05); }
+        .task-item::before {
+            content: '✓';
+            color: #40c057;
+            font-weight: 900;
+        }
 
-        .edit-prompt-overlay {
+        /* AI Prompt Input */
+        .ai-customizer {
+            margin-top: 5rem;
+            background: #000;
+            color: #fff;
+            padding: 3rem;
+            border-radius: 30px;
+            text-align: center;
+        }
+
+        .ai-customizer h2 {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+        }
+
+        .prompt-box {
+            display: flex;
+            gap: 15px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .prompt-input {
+            flex: 1;
+            padding: 1rem 1.5rem;
+            border-radius: 100px;
+            border: none;
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .btn-ai {
+            background: #ff0055;
+            color: #fff;
+            border: none;
+            padding: 0 2rem;
+            border-radius: 100px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .btn-ai:hover { transform: scale(1.05); }
+
+        .loading-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.8);
-            backdrop-filter: blur(8px);
-            z-index: 4000;
+            background: rgba(255,255,255,0.9);
+            z-index: 5000;
             display: none;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
+            justify-content: center;
         }
 
-        .prompt-card {
-            background: #fff;
-            padding: 3rem;
-            border-radius: 32px;
-            width: 90%;
-            max-width: 600px;
-            border: 4px solid #000;
-            box-shadow: 15px 15px 0px #ffde59;
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #eee;
+            border-top: 5px solid #000;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 1rem;
         }
 
-        textarea {
-            width: 100%;
-            height: 150px;
-            padding: 1.5rem;
-            border: 3px solid #000;
-            border-radius: 20px;
-            font-family: inherit;
-            font-size: 1.1rem;
-            margin: 1.5rem 0;
-            resize: none;
-            outline: none;
-        }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
 
         @media (max-width: 768px) {
-            .roadmap-header h1 { font-size: 2.5rem; }
-            .phase-card { margin-left: 60px; padding: 1.5rem; }
-            .timeline-container::before { left: 30px; }
-            .phase-marker { left: -45px; }
-            .task-list { grid-template-columns: 1fr; }
-            .main-header { left: 50%; transform: translateX(-50%); top: 0.5rem; }
-            .main-logo { height: 35px; }
-            .tab-container { width: 95%; border-radius: 20px; top: 1rem; }
-            .tab-item { padding: 0.6rem 1rem; font-size: 0.7rem; }
+            .roadmap-header h1 { font-size: 2.2rem; }
+            .step-content { padding: 1.5rem; }
+            .prompt-box { flex-direction: column; border-radius: 20px; }
+            .tab-container { width: 95%; font-size: 0.75rem; }
         }
     </style>
 </head>
+
 <body>
-    <header class="main-header" style="position: fixed; top: 1.5rem; left: 2rem; z-index: 9999;">
-        <div class="logo-area">
-            <a href="index.html">
-                <img src="KAREER.png" alt="Kareer Logo" class="main-logo">
-            </a>
-        </div>
+    <header class="main-header">
+        <a href="index.html">
+            <img src="KAREER.png" alt="Kareer Logo" class="main-logo">
+        </a>
     </header>
 
     <div class="tab-container">
         <a href="step2.html" class="tab-item">Kết quả phân tích</a>
         <a href="step3.html" class="tab-item">Định hướng</a>
         <a href="timeline.html" class="tab-item">Chi tiết nghề nghiệp</a>
-        <a href="#" class="tab-item active">Lộ trình phát triển</a>
+        <a href="roadmap.html" class="tab-item active">Lộ trình phát triển</a>
     </div>
 
-    <div class="roadmap-view">
-        <header class="roadmap-header">
-            <h1 id="roadmap-main-title">Lộ trình <span>Chiến lược</span></h1>
-            <p style="font-weight: 600; color: #666; font-size: 1.2rem;">Kế hoạch hành động 24 tháng được cá nhân hóa bởi Kareer AI.</p>
-        </header>
-
-        <div id="roadmap-timeline" class="timeline-container">
-            <!-- Phases injected by JS -->
+    <div class="container">
+        <div class="roadmap-header">
+            <p id="career-subtitle">Lộ trình phát triển dành cho</p>
+            <h1 id="career-title">Nghề nghiệp mục tiêu</h1>
+            <p>Hành trình từng bước để đạt được thành công bền vững trong lĩnh vực này.</p>
         </div>
-    </div>
 
-    <div class="ai-assistant-bar" onclick="showPromptArea()">
-        <div style="background: #ffde59; width: 45px; height: 45px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #000;">
-            <i class="fas fa-magic fa-lg"></i>
+        <div class="roadmap-timeline" id="roadmap-root">
+            <!-- Roadmap steps will be injected here -->
         </div>
-        <div>
-            <div style="font-weight: 800; font-size: 1.1rem;">Kareer AI Assistant</div>
-            <div style="font-size: 0.85rem; opacity: 0.7;">Tùy chỉnh lộ trình theo mục tiêu riêng của bạn</div>
-        </div>
-    </div>
 
-    <div id="edit-prompt-area" class="edit-prompt-overlay">
-        <div class="prompt-card">
-            <h2 style="font-weight: 900; font-size: 2rem; margin-bottom: 1rem;">Tùy chỉnh lộ trình</h2>
-            <p style="color: #666; line-height: 1.5;">Bạn muốn tập trung vào kỹ năng nào? Bạn có mục tiêu ngắn hạn gì đặc biệt? Hãy cho Kareer AI biết để điều chỉnh lộ trình.</p>
-            <textarea id="user-edit-prompt" placeholder="Ví dụ: Tôi muốn rút ngắn thời gian giai đoạn 1 và tập trung mạnh vào học AI..."></textarea>
-            <div style="display: flex; gap: 1rem;">
-                <button onclick="submitEditRequest()" style="flex: 2; background: #000; color: #fff; border: none; padding: 1.2rem; border-radius: 15px; font-weight: 800; cursor: pointer;">CẬP NHẬT LỘ TRÌNH</button>
-                <button onclick="document.getElementById('edit-prompt-area').style.display='none'" style="flex: 1; background: #eee; border: none; padding: 1.2rem; border-radius: 15px; font-weight: 800; cursor: pointer;">HỦY</button>
+        <div class="ai-customizer">
+            <h2>Cá nhân hóa lộ trình với AI</h2>
+            <p style="margin-bottom: 2rem; opacity: 0.7;">Nhập mong muốn riêng của bạn (vd: "lộ trình cấp tốc 3 tháng", "tập trung vào kỹ năng quản lý", "cho người trái ngành")</p>
+            <div class="prompt-box">
+                <input type="text" id="ai-prompt" class="prompt-input" placeholder="Ví dụ: Lộ trình cấp tốc trong 3 tháng...">
+                <button class="btn-ai" onclick="personalizeRoadmap()">Nâng cấp ngay</button>
             </div>
         </div>
     </div>
 
-    <script>
-        const roadmapData = {
-            "Product Manager": [
-                { phase: "Giai đoạn 1: Nền tảng & Tư duy (0-6 tháng)", tasks: [
-                    { title: "Làm chủ User Research", desc: "Thực hành phỏng vấn 10+ người dùng thật và xây dựng User Persona chi tiết." },
-                    { title: "Data Analytics 101", desc: "Học cách sử dụng SQL và Google Analytics để đọc hiểu hành vi người dùng." }
-                ]},
-                { phase: "Giai đoạn 2: Kỹ năng Chuyên sâu (6-12 tháng)", tasks: [
-                    { title: "Agile & Scrum Master", desc: "Nhận chứng chỉ PSM I và áp dụng quy trình chạy sprint thực tế." },
-                    { title: "Product Strategy", desc: "Xây dựng Product Roadmap cho một tính năng lớn từ ý tưởng đến launch." }
-                ]},
-                { phase: "Giai đoạn 3: Tối ưu & Tăng trưởng (12-24 tháng)", tasks: [
-                    { title: "Growth Hacking", desc: "Thực hiện các chiến dịch A/B testing để tối ưu tỷ lệ chuyển đổi." },
-                    { title: "Leadership & Stakeholder", desc: "Quản trị kỳ vọng của các sếp và phối hợp nhịp nhàng giữa Tech & Business." }
-                ]}
-            ]
-        };
+    <div class="loading-overlay" id="loading">
+        <div class="spinner"></div>
+        <p>AI đang phác thảo lộ trình mới cho bạn...</p>
+    </div>
 
-        function renderTimeline(isCustom = false) {
-            const role = localStorage.getItem('selectedCareer') || "Product Manager";
-            const container = document.getElementById('roadmap-timeline');
-            document.getElementById('roadmap-main-title').innerHTML = `${role} <span>Roadmap</span>`;
+    <script src="database.js"></script>
+    <script>
+        const roadmapRoot = document.getElementById('roadmap-root');
+        const careerTitle = document.getElementById('career-title');
+        const selectedCareer = localStorage.getItem('selectedCareer') || "Phân tích dữ liệu (Data Analyst)";
+
+        function renderRoadmap(prompt = "") {
+            careerTitle.textContent = selectedCareer;
             
-            const phases = roadmapData[role] || roadmapData["Product Manager"];
-            
-            container.innerHTML = phases.map((p, idx) => `
-                <div class="phase-card" style="animation: slideIn 0.6s ease forwards ${idx * 0.2}s; opacity: 0;">
-                    <div class="phase-marker"></div>
-                    <span class="phase-badge">${p.phase.split(':')[0]}</span>
-                    <h2 class="phase-title">${p.phase.split(':')[1] || p.phase}</h2>
-                    <div class="task-list">
-                        ${p.tasks.map(t => `
-                            <div class="task-item">
-                                <h4>${t.title}</h4>
-                                <p>${t.desc}</p>
-                            </div>
-                        `).join('')}
+            // Get roadmap from database.js
+            const steps = generateCareerRoadmap(selectedCareer, prompt);
+
+            roadmapRoot.innerHTML = steps.map((step, i) => `
+                <div class="roadmap-step" style="animation-delay: ${i * 0.2}s">
+                    <div class="step-marker"></div>
+                    <div class="step-content">
+                        <span class="step-phase">${step.phase}</span>
+                        <h3>${step.title || `Giai đoạn ${i+1}`}</h3>
+                        <div class="task-list">
+                            ${step.tasks.map(task => `
+                                <div class="task-item">${task}</div>
+                            `).join('')}
+                        </div>
                     </div>
                 </div>
             `).join('');
-
-            if(isCustom) {
-                const customPrompt = localStorage.getItem('kareer_custom_roadmap_prompt');
-                const aiPhase = `
-                    <div class="phase-card" style="border-color: #ffde59; background: #fffcf0;">
-                        <div class="phase-marker" style="background: #000;"></div>
-                        <span class="phase-badge" style="background: #ffde59; color: #000;">AI CUSTOMIZED</span>
-                        <h2 class="phase-title">Yêu cầu đặc biệt: ${customPrompt.substring(0, 30)}...</h2>
-                        <div class="task-item" style="width: 100%; border-style: dashed;">
-                            <p>Kareer AI đã điều chỉnh lộ trình dựa trên yêu cầu: <strong>"${customPrompt}"</strong>. Chúng tôi đã ưu tiên các đầu việc liên quan và tối ưu hóa thời gian thực hiện cho bạn.</p>
-                        </div>
-                    </div>
-                `;
-                container.innerHTML = aiPhase + container.innerHTML;
-            }
         }
 
-        window.onload = () => {
-            renderTimeline();
-            const style = document.createElement('style');
-            style.textContent = `
-                @keyframes slideIn {
-                    from { opacity: 0; transform: translateX(30px); }
-                    to { opacity: 1; transform: translateX(0); }
-                }
-            `;
-            document.head.appendChild(style);
-        };
+        async function personalizeRoadmap() {
+            const prompt = document.getElementById('ai-prompt').value;
+            if (!prompt) return;
 
-        function showPromptArea() {
-            document.getElementById('edit-prompt-area').style.display = 'flex';
-        }
-
-        function submitEditRequest() {
-            const prompt = document.getElementById('user-edit-prompt').value;
-            if (!prompt.trim()) return;
+            document.getElementById('loading').style.display = 'flex';
             
-            localStorage.setItem('kareer_custom_roadmap_prompt', prompt);
-            alert(`Yêu cầu của bạn: "${prompt}" đã được ghi nhận. Đang tái cấu trúc lộ trình...`);
-            renderTimeline(true); 
-            document.getElementById('edit-prompt-area').style.display = 'none';
+            // Simulate AI delay
+            await new Promise(r => setTimeout(r, 1500));
+            
+            renderRoadmap(prompt);
+            document.getElementById('loading').style.display = 'none';
+            
+            // Scroll to top of timeline
+            window.scrollTo({ top: roadmapRoot.offsetTop - 150, behavior: 'smooth' });
         }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderRoadmap();
+        });
     </script>
 </body>
+
 </html>
