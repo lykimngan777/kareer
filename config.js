@@ -1,3 +1,3 @@
-window.Kareer_API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+const Kareer_API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
     ? 'http://localhost:3000' 
-    : ''; // Production URL uses relative path /api
+    : ''; // Add production URL if needed

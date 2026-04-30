@@ -4,72 +4,56 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kareer | Khám phá Bản sắc Nghề nghiệp</title>
-  <link rel="stylesheet" href="step2.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap"
-    rel="stylesheet">
+  <title>Trắc Nghiệm Định Hướng Nghề Nghiệp</title>
+  <meta name="description"
+    content="Khám phá định hướng nghề nghiệp phù hợp với bản thân qua 35 câu hỏi trắc nghiệm khoa học.">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="config.js"></script>
+  <script src="api-client.js"></script>
   <style>
-    /* Reset and Layout Optimization */
     * {
       box-shadow: none !important;
     }
-
-    body {
-      overflow-y: auto !important;
-      background: #ffffff;
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
 
-    .main-nav-tabs {
-      position: fixed;
-      top: 2rem;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      justify-content: center;
-      gap: 0.5rem;
-      padding: 0.5rem;
-      background: #fff;
-      border: 2px solid #000;
-      border-radius: 100px;
-      width: fit-content;
-      z-index: 2000;
-      box-shadow: 8px 8px 0px #000;
+    :root {
+      --font-main: 'Inter', system-ui, -apple-system, sans-serif;
+      --font-heading: 'Inter', system-ui, -apple-system, sans-serif;
+      --bg-color: #f2f2f2;
+      --bg-white: #ffffff;
+      --text-black: #111111;
+      --text-muted: #8c9aaf;
+      --text-secondary: #555555;
+      --border-color: #e0e0e0;
+      --accent: #000000;
+      --accent-hover: #333333;
+      --shadow-sm: 0 4px 15px rgba(0, 0, 0, 0.04);
+      --shadow-md: 0 8px 30px rgba(0, 0, 0, 0.06);
+      --radius-sm: 8px;
+      --radius-md: 16px;
+      --radius-full: 999px;
+      --transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+
+      --primary-yellow: #f0f0f0;
+      --primary-pink: #111111;
+      --primary-mint: #e8e8e8;
+      --border-width: 1px;
+      --card-shadow: var(--shadow-md);
+      --success: #4caf50;
+      --danger: #e53935;
+      --radius: 12px;
     }
 
-    .tab-item {
-      padding: 0.7rem 1.8rem;
-      border-radius: 100px;
-      text-decoration: none;
-      font-size: 0.9rem;
-      font-weight: 700;
-      color: #000;
-      background: transparent;
-      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      white-space: nowrap;
-    }
-
-    .tab-item.active {
-      background: #000;
-      color: #fff;
-    }
-
-    .quiz-container {
-      margin-top: 100px;
-      max-width: 1000px;
-      margin-left: auto;
-      margin-right: auto;
-      padding: 2rem;
-    }
-
-    .result-screen {
-      margin-top: 40px;
-    }
-
-    /* Fixed logo style */
+    /* ─── HEADER / LOGO ─── */
     .main-header {
       position: fixed;
       top: 1.5rem;
@@ -77,73 +61,742 @@
       z-index: 9999;
     }
 
+    .logo-area {
+      pointer-events: auto;
+      display: block;
+    }
+
     .main-logo {
       height: 55px;
       width: auto;
       display: block;
+      transition: var(--transition);
     }
 
     @media (max-width: 768px) {
       .main-header {
+        top: 0.5rem;
         left: 50%;
         transform: translateX(-50%);
-        top: 0.5rem;
+        width: 100%;
+        display: flex;
+        justify-content: center;
       }
 
       .main-logo {
         height: 35px;
       }
+    }
 
-      .main-nav-tabs {
+    body {
+      font-family: var(--font-main);
+      background: var(--bg-color);
+      color: var(--text-black);
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+    }
+
+    /* ─── TAB NAVIGATION (STANDARDIZED) ─── */
+    .tab-container {
+        position: fixed;
+        top: 2rem;
+        left: 50%;
+        transform: translateX(-50%);
+        display: none; /* Hidden by default */
+        justify-content: center;
+        gap: 0.5rem;
+        padding: 0.5rem;
+        background: #fff;
+        border: 2px solid #000;
+        border-radius: 100px;
+        width: fit-content;
+        z-index: 2000;
+        box-shadow: 8px 8px 0px #000;
+    }
+
+    .tab-item {
+        padding: 0.7rem 1.8rem;
+        border-radius: 100px;
+        text-decoration: none;
+        font-size: 0.9rem;
+        font-weight: 700;
+        font-family: var(--font-main);
+        color: #000;
+        background: transparent;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        white-space: nowrap;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .tab-item:hover {
+        background: #f0f0f0;
+    }
+
+    .tab-item.active {
+        background: #000;
+        color: #fff;
+    }
+
+
+
+
+    .quiz-container {
+      max-width: 1200px;
+      margin: 180px auto 60px;
+      width: 100%;
+      padding: 0 30px;
+    }
+
+    .opt-label {
+      position: relative;
+      cursor: pointer;
+    }
+
+    .opt-label::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      bottom: 140%;
+      left: 50%;
+      transform: translateX(-50%) translateY(5px);
+      background: #111;
+      color: #fff;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      z-index: 100;
+    }
+
+    .opt-label:hover::after {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .card {
+      position: relative;
+      width: 100%;
+      background: var(--bg-white);
+      border-radius: var(--radius-md);
+      padding: 50px;
+      box-shadow: var(--shadow-md);
+    }
+
+    .progress-shell {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 6px;
+      background: var(--border-color);
+      z-index: 2000;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: var(--accent);
+      transition: width 0.4s ease;
+    }
+
+    .q-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 24px;
+      background: #f8f9fa;
+      border-radius: 16px;
+      margin-bottom: 12px;
+      border: 1.5px solid transparent;
+      transition: all 0.3s ease;
+    }
+
+    .q-item.answered {
+      background: #fff;
+      border-color: #e8f5e9;
+      opacity: 0.9;
+    }
+
+    .q-item:hover {
+      background: #fff;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+      transform: scale(1.005);
+    }
+
+    .q-text {
+      flex: 1;
+      font-size: 1.05rem;
+      font-weight: 500;
+      padding-right: 20px;
+      color: #334155;
+    }
+
+    .options-row {
+      display: flex;
+      gap: 24px;
+      padding-right: 1.5rem;
+    }
+
+    .opt-label {
+      cursor: pointer;
+      position: relative;
+      width: 24px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .opt-label input {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      cursor: pointer;
+      z-index: 100;
+      background: rgba(255,255,255,0.01); /* Invisible but tangible touch target */
+    }
+
+    .opt-circle {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 1.5px solid var(--border-color);
+      background: var(--bg-white);
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .opt-label:hover .opt-circle {
+      border-color: var(--accent);
+      transform: scale(1.1);
+    }
+
+    .opt-label input:checked ~ .opt-circle {
+      background: var(--accent) !important;
+      border-color: var(--accent) !important;
+      box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .scale-header {
+      display: flex;
+      justify-content: flex-end;
+      gap: 24px;
+      margin-bottom: 20px;
+      padding-right: calc(1.5rem + 24px); /* Match options-row (1.5rem) + q-item (24px) */
+    }
+
+    .scale-label {
+      width: 24px;
+      text-align: center;
+      font-size: 0.52rem;
+      font-weight: 800;
+      color: #94a3b8;
+      text-transform: uppercase;
+      line-height: 1.1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      letter-spacing: 0.08em;
+    }
+
+    /* Results UI */
+    .result-screen {
+      display: none;
+    }
+
+    .result-hdr {
+      text-align: center;
+      margin-bottom: 40px;
+      padding-top: 40px;
+    }
+
+    .result-title {
+      font-family: var(--font-heading);
+      font-size: clamp(1.8rem, 5vw, 3rem);
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .insight-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 25px;
+      margin-bottom: 50px;
+    }
+
+    .insight-block {
+      background: white;
+      border-radius: 16px;
+      padding: 30px 20px;
+      box-shadow: 8px 8px 0px 0px #000;
+      border: 3px solid #000;
+    }
+
+    .insight-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .insight-list li {
+      font-size: 0.95rem;
+      line-height: 1.6;
+      padding-left: 1.5rem;
+      position: relative;
+      margin-bottom: 10px;
+    }
+
+    .insight-list li::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      font-weight: bold;
+    }
+
+    /* Scientific Models */
+    .theory-box {
+      background: var(--bg-white);
+      border: 3px solid var(--text-black);
+      border-radius: 12px;
+      padding: 35px 25px;
+      margin-top: 50px;
+      margin-bottom: 50px;
+      box-shadow: 10px 10px 0px 0px rgba(0, 0, 0, 1);
+    }
+
+    .theory-title {
+      font-family: var(--font-heading);
+      font-size: 1.4rem;
+      font-weight: 900;
+      margin-bottom: 30px;
+      text-transform: uppercase;
+      border-bottom: 3px solid var(--text-black);
+      padding-bottom: 15px;
+    }
+
+    .theory-section {
+      border: 2px solid var(--text-black);
+      border-radius: 12px;
+      background: #fafafa;
+      padding: 25px 20px;
+      margin-bottom: 30px;
+    }
+
+    .theory-section-hdr {
+      font-family: var(--font-heading);
+      font-weight: 900;
+      font-size: 1.2rem;
+      margin-bottom: 20px;
+      border-bottom: 1.5px dashed #ccc;
+      padding-bottom: 10px;
+    }
+
+    .dim-item {
+      padding: 20px;
+      background: white;
+      border: 2px solid #eee;
+      border-radius: 10px;
+      margin-bottom: 15px;
+      position: relative; /* For absolute badge */
+    }
+
+    .dim-item-top {
+      display: flex;
+      justify-content: flex-start; /* Label on left */
+      align-items: center;
+      margin-bottom: 12px;
+      padding-right: 80px; /* Avoid overlap with absolute badge */
+    }
+
+    .dim-label {
+      font-family: var(--font-heading);
+      font-weight: 800;
+      font-size: 1rem;
+    }
+
+    .dim-badge {
+      font-weight: 800;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      position: absolute;
+      top: 8px;
+      right: 15px;
+      background: transparent !important;
+      color: #000 !important;
+      padding: 0 !important;
+    }
+
+    .dim-bar-track {
+      height: 10px;
+      background: #f0f0f0;
+      border-radius: 5px;
+      overflow: hidden;
+      margin-bottom: 12px;
+      border: 1px solid #ddd;
+    }
+
+    .dim-bar-fill {
+      height: 100%;
+      background: #000;
+      transition: width 1s ease-out;
+    }
+
+    .val-vhigh, .val-med, .val-low {
+      color: #000;
+    }
+
+    /* Recommendation Box */
+    .recommendation-box {
+      background: #fff;
+      border: 3px solid #000;
+      border-radius: 16px;
+      padding: 40px 25px;
+      margin-top: 50px;
+      margin-bottom: 50px;
+      box-shadow: 12px 12px 0px 0px #000;
+    }
+
+    .rec-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      margin-top: 30px;
+    }
+
+    .rec-item {
+      padding: 25px;
+      border-radius: 12px;
+      border: 2px solid #000;
+    }
+
+    .rec-suitable {
+      background: #f0faf0;
+      border-color: #2e7d32;
+    }
+
+    .rec-unsuitable {
+      background: #fff5f5;
+      border-color: #c62828;
+    }
+
+    .rec-title {
+      font-weight: 900;
+      text-transform: uppercase;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* Buttons */
+    .btn {
+      font-family: var(--font-heading);
+      padding: 1rem 2.5rem;
+      border-radius: 999px;
+      font-weight: 800;
+      font-size: 0.95rem;
+      cursor: pointer;
+      border: 3px solid var(--text-black);
+      text-transform: uppercase;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 4px 4px 0px 0px #000;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: white;
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--text-black);
+      box-shadow: none;
+      border-width: 2px;
+    }
+
+    .btn:hover:not(:disabled) {
+      transform: translate(-2px, -2px);
+      box-shadow: 6px 6px 0px 0px #000;
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      box-shadow: none;
+      transform: none;
+    }
+
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 40px;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #111;
+      color: #fff;
+      padding: 15px 30px;
+      border-radius: 50px;
+      font-size: 1rem;
+      font-weight: 600;
+      opacity: 0;
+      transition: all 0.3s ease;
+      z-index: 10000;
+      white-space: nowrap;
+    }
+
+    .toast.show {
+      opacity: 1;
+      bottom: 40px;
+    }
+
+    .model-summary-box {
+      margin-top: 25px;
+      padding-top: 20px;
+      border-top: 1.5px solid #eee;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+    }
+
+    .btn-toggle-narrative {
+      background: #fff;
+      background-image: linear-gradient(transparent 50%, #000 50%);
+      background-size: 100% 200%;
+      background-position: 0 0;
+      border: 3px solid #000;
+      padding: 12px 24px;
+      border-radius: 12px;
+      font-family: var(--font-main);
+      font-weight: 900;
+      font-size: 0.95rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+      box-shadow: 6px 6px 0px 0px #000;
+      animation: btnAttention 2.5s infinite ease-in-out;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-toggle-narrative:hover {
+      background-position: 0 -100%;
+      color: #fff;
+      transform: translate(-4px, -4px) scale(1.02);
+      box-shadow: 10px 10px 0px 0px #000;
+      animation: none;
+    }
+
+    .btn-toggle-narrative::after {
+      content: '▼';
+      font-size: 0.7rem;
+      transition: transform 0.3s;
+    }
+
+    .btn-toggle-narrative.active::after {
+      transform: rotate(180deg);
+    }
+
+    @keyframes btnAttention {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-4px); box-shadow: 6px 10px 0px 0px rgba(0,0,0,0.2); }
+    }
+
+    .narrative-content {
+      width: 100%;
+      animation: slideDown 0.3s ease-out;
+    }
+
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 5px;
+      }
+
+      .main-logo {
+        height: 35px; /* Extra shrunken */
+      }
+
+      .tab-container {
         width: 95%;
-        border-radius: 20px;
-        top: 1rem;
+        top: 3.2rem; /* Avoid centered logo */
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 0.2rem;
+        gap: 5px;
       }
 
       .tab-item {
-        padding: 0.6rem 1rem;
+        padding: 0.25rem 0.5rem;
+        font-size: 0.55rem; /* Extra shrunken tabs */
+      }
+
+      .card {
+        padding: 0.5rem;
+        margin-top: 60px;
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+      }
+
+      .q-item {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 15px 0;
+        gap: 15px;
+        border-bottom: 1px solid rgba(0,0,0,0.05);
+        background: transparent !important;
+        box-shadow: none !important;
+        transform: none !important;
+      }
+
+      .q-item.answered {
+        background: rgba(0, 0, 0, 0.02) !important; /* Subtle feedback */
+        border-radius: 8px;
+      }
+
+      .q-text {
+        font-size: 1.05rem;
+        font-weight: 700;
+        color: #000;
+        padding-right: 0;
+        line-height: 1.4;
+      }
+
+      .options-row {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 5px;
+        padding: 5px 0 10px 0;
+      }
+
+      .opt-label {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        width: auto;
+        flex: 1;
+        min-height: 50px; /* Larger hit area */
+        justify-content: flex-end;
+        padding: 5px 0;
+        position: relative; /* CRITICAL for absolute children */
+      }
+
+      .mobile-label {
+        display: block !important;
+        font-size: 0.55rem;
+        font-weight: 600;
+        color: #666;
+        text-align: center;
+        max-width: 45px;
+        line-height: 1.1;
+        pointer-events: none; /* Don't block clicks */
+      }
+
+      .opt-circle {
+        width: 24px;
+        height: 24px;
+        pointer-events: none; /* Don't block clicks */
+      }
+
+      .result-title {
+        font-size: 1.4rem;
+      }
+
+      .rec-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+      }
+
+      .rec-item {
+        padding: 15px;
+      }
+
+      .insight-card {
+        padding: 15px;
+      }
+
+      .btn {
+        padding: 0.4rem 0.8rem;
         font-size: 0.7rem;
       }
 
-      .quiz-container {
-        margin-top: 120px;
-        padding: 1rem;
+      .footer {
+        margin-top: 20px;
+        gap: 10px;
+      }
+
+      .scale-header {
+        display: none !important;
       }
     }
   </style>
 </head>
 
 <body>
-  <header class="main-header">
-    <div class="logo-area">
-      <a href="index.html">
-        <img src="KAREER.png" alt="Kareer Logo" class="main-logo">
-      </a>
+  <div class="shell">
+    <header class="main-header">
+      <div class="logo-area">
+        <a href="index.html">
+          <img src="KAREER.png" alt="Kareer Logo" class="main-logo">
+        </a>
+      </div>
+    </header>
+
+    <div class="tab-container" id="main-nav-tabs">
+        <a href="step2.html" class="tab-item active">Kết quả phân tích</a>
+        <a href="step3.html" class="tab-item">Định hướng</a>
+        <a href="timeline.html" class="tab-item">Chi tiết nghề nghiệp</a>
+        <a href="roadmap.html" class="tab-item">Lộ trình phát triển</a>
     </div>
-  </header>
 
-  <div class="main-nav-tabs" id="main-nav-tabs" style="display: none;">
-    <a href="step2.html" class="tab-item active">Kết quả phân tích</a>
-    <a href="step3.html" class="tab-item">Định hướng</a>
-    <a href="timeline.html" class="tab-item">Chi tiết nghề nghiệp</a>
-    <a href="roadmap.html" class="tab-item">Lộ trình phát triển</a>
-  </div>
+    <div class="progress-shell" id="progressShell">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
 
-  <div class="quiz-container">
-    <div class="quiz-card">
-      <div class="hdr-block" id="hdrBlock">
-        <div class="intro-badge">PHÂN TÍCH CHUYÊN SÂU</div>
-        <h1 class="main-title">THẤU HIỂU BẢN SẮC CỦA BẠN</h1>
-        <p class="subtitle">Dành 5 phút để AI giúp bạn tìm ra điểm giao thoa giữa đam mê, năng lực và giá trị cốt lõi.</p>
+    <div class="quiz-container">
+      <div class="card" id="hdrBlock">
+        <h1
+          style="font-family: var(--font-heading); font-size: 2.2rem; font-weight: 900; margin-bottom: 10px; text-align: center; text-transform: uppercase;">
+          Khám Phá Bản Sắc Nghề Nghiệp</h1>
       </div>
 
-      <div class="progress-shell" id="progressShell">
-        <div class="progress-bar">
-          <div class="progress-fill" id="progressFill"></div>
-        </div>
-      </div>
-
-      <div class="q-area" id="questionArea">
+      <div id="questionArea" style="margin-top: 30px;">
         <!-- Questions injected by JS -->
       </div>
 
@@ -552,20 +1205,20 @@
             conventional: "Bạn tin vào sự chuẩn mực, tính kỷ luật và truyền thống. Bạn lấy việc duy trì sự ổn định, minh bạch và hiệu quả làm nền tảng cho sự nghiệp, tin rằng một hệ thống tốt là chìa khóa cho mọi sự phát triển bền vững."
           };
           const environments = {
-            realistic: "Bạn yêu thích những môi trường có cấu trúc rõ ràng, nơi bạn có thể làm việc độc lập hoặc tương tác trực tiếp with máy móc và công nghệ. Một không gian làm việc ngoài trời hoặc thực địa luôn khiến bạn cảm thấy tràn đầy năng lượng hơn là ngồi trong văn phòng.",
+            realistic: "Bạn yêu thích những môi trường có cấu trúc rõ ràng, nơi bạn có thể làm việc độc lập hoặc tương tác trực tiếp với máy móc và công nghệ. Một không gian làm việc ngoài trời hoặc thực địa luôn khiến bạn cảm thấy tràn đầy năng lượng hơn là ngồi trong văn phòng.",
             investigative: "Môi trường làm việc lý tưởng của bạn là không gian học thuật, phòng thí nghiệm hoặc những nơi mang tính nghiên cứu cao. Bạn cần một nơi yên tĩnh để tập trung sâu, nơi ý kiến chuyên môn của bạn được tôn trọng và bạn có đủ dữ liệu để làm việc.",
             artistic: "Bạn cần một không gian làm việc linh hoạt, sáng tạo và không bị gò bó bởi những quy định hành chính cứng nhắc. Môi trường lý tưởng là nơi khuyến khích sự khác biệt, cho phép bạn tự do quản lý thời gian và phong cách thực hiện dự án của riêng mình.",
             social: "Làm việc nhóm và tương tác trực tiếp với con người là nơi bạn tỏa sáng nhất. Bạn phù hợp với những môi trường đề cao sự chia sẻ, cộng tác và có mục tiêu hướng tới cộng đồng hoặc chăm sóc khách hàng một cách tận tâm.",
             enterprising: "Bạn thuộc về những môi trường năng động, có tính cạnh tranh cao và cho phép bạn nắm quyền quyết định. Những nơi có lộ trình thăng tiến rõ ràng, đòi hỏi sự linh hoạt trong giao tiếp và khả năng chớp lấy cơ hội kinh doanh là nơi bạn thành công nhất.",
-            conventional: "Bạn phù hợp nhất với những môi trường chuyên nghiệp, ngăn nắp and có quy trình làm việc chuẩn mực. Một tổ chức coi trọng tính kỷ luật, sự chính xác trong số liệu and có hệ thống phân cấp rõ ràng sẽ giúp bạn phát huy tối đa năng lực quản trị."
+            conventional: "Bạn phù hợp nhất với những môi trường chuyên nghiệp, ngăn nắp và có quy trình làm việc chuẩn mực. Một tổ chức coi trọng tính kỷ luật, sự chính xác trong số liệu và có hệ thống phân cấp rõ ràng sẽ giúp bạn phát huy tối đa năng lực quản trị."
           };
           const futures = {
             realistic: "Trong tương lai, bạn sẽ đóng góp giá trị thông qua việc tạo ra các sản phẩm bền vững và các hệ thống vận hành thực tế. Mục tiêu dài hạn của bạn là trở thành một bậc thầy trong lĩnh vực kỹ thuật, người luôn đảm bảo mọi thứ được vận hành một cách hoàn hảo nhất.",
             investigative: "Bạn có tiềm năng trở thành một chuyên gia tư vấn hoặc nhà nghiên cứu đầu ngành, người mang lại những giải pháp đột phá cho xã hội. Mục tiêu dài hạn của bạn là đóng góp những kiến thức giá trị, giúp nhân loại hiểu sâu hơn về những lĩnh vực phức tạp.",
             artistic: "Mục tiêu dài hạn của bạn là để lại những dấu ấn sáng tạo riêng biệt trong ngành công nghiệp của mình. Bạn sẽ đóng góp giá trị bằng cách không ngừng đổi mới thẩm mỹ và tư duy, trở thành người dẫn dắt xu hướng và truyền cảm hứng cho thế hệ tiếp theo.",
             social: "Bạn sẽ là người kiến tạo các giá trị xã hội bền vững, nâng cao chất lượng cuộc sống cho những người yếu thế. Mục tiêu dài hạn của bạn là xây dựng nên những tổ chức hoặc chương trình có sức lan tỏa nhân văn, để lại một di sản về tình yêu thương.",
-            enterprising: "Hướng phát triển của bạn là trở thành nhà lãnh đạo chiến lược hoặc chủ doanh nghiệp thành đạt. Bạn sẽ tạo ra giá trị bằng cách xây dựng những hệ thống kinh doanh mạnh mẽ, tạo ra việc làm and dẫn dắt tổ chức vươn ra tầm quốc tế.",
-            conventional: "Bạn sẽ là người bảo vệ sự thịnh vượng bền vững cho tổ chức thông qua khả năng quản trị tài chính and quy trình xuất sắc. Mục tiêu dài hạn của bạn là xây dựng những bộ máy vận hành hoàn hảo, là chỗ dựa tin cậy cho mọi sự phát triển lâu dài."
+            enterprising: "Hướng phát triển của bạn là trở thành nhà lãnh đạo chiến lược hoặc chủ doanh nghiệp thành đạt. Bạn sẽ tạo ra giá trị bằng cách xây dựng những hệ thống kinh doanh mạnh mẽ, tạo ra việc làm và dẫn dắt tổ chức vươn ra tầm quốc tế.",
+            conventional: "Bạn sẽ là người bảo vệ sự thịnh vượng bền vững cho tổ chức thông qua khả năng quản trị tài chính và quy trình xuất sắc. Mục tiêu dài hạn của bạn là xây dựng những bộ máy vận hành hoàn hảo, là chỗ dựa tin cậy cho mọi sự phát triển lâu dài."
           };
           return `${intros[top]} ${workStyles[top]} ${motivations[top]} ${environments[top]} ${futures[top]}`;
         };
