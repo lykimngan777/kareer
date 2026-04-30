@@ -4,72 +4,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kareer Platform | AI-Powered Career Orientation</title>
+    <title>Hành Trình Tìm Kiếm Career Path | Mark Twain Quote</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Dancing+Script:wght@700&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=Be+Vietnam+Pro:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <meta name="description"
+        content="Khám phá hành trình tìm kiếm sự nghiệp và mục đích sống của bạn thông qua câu nói truyền cảm hứng của Mark Twain.">
+    <meta name="keywords" content="career path, định hướng nghề nghiệp, Mark Twain, truyền cảm hứng">
+    <meta name="author" content="Antigravity AI">
+    <meta property="og:title" content="Hành Trình Tìm Kiếm Career Path">
+    <meta property="og:description"
+        content="Hai ngày quan trọng nhất đời người là ngày bạn sinh ra và ngày bạn tìm ra lý do tại sao mình tồn tại.">
+
 </head>
 
 <body>
+    <div class="overlay-grain"></div>
+
     <header class="main-header">
         <div class="logo-area">
-            <img src="KAREER.png" alt="Kareer Logo" class="main-logo">
-        </div>
-        <nav class="main-nav">
-            <a href="#" class="nav-item">Cẩm nang</a>
-            <a href="#" class="nav-item">Doanh nghiệp</a>
-            <a href="#" class="nav-item active">Cá nhân</a>
-        </nav>
-        <div class="auth-area">
-            <button class="btn-login">Đăng nhập</button>
+            <a href="index.html">
+                <img src="KAREER.png" alt="Kareer Logo" class="main-logo">
+            </a>
         </div>
     </header>
 
     <main>
         <!-- HERO SECTION -->
-        <section class="hero-section">
-            <div class="hero-content">
-                <h1 class="hero-title">
-                    KIẾN TẠO<br>
-                    <span>SỰ NGHIỆP</span><br>
-                    ĐỘT PHÁ
+        <section class="quote-section">
+            <div class="quote-wrapper">
+                <span class="quote-icon-top">“</span>
+                <h1 class="quote-text" id="typewriter-quote"
+                    data-text="Hai ngày quan trọng nhất đời người là ngày bạn sinh ra và ngày bạn tìm ra lý do tại sao mình tồn tại.">
                 </h1>
-                <p class="hero-subtitle">Nền tảng hướng nghiệp AI giúp bạn thấu hiểu bản thân và xây dựng lộ trình thăng tiến cá nhân hóa.</p>
-                <div class="hero-cta">
-                    <button class="btn-premium" id="hero-start-btn">Bắt đầu ngay <i class="fas fa-bolt"></i></button>
-                    <div class="trust-badge">
-                        <i class="fas fa-shield-alt"></i> Bảo mật bởi AI Coaching
-                    </div>
+                <span class="quote-icon-bottom">”</span>
+                <p class="author">_Mark Twain_</p>
+                <div class="button-wrapper">
+                    <button id="cta-button" class="btn-premium">
+                        <span class="btn-text">Khám phá sứ mệnh của bạn</span>
+                        <span class="btn-icon">→</span>
+                    </button>
+                    <button id="view-results-btn" class="btn-premium btn-secondary-outline" style="display: none; margin-top: 15px;">
+                        <span class="btn-text">Xem lại kết quả</span>
+                        <span class="btn-icon">📊</span>
+                    </button>
+                    <button id="restore-data-btn" class="btn-premium btn-ghost" style="margin-top: 15px; border: 1px dashed #ccc; font-size: 0.8rem; opacity: 0.7;">
+                        <span class="btn-text">Khôi phục dữ liệu</span>
+                        <span class="btn-icon">🔄</span>
+                    </button>
                 </div>
             </div>
+        </section>
 
-            <!-- Dashboard Mockup -->
-            <div class="hero-visual">
-                <div class="mockup-container">
-                    <div class="mockup-header">
-                        <div class="dots"><span></span><span></span><span></span></div>
-                        <div class="url-bar">kareer.ai/dashboard</div>
+
+        <!-- FEATURES SECTION -->
+        <section class="features-section" id="features">
+            <div class="features-container">
+                <h2 class="features-title">Kareer có gì?</h2>
+                <div class="features-list">
+                    <div class="feature-item">
+                        <span class="feature-tick">✓</span>
+                        <div class="feature-content">
+                            <strong>Thị Trường Việt Nam:</strong> Được thiết kế và tối ưu hóa chuyên biệt cho văn hóa và
+                            giá trị bản địa.
+                        </div>
                     </div>
-                    <div class="mockup-body">
-                        <div class="feature-card">
-                            <div class="icon-box"><i class="fas fa-brain"></i></div>
-                            <div class="feature-content">
-                                <strong>Phân Tích Bản Sắc:</strong> Thuật toán RIASEC thế hệ mới thấu hiểu năng lực cốt lõi.
-                            </div>
+                    <div class="feature-item">
+                        <span class="feature-tick">✓</span>
+                        <div class="feature-content">
+                            <strong>Đa Mô Hình Khoa Học:</strong> Kết hợp RIASEC, Big Five và Schwartz trong một hệ
+                            thống đánh giá.
                         </div>
-                        <div class="feature-card">
-                            <div class="icon-box" style="background: #D3F9D8;"><i class="fas fa-map-marked-alt"></i></div>
-                            <div class="feature-content">
-                                <strong>Ma Trận Định Hướng:</strong> Kết nối 500+ vị trí công việc phù hợp nhất với bạn.
-                            </div>
-                        </div>
-                        <div class="feature-card">
-                            <div class="icon-box" style="background: #FFF3BF;"><i class="fas fa-chart-line"></i></div>
-                            <div class="feature-content">
-                                <strong>Lộ Trình Đột Phá:</strong> Chiến lược nâng cấp năng lực chi tiết dựa trên dữ liệu thực tế và thực tiễn.
-                            </div>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-tick">✓</span>
+                        <div class="feature-content">
+                            <strong>Lộ Trình Đột Phá:</strong> Chiến lược nâng cấp năng lực chi tiết dựa trên dữ liệu
+                            thực tế và thực tiễn.
                         </div>
                     </div>
                 </div>
@@ -84,81 +98,65 @@
                 <div class="journey-steps">
                     <!-- Step 1 -->
                     <div class="journey-item">
-                        <div class="journey-info">
-                            <div class="journey-number">01</div>
-                            <h3>Thông tin nền tảng</h3>
-                            <p>Bắt đầu bằng việc xác định trình độ, kinh nghiệm và mục tiêu cá nhân để AI có cơ sở phân tích chính xác nhất.</p>
+                        <div class="journey-content">
+                            <span class="step-num">01</span>
+                            <h3>Định vị bản sắc</h3>
+                            <p>Hệ thống AI giúp bạn thấu hiểu sâu sắc các giá trị, hứng thú và tính cách cốt lõi.</p>
                         </div>
-                        <div class="journey-frame">
-                            <img src="profile_sc.png" alt="Thông tin nền tảng">
+                        <div class="journey-visual">
+                            <div class="image-stack">
+                                <img src="profile_sc.png" alt="Profile Analysis" class="sc-img">
+                                <img src="profile_sc.png" alt="Profile Analysis" class="sc-img">
+                                <img src="profile_sc.png" alt="Profile Analysis" class="sc-img">
+                            </div>
                         </div>
                     </div>
 
                     <!-- Step 2 -->
-                    <div class="journey-item">
-                        <div class="journey-info">
-                            <div class="journey-number">02</div>
-                            <h3>Bài test bản sắc 35 câu</h3>
-                            <p>Khám phá thế giới nội tâm qua hệ thống câu hỏi khoa học dựa trên mô hình RIASEC, Big Five và Schwartz.</p>
+                    <div class="journey-item reverse">
+                        <div class="journey-content">
+                            <span class="step-num">02</span>
+                            <h3>Phân tích đa chiều</h3>
+                            <p>Phân tích dữ liệu để tìm ra điểm giao thoa giữa đam mê và nhu cầu thực tế của thị trường.</p>
                         </div>
-                        <div class="journey-frame">
-                            <img src="test_sc.png" alt="Bài test bản sắc">
+                        <div class="journey-visual">
+                            <div class="image-stack">
+                                <img src="test_sc.png" alt="Assessment Analysis" class="sc-img">
+                                <img src="test_sc.png" alt="Assessment Analysis" class="sc-img">
+                                <img src="test_sc.png" alt="Assessment Analysis" class="sc-img">
+                            </div>
                         </div>
                     </div>
 
                     <!-- Step 3 -->
                     <div class="journey-item">
-                        <div class="journey-info">
-                            <div class="journey-number">03</div>
-                            <h3>Kết quả phân tích</h3>
-                            <p>Nhận diện bản đồ năng lực cá nhân với biểu đồ trực quan, thấu hiểu điểm mạnh và giá trị cốt lõi của bản thân.</p>
+                        <div class="journey-content">
+                            <span class="step-num">03</span>
+                            <h3>Ma trận nghề nghiệp</h3>
+                            <p>Khám phá các vị trí phù hợp nhất thông qua bản đồ trực quan hóa dữ liệu thông minh.</p>
                         </div>
-                        <div class="journey-frames-stack">
-                            <div class="journey-frame">
-                                <img src="analysis_sc1.png" alt="Kết quả phân tích 1">
-                            </div>
-                            <div class="journey-frame">
-                                <img src="analysis_sc2.png" alt="Kết quả phân tích 2">
-                            </div>
-                            <div class="journey-frame">
-                                <img src="analysis_sc3.png" alt="Kết quả phân tích 3">
+                        <div class="journey-visual">
+                            <div class="image-stack">
+                                <img src="matrix_sc.png" alt="Career Matrix" class="sc-img">
+                                <img src="matrix_sc.png" alt="Career Matrix" class="sc-img">
+                                <img src="matrix_sc.png" alt="Career Matrix" class="sc-img">
                             </div>
                         </div>
                     </div>
 
                     <!-- Step 4 -->
-                    <div class="journey-item">
-                        <div class="journey-info">
-                            <div class="journey-number">04</div>
-                            <h3>Matrix nghề nghiệp</h3>
-                            <p>Ma trận định hướng thông minh kết nối bản sắc cá nhân với hàng trăm vị trí công việc thực tế trong thị trường.</p>
+                    <div class="journey-item reverse">
+                        <div class="journey-content">
+                            <span class="step-num">04</span>
+                            <h3>Lộ trình chiến lược</h3>
+                            <p>Nhận ngay kế hoạch hành động chi tiết từng bước để đạt được mục tiêu sự nghiệp của bạn.</p>
                         </div>
-                        <div class="journey-frame">
-                            <img src="matrix_sc.png" alt="Ma trận nghề nghiệp">
-                        </div>
-                    </div>
-
-                    <!-- Step 5 -->
-                    <div class="journey-item">
-                        <div class="journey-info">
-                            <div class="journey-number">05</div>
-                            <h3>Thông tin chi tiết công việc</h3>
-                            <p>Phân tích sâu về nhiệm vụ, lợi thế cạnh tranh và tư vấn từ AI Coaching cho từng vị trí mục tiêu.</p>
-                        </div>
-                        <div class="journey-frame">
-                            <img src="detail_sc.png" alt="Thông tin chi tiết">
-                        </div>
-                    </div>
-
-                    <!-- Step 6 -->
-                    <div class="journey-item">
-                        <div class="journey-info">
-                            <div class="journey-number">06</div>
-                            <h3>Phác thảo lộ trình phát triển</h3>
-                            <p>Xây dựng kế hoạch hành động chi tiết từng giai đoạn và các kỹ năng trọng tâm cần trang bị để đạt được thành công.</p>
-                        </div>
-                        <div class="journey-frame">
-                            <img src="roadmap_sc.png" alt="Lộ trình phát triển">
+                        <div class="journey-visual">
+                            <div class="image-stack">
+                                <img src="roadmap_sc.png" alt="Career Roadmap" class="sc-img">
+                                <img src="roadmap_sc.png" alt="Career Roadmap" class="sc-img">
+                                <img src="roadmap_sc.png" alt="Career Roadmap" class="sc-img">
+                            </div>
                         </div>
                     </div>
                 </div>
