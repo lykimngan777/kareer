@@ -3,292 +3,222 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Career Roadmap | Kareer AI</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+    <title>Lộ trình phát triển | Kareer</title>
+    <script src="api-client.js"></script>
+    <script src="database.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
+        * { box-shadow: none !important; }
         :root {
+            --primary: #000000;
             --accent: #ffde59;
-            --bg-secondary: #f8f9fa;
+            --bg: #ffffff;
+            --font-main: 'Plus Jakarta Sans', sans-serif;
         }
 
         body {
-            background-color: #fff;
-            padding-bottom: 5rem;
+            background: #ffffff;
+            font-family: var(--font-main);
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            overflow-y: auto !important;
+            scrollbar-width: none;
         }
 
-        .container {
-            max-width: 1000px;
-            margin: 8rem auto 0;
-            padding: 0 2rem;
-        }
+        body::-webkit-scrollbar { display: none; }
 
         .tab-container {
+            position: fixed;
+            top: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
             display: flex;
             justify-content: center;
-            gap: 1rem;
-            margin-bottom: 4rem;
-            flex-wrap: wrap;
+            gap: 0.5rem;
+            padding: 0.5rem;
+            background: #fff;
+            border: 2px solid #000;
+            border-radius: 100px;
+            width: fit-content;
+            z-index: 2000;
+            box-shadow: 8px 8px 0px #000;
         }
 
         .tab-item {
-            padding: 0.8rem 1.8rem;
-            border: 2px solid #000;
+            padding: 0.7rem 1.8rem;
             border-radius: 100px;
             text-decoration: none;
-            color: #000;
-            font-weight: 700;
             font-size: 0.9rem;
-            transition: all 0.2s;
-            background: #fff;
+            font-weight: 700;
+            color: #000;
+            background: transparent;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            white-space: nowrap;
         }
 
-        .tab-item.active {
-            background: #000;
-            color: #fff;
-            box-shadow: 5px 5px 0px var(--accent);
+        .tab-item:hover { background: #f0f0f0; }
+        .tab-item.active { background: #000; color: #fff; }
+
+        .roadmap-view {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 10rem 2rem 5rem;
         }
 
-        header {
+        .roadmap-header {
             text-align: center;
             margin-bottom: 4rem;
         }
 
-        header h1 {
-            font-family: var(--font-serif);
-            font-size: 3.5rem;
+        .roadmap-header h1 {
+            font-size: 4rem;
+            font-weight: 900;
+            letter-spacing: -3px;
             margin-bottom: 1rem;
-            line-height: 1.1;
-        }
-
-        header h1 span {
-            color: var(--accent);
-            -webkit-text-stroke: 1px #000;
-        }
-
-        .subtitle {
-            font-size: 1.1rem;
-            color: #666;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        .filter-box {
-            background: #fff;
-            border: 3px solid #000;
-            border-radius: 20px;
-            padding: 2rem;
-            margin-bottom: 5rem;
-            box-shadow: 10px 10px 0px #000;
-        }
-
-        .select-group label {
-            display: block;
-            font-weight: 800;
             text-transform: uppercase;
-            font-size: 0.75rem;
-            letter-spacing: 1px;
-            margin-bottom: 0.8rem;
         }
 
-        .select-group select {
-            width: 100%;
-            padding: 1.2rem;
-            border: 2px solid #000;
-            border-radius: 12px;
-            font-family: inherit;
-            font-size: 1rem;
-            font-weight: 600;
-            appearance: none;
-            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") no-repeat right 1.5rem center;
-            cursor: pointer;
-        }
+        .roadmap-header span { color: #ffde59; -webkit-text-stroke: 2px #000; }
 
-        /* TIMELINE DESIGN */
-        .timeline {
+        .timeline-container {
             position: relative;
-            padding-left: 50px;
+            padding: 2rem 0;
         }
 
-        .timeline-line {
+        .timeline-container::before {
+            content: '';
             position: absolute;
-            left: 20px;
+            left: 50px;
             top: 0;
             bottom: 0;
             width: 4px;
             background: #000;
         }
 
-        .timeline-item {
+        .phase-card {
             position: relative;
-            margin-bottom: 6rem;
-            opacity: 0;
-            transform: translateY(20px);
-            animation: fadeInUp 0.6s forwards;
-        }
-
-        @keyframes fadeInUp {
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .timeline-dot {
-            position: absolute;
-            left: -38px;
-            top: 10px;
-            width: 16px;
-            height: 16px;
-            background: #fff;
-            border: 4px solid #000;
-            border-radius: 50%;
-            z-index: 2;
-        }
-
-        .timeline-item.start .timeline-dot { background: #000; width: 24px; height: 24px; left: -42px; }
-        .timeline-item.target .timeline-dot { background: var(--accent); width: 24px; height: 24px; left: -42px; }
-
-        .timeline-content {
+            margin-left: 100px;
+            margin-bottom: 4rem;
             background: #fff;
             border: 3px solid #000;
-            border-radius: 24px;
-            padding: 2.5rem;
-            box-shadow: 12px 12px 0px #f0f0f0;
-            transition: all 0.3s;
+            border-radius: 32px;
+            padding: 3rem;
+            box-shadow: 12px 12px 0px #000;
+            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .timeline-item:hover .timeline-content {
-            transform: translate(-5px, -5px);
-            box-shadow: 17px 17px 0px #000;
+        .phase-card:hover { transform: translate(-4px, -4px); box-shadow: 16px 16px 0px #000; }
+
+        .phase-marker {
+            position: absolute;
+            left: -65px;
+            top: 40px;
+            width: 30px;
+            height: 30px;
+            background: #ffde59;
+            border: 4px solid #000;
+            border-radius: 50%;
+            z-index: 10;
         }
 
-        .timeline-step-label {
-            font-weight: 800;
-            text-transform: uppercase;
-            font-size: 0.75rem;
-            letter-spacing: 2px;
-            color: #888;
-            margin-bottom: 0.5rem;
-            display: block;
-        }
-
-        .timeline-role {
-            font-family: var(--font-serif);
-            font-size: 1.8rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            color: #000;
-        }
-
-        .skill-chip {
+        .phase-badge {
             display: inline-block;
-            background: #f0f0f0;
-            padding: 6px 16px;
-            border-radius: 50px;
-            font-size: 0.85rem;
-            font-weight: 700;
-            border: 2px solid #000;
-        }
-
-        .skill-future {
-            background: var(--accent);
-        }
-
-        .course-suggestion h4 {
-            font-size: 0.9rem;
+            background: #000;
+            color: #fff;
+            padding: 0.5rem 1.5rem;
+            border-radius: 100px;
+            font-weight: 800;
+            font-size: 0.8rem;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
             margin-bottom: 1.5rem;
         }
 
-        .cta-box {
-            margin: 4rem 0;
-            padding: 0;
-            background: transparent;
-            border-radius: 0;
-            text-align: center;
-        }
+        .phase-title { font-size: 2.2rem; font-weight: 900; margin-bottom: 1.5rem; letter-spacing: -1px; }
 
-        .edit-prompt-container {
-            display: none;
-            margin-top: 1.5rem;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-            animation: fadeIn 0.3s ease;
-        }
+        .task-list { list-style: none; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
 
-        .edit-input-group {
-            display: flex;
-            gap: 0.5rem;
-            background: #fff;
-            padding: 0.5rem;
+        .task-item {
+            background: #f8f9fa;
             border: 2px solid #000;
-            border-radius: 12px;
+            padding: 1.5rem;
+            border-radius: 20px;
+            position: relative;
         }
 
-        .edit-input-group input {
-            flex: 1;
-            border: none;
-            padding: 0.8rem;
+        .task-item h4 { margin: 0 0 0.8rem; font-weight: 800; font-size: 1.1rem; color: #000; }
+        .task-item p { margin: 0; font-size: 0.95rem; color: #444; line-height: 1.5; }
+
+        .main-logo { height: 55px; width: auto; display: block; }
+
+        .ai-assistant-bar {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: #000;
+            color: #fff;
+            padding: 1.5rem 2rem;
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            z-index: 3000;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .ai-assistant-bar:hover { transform: scale(1.05); }
+
+        .edit-prompt-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(8px);
+            z-index: 4000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .prompt-card {
+            background: #fff;
+            padding: 3rem;
+            border-radius: 32px;
+            width: 90%;
+            max-width: 600px;
+            border: 4px solid #000;
+            box-shadow: 15px 15px 0px #ffde59;
+        }
+
+        textarea {
+            width: 100%;
+            height: 150px;
+            padding: 1.5rem;
+            border: 3px solid #000;
+            border-radius: 20px;
             font-family: inherit;
-            font-size: 0.95rem;
+            font-size: 1.1rem;
+            margin: 1.5rem 0;
+            resize: none;
             outline: none;
         }
 
-        .btn-send-prompt {
-            background: #000;
-            color: #fff;
-            border: none;
-            padding: 0.8rem 1.5rem;
-            border-radius: 8px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .btn-send-prompt:hover {
-            transform: scale(1.05);
-            background: #333;
-        }
-
-        .cta-box h2 {
-            font-family: var(--font-serif);
-            font-size: 2.2rem;
-            margin-bottom: 2rem;
-        }
-
-        .timeline-transition {
-            margin: -3rem 0 3rem 0;
-            padding: 1.5rem;
-            background: #fdfdfd;
-            border: 2px dashed #000;
-            border-radius: 12px;
-            font-size: 0.9rem;
-            color: #555;
-            position: relative;
-            z-index: 10;
-            opacity: 0;
-            transform: translateX(-20px);
-            animation: fadeInRight 0.6s forwards;
-        }
-
-        .timeline-transition::before {
-            content: 'BRIDGE →';
-            position: absolute;
-            top: -10px;
-            left: 20px;
-            background: var(--accent);
-            color: #000;
-            padding: 2px 10px;
-            font-size: 0.7rem;
-            font-weight: 900;
-            border-radius: 4px;
-        }
-
-        @keyframes fadeInRight {
-            to { opacity: 1; transform: translateX(0); }
+        @media (max-width: 768px) {
+            .roadmap-header h1 { font-size: 2.5rem; }
+            .phase-card { margin-left: 60px; padding: 1.5rem; }
+            .timeline-container::before { left: 30px; }
+            .phase-marker { left: -45px; }
+            .task-list { grid-template-columns: 1fr; }
+            .main-header { left: 50%; transform: translateX(-50%); top: 0.5rem; }
+            .main-logo { height: 35px; }
+            .tab-container { width: 95%; border-radius: 20px; top: 1rem; }
+            .tab-item { padding: 0.6rem 1rem; font-size: 0.7rem; }
         }
     </style>
 </head>
@@ -300,387 +230,118 @@
             </a>
         </div>
     </header>
-    <div class="container">
-        <div class="tab-container">
-            <a href="step2.html" class="tab-item">Kết quả phân tích</a>
-            <a href="step3.html" class="tab-item">Định hướng</a>
-            <a href="timeline.html" class="tab-item">Chi tiết nghề nghiệp</a>
-            <a href="roadmap.html" class="tab-item active">Lộ trình phát triển</a>
-        </div>
 
-        <header>
-            <h1 id="roadmap-main-title">Lộ trình chinh phục <span>Sự nghiệp</span></h1>
-            <p class="subtitle" id="roadmap-subtitle">Cá nhân hóa cho lộ trình sự nghiệp của bạn dựa trên thế mạnh RIASEC.</p>
+    <div class="tab-container">
+        <a href="step2.html" class="tab-item">Kết quả phân tích</a>
+        <a href="step3.html" class="tab-item">Định hướng</a>
+        <a href="timeline.html" class="tab-item">Chi tiết nghề nghiệp</a>
+        <a href="#" class="tab-item active">Lộ trình phát triển</a>
+    </div>
+
+    <div class="roadmap-view">
+        <header class="roadmap-header">
+            <h1 id="roadmap-main-title">Lộ trình <span>Chiến lược</span></h1>
+            <p style="font-weight: 600; color: #666; font-size: 1.2rem;">Kế hoạch hành động 24 tháng được cá nhân hóa bởi Kareer AI.</p>
         </header>
 
-        <div class="filter-box">
-            <div style="display: flex; justify-content: center; align-items: flex-end; gap: 1rem; text-align: left; flex-wrap: wrap;">
-                <div class="select-group" style="flex: 1; max-width: 800px;">
-                    <label>Vị trí công việc mục tiêu</label>
-                    <select id="role-filter">
-                        <!-- Options populated by JS -->
-                    </select>
-                </div>
-            </div>
+        <div id="roadmap-timeline" class="timeline-container">
+            <!-- Phases injected by JS -->
         </div>
+    </div>
 
-        <div class="timeline" id="timeline-flow">
-            <div class="timeline-line"></div>
-            <!-- Timeline items injected here -->
+    <div class="ai-assistant-bar" onclick="showPromptArea()">
+        <div style="background: #ffde59; width: 45px; height: 45px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #000;">
+            <i class="fas fa-magic fa-lg"></i>
         </div>
+        <div>
+            <div style="font-weight: 800; font-size: 1.1rem;">Kareer AI Assistant</div>
+            <div style="font-size: 0.85rem; opacity: 0.7;">Tùy chỉnh lộ trình theo mục tiêu riêng của bạn</div>
+        </div>
+    </div>
 
-        <div class="cta-box">
-            <button class="btn-primary" onclick="showEditPrompt()" style="border: 2px solid #000; cursor: pointer; background: #fff; color: #000; padding: 1.2rem 3rem; font-weight: 800; border-radius: 100px; text-transform: uppercase; letter-spacing: 1px;">TẠO LẠI LỘ TRÌNH</button>
-            
-            <div id="edit-prompt-area" class="edit-prompt-container">
-                <div class="edit-input-group">
-                    <input type="text" id="user-edit-prompt" placeholder="Bạn muốn chỉnh sửa lộ trình như thế nào? (Vd: học nhanh hơn, tập trung vào AI...)">
-                    <button class="btn-send-prompt" onclick="submitEditRequest()">Gửi yêu cầu</button>
-                </div>
+    <div id="edit-prompt-area" class="edit-prompt-overlay">
+        <div class="prompt-card">
+            <h2 style="font-weight: 900; font-size: 2rem; margin-bottom: 1rem;">Tùy chỉnh lộ trình</h2>
+            <p style="color: #666; line-height: 1.5;">Bạn muốn tập trung vào kỹ năng nào? Bạn có mục tiêu ngắn hạn gì đặc biệt? Hãy cho Kareer AI biết để điều chỉnh lộ trình.</p>
+            <textarea id="user-edit-prompt" placeholder="Ví dụ: Tôi muốn rút ngắn thời gian giai đoạn 1 và tập trung mạnh vào học AI..."></textarea>
+            <div style="display: flex; gap: 1rem;">
+                <button onclick="submitEditRequest()" style="flex: 2; background: #000; color: #fff; border: none; padding: 1.2rem; border-radius: 15px; font-weight: 800; cursor: pointer;">CẬP NHẬT LỘ TRÌNH</button>
+                <button onclick="document.getElementById('edit-prompt-area').style.display='none'" style="flex: 1; background: #eee; border: none; padding: 1.2rem; border-radius: 15px; font-weight: 800; cursor: pointer;">HỦY</button>
             </div>
         </div>
     </div>
 
-    <script src="config.js"></script>
-    <script src="api-client.js"></script>
-    <script src="database.js"></script>
     <script>
-        const roleCategories = {
-            tech: [
-                "Giám đốc Công nghệ (CTO) / Kiến trúc sư trưởng",
-                "Trưởng phòng Phân tích dữ liệu chiến lược",
-                "Giám đốc Quản lý Dự án & Vận hành IT",
-                "Trưởng phòng Kỹ thuật / Chuyên gia Tư vấn Công nghiệp",
-                "Chuyên gia Nghiên cứu AI / Giám đốc Khoa học",
-                "Trưởng khoa học dữ liệu (Chief Data Scientist)"
-            ],
-            design: [
-                "Giám đốc Trải nghiệm (CXO) / Giám đốc Nghệ thuật",
-                "Kiến trúc sư trưởng / Chủ trì thiết kế cấp cao",
-                "Giám đốc Sáng tạo / Chủ sở hữu thương hiệu thời trang"
-            ],
-            business: [
-                "Giám đốc Tài chính (CFO)",
-                "Giám đốc Nhân sự (CHRO)",
-                "Giám đốc Kiểm toán / Đối tác (Partner)",
-                "Giám đốc Chuỗi cung ứng (CSO)",
-                "Chủ tịch Hội đồng Quản trị / Tổng Giám đốc (CEO)",
-                "Giám đốc Điều hành Khách sạn / Khu nghỉ dưỡng",
-                "Chuyên viên Tư vấn & Quản trị Học vụ",
-                "Đối tác Quản lý Tài sản Cấp cao (Wealth Manager)",
-                "Chuyên gia Ngôn ngữ / Giám đốc Học thuật"
-            ],
-            marketing: [
-                "Giám đốc Marketing số",
-                "Giám đốc Truyền thông & Thương hiệu"
-            ],
-            legal: [
-                "Giám đốc Pháp chế / Luật sư điều hành"
-            ],
-            medical: [
-                "Giám đốc Y khoa / Chuyên gia Tư vấn Cấp cao",
-                "Chuyên gia Tư vấn Chiến lược Sức khỏe Tinh thần"
+        const roadmapData = {
+            "Product Manager": [
+                { phase: "Giai đoạn 1: Nền tảng & Tư duy (0-6 tháng)", tasks: [
+                    { title: "Làm chủ User Research", desc: "Thực hành phỏng vấn 10+ người dùng thật và xây dựng User Persona chi tiết." },
+                    { title: "Data Analytics 101", desc: "Học cách sử dụng SQL và Google Analytics để đọc hiểu hành vi người dùng." }
+                ]},
+                { phase: "Giai đoạn 2: Kỹ năng Chuyên sâu (6-12 tháng)", tasks: [
+                    { title: "Agile & Scrum Master", desc: "Nhận chứng chỉ PSM I và áp dụng quy trình chạy sprint thực tế." },
+                    { title: "Product Strategy", desc: "Xây dựng Product Roadmap cho một tính năng lớn từ ý tưởng đến launch." }
+                ]},
+                { phase: "Giai đoạn 3: Tối ưu & Tăng trưởng (12-24 tháng)", tasks: [
+                    { title: "Growth Hacking", desc: "Thực hiện các chiến dịch A/B testing để tối ưu tỷ lệ chuyển đổi." },
+                    { title: "Leadership & Stakeholder", desc: "Quản trị kỳ vọng của các sếp và phối hợp nhịp nhàng giữa Tech & Business." }
+                ]}
             ]
         };
 
-        const wefSkills = [
-            { name: "Làm chủ AI (AI Literacy)", type: "future" },
-            { name: "Phân tích dữ liệu & Trực quan hóa", type: "future" },
-            { name: "Kỹ năng số (Digital Literacy)", type: "future" },
-            { name: "Tư duy phản biện & Phân tích", type: "future" },
-            { name: "Sáng tạo & Sáng kiến", type: "future" }
-        ];
-
-        function generateCustomPath(targetRole, profile, customPrompt = "") {
-            const sData = typeof specializedData !== 'undefined' ? specializedData[targetRole] : null;
-            const basePos = profile.position || "Khởi đầu";
-            const coreDomain = targetRole.replace("Giám đốc ", "").replace("Trưởng phòng ", "").split(" (")[0].split(" /")[0];
-            const category = Object.keys(roleCategories).find(key => roleCategories[key].includes(targetRole)) || 'business';
-
-            const steps = [];
-            const prompt = (customPrompt || "").toLowerCase();
-
-            const pick = (arr, count) => {
-                if (!arr || !Array.isArray(arr)) return [];
-                const shuffled = [...arr].sort(() => 0.5 - Math.random());
-                return shuffled.slice(0, count);
-            };
-
-            // Logic to adjust time based on prompt
-            let timeUnit = "Tháng";
-            let timeFactor = 1;
-            if (prompt.includes("nhanh") || prompt.includes("cấp tốc")) timeFactor = 0.5;
-            if (prompt.includes("chậm") || prompt.includes("kỹ") || prompt.includes("chi tiết")) timeFactor = 1.5;
-
-            // PHASE 1: FOUNDATION / ACADEMIC
-            let p1 = {
-                phase: "Giai đoạn 1",
-                time: `${Math.ceil(1 * timeFactor)}–${Math.ceil(6 * timeFactor)} ${timeUnit}`,
-                stage: "XÂY DỰNG NỀN TẢNG CỐT LÕI",
-                role: `Hệ thống hóa từ Base: ${basePos}`,
-                desc: `Khởi đầu bằng việc làm chủ bộ công cụ và tư duy căn bản của ngành <strong>${coreDomain}</strong>.`,
-                transition: `<strong>Tại sao mốc này quan trọng?</strong> Đây là bước "xây móng" giúp bạn hiểu rõ luật chơi và bản chất của ngành.`,
-                tasks: ["Nghiên cứu 10 tài liệu nền tảng", "Thành thạo 3 công cụ làm việc cốt lõi"],
-                skills: ["Tư duy hệ thống", "Phân tích ngành"],
-            };
-
-            if (prompt.includes("đại học")) {
-                p1.stage = "BẬC CỬ NHÂN / ĐẠI HỌC";
-                p1.role = `Sinh viên ngành ${coreDomain}`;
-                p1.desc = `Học tập chính quy, tập trung vào lý thuyết và các nguyên lý khoa học nền tảng của ${coreDomain}.`;
-                p1.tasks = ["Hoàn thành 40+ học phần chuyên ngành", "Tham gia các kỳ thực tập cơ bản"];
-            }
-
-            steps.push(p1);
-
-            // PHASE 2: SPECIALIZATION / ADVANCED ACADEMIC
-            let p2 = {
-                phase: "Giai đoạn 2",
-                time: `${Math.ceil(6 * timeFactor)}–${Math.ceil(12 * timeFactor)} ${timeUnit}`,
-                stage: "CHUYÊN SÂU & THỰC NGHIỆM",
-                role: `Cộng tác viên / Thực tập sinh ${coreDomain}`,
-                desc: `Bắt đầu áp dụng kiến thức vào các dự án nhỏ và xây dựng Portfolio cá nhân.`,
-                transition: `<strong>Bước tiến mới:</strong> Chuyển từ "biết" sang "làm được", tạo dựng uy tín ban đầu.`,
-                tasks: ["Xây dựng 3 Case Study thực tế", "Tham gia các Workshop chuyên sâu"],
-                skills: ["Giải quyết vấn đề", "Thực thi kỹ thuật"],
-            };
-
-            if (prompt.includes("thạc sĩ") || prompt.includes("cao học")) {
-                p2.stage = "CHƯƠNG TRÌNH THẠC SĨ (MASTER)";
-                p2.role = `Học viên Cao học ${coreDomain}`;
-                p2.desc = `Nghiên cứu sâu về các mô hình quản trị và chiến lược cấp cao trong ${coreDomain}.`;
-                p2.tasks = ["Nghiên cứu luận văn chuyên sâu", "Tham gia các hội thảo quốc tế"];
-            }
-
-            steps.push(p2);
-
-            // PHASE 3: EXECUTION & CAREER ENTRY
-            let p3 = {
-                phase: "Giai đoạn 3",
-                time: `${Math.ceil(12 * timeFactor)}–${Math.ceil(24 * timeFactor)} ${timeUnit}`,
-                stage: "BỨT PHÁ VỀ NĂNG LỰC THỰC CHIẾN",
-                role: `Chuyên viên / Junior ${targetRole}`,
-                desc: `Trực tiếp đảm nhận các phần việc quan trọng trong quy trình vận hành của doanh nghiệp.`,
-                transition: `<strong>Điểm rơi phong độ:</strong> Giai đoạn khẳng định năng lực thông qua các kết quả định lượng.`,
-                tasks: sData ? pick(sData.dailyTasks, 3) : ["Vận hành hệ thống thực tế", "Tối ưu hóa quy trình làm việc"],
-                skills: sData ? pick(sData.requirements.itSkills.split(', ').map(s => s.replace(/^(Am hiểu sâu về |Thành thạo |Hiểu rõ về |Kỹ năng )/i, '')), 3) : ["Quản lý dự án", "Giao tiếp chuyên nghiệp"],
-            };
-
-            if (prompt.includes("phd") || prompt.includes("tiến sĩ") || prompt.includes("nghiên cứu")) {
-                p3.stage = "TIẾN SĨ / NGHIÊN CỨU SINH (PHD)";
-                p3.role = `Nghiên cứu viên cao cấp`;
-                p3.desc = `Tạo ra những tri thức mới và đóng góp cho sự phát triển của ngành ${coreDomain} toàn cầu.`;
-            }
-
-            steps.push(p3);
-
-            // PHASE 4: ACCELERATION & MANAGEMENT
-            steps.push({
-                phase: "Giai đoạn 4",
-                time: `${Math.ceil(24 * timeFactor)}–${Math.ceil(48 * timeFactor)} ${timeUnit}`,
-                stage: "TIỆM CẬN VAI TRÒ QUẢN TRỊ",
-                role: `Senior / Team Lead / Deputy Manager`,
-                desc: `Không chỉ làm tốt việc của mình mà còn bắt đầu dẫn dắt, hướng dẫn đội ngũ và chịu trách nhiệm về KPIs nhóm.`,
-                transition: `<strong>Tư duy lãnh đạo:</strong> Chuyển dịch từ tư duy cá nhân sang tư duy tập thể và chiến lược bộ phận.`,
-                tasks: sData ? [`Dẫn dắt các dự án chiến lược`, `Tối ưu KPIs: ${sData.kpis[0]}`] : ["Đào tạo nhân sự cấp dưới", "Thiết lập quy trình làm việc cho Team"],
-                skills: ["Lãnh đạo đội ngũ", "Quản trị rủi ro", "Đàm phán"],
-            });
-
-            // PHASE 5: MASTERY & GLOBAL LEADERSHIP
-            steps.push({
-                phase: "Giai đoạn 5",
-                time: `Trên ${Math.ceil(48 * timeFactor)} ${timeUnit}`,
-                stage: "KHẲNG ĐỊNH VỊ THẾ LÃNH ĐẠO TOÀN CẦU",
-                role: targetRole,
-                desc: `Chính thức nắm giữ vai trò <strong>${targetRole}</strong>, định hình tầm nhìn dài hạn và kiến tạo giá trị bền vững cho doanh nghiệp và xã hội.`,
-                transition: `<strong>Đỉnh cao sự nghiệp:</strong> Trở thành người dẫn đầu, người truyền cảm hứng và chuyên gia đầu ngành.`,
-                tasks: sData ? sData.responsibilities.slice(0, 3) : [`Định hướng chiến lược cấp tập đoàn`, "Kiến tạo văn hóa đổi mới"],
-                skills: sData ? pick(sData.traits, 3) : ["Tầm nhìn chiến lược", "Đổi mới sáng tạo", "Cố vấn (Mentoring)"],
-            });
-
-            return steps;
-        }
-
-        function initDropdown() {
-            const roleFilter = document.getElementById('role-filter');
-            const profileStr = localStorage.getItem('kareer_profile');
-            const profile = profileStr ? JSON.parse(profileStr) : { interests: [] };
-            const interests = profile.interests || [];
+        function renderTimeline(isCustom = false) {
+            const role = localStorage.getItem('selectedCareer') || "Product Manager";
+            const container = document.getElementById('roadmap-timeline');
+            document.getElementById('roadmap-main-title').innerHTML = `${role} <span>Roadmap</span>`;
             
-            const quizResultStr = localStorage.getItem('kareer_result');
-            const quizResult = quizResultStr ? JSON.parse(quizResultStr) : { scores: {} };
-            const userScores = quizResult.scores || {};
+            const phases = roadmapData[role] || roadmapData["Product Manager"];
             
-            let scoredRoles = [];
-            
-            if (typeof careerDatabase !== 'undefined' && careerDatabase.length > 0) {
-                careerDatabase.forEach(career => {
-                    let score = 0;
-                    if (career.traits) {
-                        career.traits.forEach(t => {
-                            const traitKey = t.toLowerCase();
-                            score += (userScores[traitKey] || 0);
-                        });
-                    }
-                    interests.forEach(interest => {
-                        if (career.name.toLowerCase().includes(interest.toLowerCase())) score += 50;
-                    });
-                    scoredRoles.push({ role: career.name, score });
-                });
-            } else {
-                const catRiasec = {
-                    tech: ['investigative', 'realistic'],
-                    design: ['artistic', 'investigative'],
-                    business: ['enterprising', 'conventional'],
-                    marketing: ['enterprising', 'artistic']
-                };
-                Object.entries(roleCategories).forEach(([cat, roles]) => {
-                    roles.forEach(role => {
-                        let score = 0;
-                        const traits = catRiasec[cat] || [];
-                        traits.forEach(t => score += (userScores[t] || 0));
-                        interests.forEach(interest => {
-                            if (role.toLowerCase().includes(interest.toLowerCase())) score += 50;
-                        });
-                        scoredRoles.push({ role, score });
-                    });
-                });
-            }
-
-            scoredRoles.sort((a, b) => b.score - a.score);
-            roleFilter.innerHTML = scoredRoles.map(item => `<option value="${item.role}">${item.role}</option>`).join('');
-            
-            const selected = localStorage.getItem('selectedCareer');
-            if (selected && scoredRoles.some(r => r.role === selected)) {
-                roleFilter.value = selected;
-            }
-        }
-
-        function renderTimeline(isManual = false) {
-            try {
-                const flow = document.getElementById('timeline-flow');
-                const roleSelect = document.getElementById('role-filter');
-                if (!flow || !roleSelect) return;
-
-                const targetRole = roleSelect.value;
-                const profileStr = localStorage.getItem('kareer_profile');
-                const profile = profileStr ? JSON.parse(profileStr) : { position: "Người dùng mới", experience: "Chưa có kinh nghiệm" };
-                
-                const customPrompt = localStorage.getItem('kareer_custom_roadmap_prompt') || "";
-                const path = generateCustomPath(targetRole, profile, customPrompt);
-                
-                const quizResultStr = localStorage.getItem('kareer_result');
-                const quizResult = quizResultStr ? JSON.parse(quizResultStr) : { scores: {} };
-                const userScores = quizResult.scores || {};
-                const riasecKeys = ['realistic', 'investigative', 'artistic', 'social', 'enterprising', 'conventional'];
-                const topTraits = Object.entries(userScores)
-                    .filter(([trait]) => riasecKeys.includes(trait))
-                    .sort(([, a], [, b]) => b - a)
-                    .slice(0, 2)
-                    .map(([trait]) => trait);
-
-                const traitLabels = {
-                    realistic: 'Thực tế (R)', investigative: 'Nghiên cứu (I)', artistic: 'Nghệ thuật (A)',
-                    social: 'Xã hội (S)', enterprising: 'Quản lý (E)', conventional: 'Nghiệp vụ (C)'
-                };
-
-                localStorage.setItem('selectedCareer', targetRole);
-
-                const headerTitle = document.getElementById('roadmap-main-title');
-                const headerSubtitle = document.getElementById('roadmap-subtitle');
-                if (headerTitle) {
-                    const prefix = "Lộ trình chinh phục";
-                    const roleParts = targetRole.split('/');
-                    
-                    if (roleParts.length > 1) {
-                        headerTitle.innerHTML = `
-                            ${prefix}<br>
-                            <span>${roleParts[0].trim()} /</span><br>
-                            <span>${roleParts[1].trim()}</span>
-                        `;
-                    } else {
-                        headerTitle.innerHTML = `
-                            ${prefix}<br>
-                            <span>${targetRole}</span>
-                        `;
-                    }
-                }
-                if (headerSubtitle) {
-                    const traitText = topTraits.length > 0 
-                        ? `Chiến lược cá nhân hóa theo thế mạnh ${topTraits.map(t => traitLabels[t]).join(' & ')}`
-                        : "Cá nhân hóa cho lộ trình sự nghiệp của bạn";
-                    headerSubtitle.innerText = traitText;
-                }
-                
-                let html = '<div class="timeline-line"></div>';
-
-                path.forEach((step, index) => {
-                    const isStart = index === 0;
-                    const isTarget = index === path.length - 1;
-                    const itemClass = isStart ? 'timeline-item start' : (isTarget ? 'timeline-item target' : 'timeline-item');
-                    
-                    const currentSkills = [...(step.skills || [])];
-                    if (index === 1) currentSkills.push(wefSkills[0].name, wefSkills[2].name); 
-                    if (index === 2) currentSkills.push(wefSkills[1].name); 
-
-                    html += `
-                        <div class="timeline-item ${itemClass}" style="animation-delay: ${index * 0.2}s">
-                            <div class="timeline-dot"></div>
-                            <div class="timeline-content">
-                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                                    <span class="timeline-step-label">${step.phase}: ${step.stage}</span>
-                                    <span style="font-size: 0.8rem; font-weight: 800; color: #ffde59; background: #000; padding: 4px 12px; border-radius: 20px;">${step.time}</span>
-                                </div>
-                                <div class="timeline-role">
-                                    ${step.role}
-                                </div>
-                                
-                                <p style="font-size:0.95rem; color:#444; margin: 1rem 0; line-height:1.6; padding: 1.2rem; background: #f8f9fa; border-left: 5px solid ${isTarget ? '#ffde59' : '#000'}; border-radius: 6px;">
-                                    ${step.desc}
-                                </p>
-
-                                <div style="margin-bottom: 1.5rem;">
-                                    <h4 style="font-size: 0.85rem; text-transform: uppercase; color: #666; margin-bottom: 0.8rem;">🎯 Nhiệm vụ thực hành:</h4>
-                                    <ul style="padding-left: 1.2rem; font-size: 0.9rem; color: #333; line-height: 1.5;">
-                                        ${step.tasks.map(t => `<li style="margin-bottom: 0.5rem;">${t}</li>`).join('')}
-                                    </ul>
-                                </div>
-
-                                <div class="skill-list" style="margin-bottom: 1.5rem;">
-                                    ${currentSkills.map(s => {
-                                        const isWef = wefSkills.some(w => w.name === s);
-                                        return `<span class="skill-chip ${isWef ? 'skill-future' : ''}">${s}${isWef ? ' ✨' : ''}</span>`;
-                                    }).join('')}
-                                </div>
+            container.innerHTML = phases.map((p, idx) => `
+                <div class="phase-card" style="animation: slideIn 0.6s ease forwards ${idx * 0.2}s; opacity: 0;">
+                    <div class="phase-marker"></div>
+                    <span class="phase-badge">${p.phase.split(':')[0]}</span>
+                    <h2 class="phase-title">${p.phase.split(':')[1] || p.phase}</h2>
+                    <div class="task-list">
+                        ${p.tasks.map(t => `
+                            <div class="task-item">
+                                <h4>${t.title}</h4>
+                                <p>${t.desc}</p>
                             </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('');
+
+            if(isCustom) {
+                const customPrompt = localStorage.getItem('kareer_custom_roadmap_prompt');
+                const aiPhase = `
+                    <div class="phase-card" style="border-color: #ffde59; background: #fffcf0;">
+                        <div class="phase-marker" style="background: #000;"></div>
+                        <span class="phase-badge" style="background: #ffde59; color: #000;">AI CUSTOMIZED</span>
+                        <h2 class="phase-title">Yêu cầu đặc biệt: ${customPrompt.substring(0, 30)}...</h2>
+                        <div class="task-item" style="width: 100%; border-style: dashed;">
+                            <p>Kareer AI đã điều chỉnh lộ trình dựa trên yêu cầu: <strong>"${customPrompt}"</strong>. Chúng tôi đã ưu tiên các đầu việc liên quan và tối ưu hóa thời gian thực hiện cho bạn.</p>
                         </div>
-                    `;
-
-                    if (!isTarget && step.transition) {
-                        html += `
-                            <div class="timeline-transition" style="animation-delay: ${(index * 0.2) + 0.1}s">
-                                ${step.transition}
-                            </div>
-                        `;
-                    }
-                });
-                
-                flow.innerHTML = html;
-            } catch (err) {
-                console.error("Roadmap Render Error:", err);
-                document.getElementById('timeline-flow').innerHTML = `<p style="padding: 2rem; color: red;">Đã xảy ra lỗi khi tải lộ trình: ${err.message}</p>`;
+                    </div>
+                `;
+                container.innerHTML = aiPhase + container.innerHTML;
             }
         }
 
-        document.getElementById('role-filter').addEventListener('change', renderTimeline);
-        initDropdown();
-        renderTimeline();
-        function showEditPrompt() {
-            const area = document.getElementById('edit-prompt-area');
-            area.style.display = area.style.display === 'block' ? 'none' : 'block';
-            if (area.style.display === 'block') {
-                document.getElementById('user-edit-prompt').focus();
-            }
+        window.onload = () => {
+            renderTimeline();
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes slideIn {
+                    from { opacity: 0; transform: translateX(30px); }
+                    to { opacity: 1; transform: translateX(0); }
+                }
+            `;
+            document.head.appendChild(style);
+        };
+
+        function showPromptArea() {
+            document.getElementById('edit-prompt-area').style.display = 'flex';
         }
 
         function submitEditRequest() {
