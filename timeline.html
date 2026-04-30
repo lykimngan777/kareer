@@ -3,48 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chi tiết nghề nghiệp | Kareer</title>
-    <script src="api-client.js"></script>
-    <script src="database.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <title>Chi tiết nghề nghiệp | Kareer AI</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        * {
-            box-shadow: none !important;
-        }
         :root {
-            --font-main: 'Plus Jakarta Sans', sans-serif;
-            --primary: #000000;
-            --accent: #ffde59;
-            --bg: #ffffff;
+            --bg: #f8f9fb;
+            --card: #ffffff;
+            --accent: #000000;
+            --text-main: #111111;
+            --text-sub: #666666;
+            --border: #eeeeee;
         }
 
         body {
-            overflow-y: auto !important;
-            overflow-x: hidden !important;
-            background: #ffffff;
-            font-family: var(--font-main);
+            background-color: var(--bg);
+            color: var(--text-main);
+            font-family: 'Be Vietnam Pro', sans-serif;
             margin: 0;
             padding: 0;
-            -ms-overflow-style: none;
-            scrollbar-width: none;
+            overflow-x: hidden;
         }
 
-        body::-webkit-scrollbar {
-            display: none;
+        .main-header {
+            position: fixed;
+            top: 1.5rem;
+            left: 2rem;
+            z-index: 1000;
         }
 
-        .timeline-header {
-            text-align: center;
-            margin-bottom: 2rem;
+        .main-logo {
+            height: 45px;
+            width: auto;
         }
 
-        .timeline-header h1 {
-            font-size: 3.5rem;
-            font-weight: 900;
-            letter-spacing: -2px;
-            margin-bottom: 1rem;
-        }
-
+        /* Standardized Tab Navigation */
         .tab-container {
             position: fixed;
             top: 2rem;
@@ -66,347 +59,354 @@
             padding: 0.7rem 1.8rem;
             border-radius: 100px;
             text-decoration: none;
-            font-size: 0.9rem;
-            font-weight: 700;
-            color: #000;
-            background: transparent;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            white-space: nowrap;
-        }
-
-        .tab-item:hover {
-            background: #f0f0f0;
-        }
-
-        .tab-item.active {
-            background: #000;
-            color: #fff;
-        }
-
-        .timeline-view {
-            width: 100%;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 10rem 2rem 5rem;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .filter-box {
-            background: #ffffff;
-            padding: 1rem 0;
-            margin-bottom: 3rem;
-            width: 100%;
-            max-width: 800px;
-        }
-
-        .select-group {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            width: 100%;
-        }
-
-        .select-group label {
             font-size: 0.85rem;
             font-weight: 800;
-            color: #666;
+            color: #000;
+            transition: all 0.2s ease;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
 
-        .select-group select {
-            padding: 1.2rem;
-            border: 3px solid #000;
-            border-radius: 16px;
-            font-size: 1.1rem;
-            font-weight: 700;
-            background: #fff;
-            appearance: none;
-            cursor: pointer;
-            background: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e") no-repeat right 1.5rem center/1.2rem;
+        .tab-item:hover { background: #f0f0f0; }
+        .tab-item.active { background: #000; color: #fff; }
+
+        .timeline-container {
+            max-width: 1100px;
+            margin: 120px auto 100px;
+            padding: 0 2rem;
         }
 
-        .detail-card {
-            width: 100%;
-            background: #fff;
-            border-radius: 32px;
-            padding: 3rem;
-            border: 3px solid #000;
-            animation: fadeIn 0.6s ease forwards;
+        /* Career Hero Section */
+        .career-hero {
+            background: #000;
+            color: #fff;
+            padding: 4rem;
+            border-radius: 30px;
+            margin-bottom: 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        .career-hero::after {
+            content: '';
+            position: absolute;
+            top: 0; right: 0; width: 300px; height: 300px;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            transform: translate(30%, -30%);
         }
 
-        .detail-grid {
+        .hero-info h1 {
+            font-size: 3.5rem;
+            font-weight: 900;
+            margin: 0 0 1rem 0;
+            line-height: 1.1;
+        }
+
+        .hero-meta {
+            display: flex;
+            gap: 2rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.7;
+        }
+
+        .hero-meta span { display: flex; align-items: center; gap: 8px; }
+
+        /* Main Content Layout */
+        .content-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 3rem;
+            grid-template-columns: 1.8fr 1fr;
+            gap: 2.5rem;
         }
 
-        .bullet-list {
+        .card {
+            background: var(--card);
+            padding: 2.5rem;
+            border-radius: 24px;
+            border: 1px solid var(--border);
+            margin-bottom: 2.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 800;
+            margin-bottom: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-title i { font-style: normal; font-size: 1.6rem; }
+
+        .job-desc {
+            font-size: 1.05rem;
+            line-height: 1.8;
+            color: #444;
+        }
+
+        .list-items {
             list-style: none;
             padding: 0;
             margin: 0;
         }
 
-        .bullet-list li {
-            position: relative;
-            padding-left: 1.5rem;
+        .list-item {
+            padding: 1.2rem;
+            background: #fdfdfd;
+            border: 1px solid #f0f0f0;
+            border-radius: 12px;
             margin-bottom: 1rem;
-            font-size: 1rem;
-            line-height: 1.6;
-            color: #333;
+            display: flex;
+            gap: 15px;
+            transition: all 0.3s ease;
         }
 
-        .bullet-list li::before {
-            content: '•';
-            position: absolute;
-            left: 0;
-            font-weight: 900;
-            color: #000;
+        .list-item:hover {
+            border-color: #000;
+            transform: translateX(5px);
         }
 
-        .btn-roadmap {
+        .item-number {
+            width: 28px;
+            height: 28px;
             background: #000;
             color: #fff;
-            padding: 1.5rem 3rem;
-            border-radius: 100px;
-            text-decoration: none;
-            font-weight: 800;
-            font-size: 1.1rem;
-            transition: 0.3s;
-            display: inline-flex;
+            border-radius: 50%;
+            display: flex;
             align-items: center;
-            gap: 1rem;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 800;
+            flex-shrink: 0;
         }
 
-        .btn-roadmap:hover {
-            transform: scale(1.05);
-            background: #222;
+        /* Sidebar Widgets */
+        .widget-salary {
+            background: #e7f5ff;
+            border-color: #a5d8ff;
+            text-align: center;
         }
 
-        @media (max-width: 992px) {
-            .detail-grid { grid-template-columns: 1fr; }
-            .timeline-header h1 { font-size: 2.5rem; }
+        .salary-val {
+            font-size: 2.2rem;
+            font-weight: 900;
+            color: #1971c2;
+            margin: 0.5rem 0;
         }
 
-        @media (max-width: 768px) {
-            .timeline-view { padding-top: 8rem; }
-            .tab-container { width: 95%; border-radius: 20px; top: 1rem; }
-            .tab-item { padding: 0.6rem 1rem; font-size: 0.7rem; }
-            .detail-card { padding: 1.5rem; }
+        .ai-coaching {
+            background: #fff0f6;
+            border-color: #ffdeeb;
+            position: relative;
         }
 
-        .main-logo {
-            height: 55px;
-            width: auto;
+        .ai-badge {
+            background: #d6336c;
+            color: #fff;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            position: absolute;
+            top: -12px;
+            right: 20px;
+        }
+
+        .ai-text {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #a61e4d;
+            font-style: italic;
+        }
+
+        .fit-score-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            padding: 2rem;
+            background: #f8f9fa;
+            border-radius: 20px;
+        }
+
+        .fit-ring {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: conic-gradient(#000 var(--score), #eee 0);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .fit-ring::after {
+            content: attr(data-score-text);
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            background: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 1.2rem;
+        }
+
+        .cta-roadmap {
             display: block;
+            background: #000;
+            color: #fff;
+            text-align: center;
+            padding: 1.5rem;
+            border-radius: 16px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            margin-top: 2rem;
+            text-decoration: none;
         }
 
-        @media (max-width: 768px) {
-            .main-header {
-                left: 50%;
-                transform: translateX(-50%);
-                top: 0.5rem;
-            }
-            .main-logo {
-                height: 35px;
-            }
+        .cta-roadmap:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        @media (max-width: 900px) {
+            .content-grid { grid-template-columns: 1fr; }
+            .hero-info h1 { font-size: 2.2rem; }
+            .career-hero { padding: 2rem; }
+            .tab-container { width: 90%; font-size: 0.7rem; }
         }
     </style>
 </head>
 <body>
-    <header class="main-header" style="position: fixed; top: 1.5rem; left: 2rem; z-index: 9999;">
-        <div class="logo-area">
-            <a href="index.html">
-                <img src="KAREER.png" alt="Kareer Logo" class="main-logo">
-            </a>
-        </div>
+    <header class="main-header">
+        <a href="index.html">
+            <img src="KAREER.png" alt="Kareer Logo" class="main-logo">
+        </a>
     </header>
 
     <div class="tab-container">
         <a href="step2.html" class="tab-item">Kết quả phân tích</a>
         <a href="step3.html" class="tab-item">Định hướng</a>
-        <a href="#" class="tab-item active">Chi tiết nghề nghiệp</a>
+        <a href="timeline.html" class="tab-item active">Chi tiết nghề nghiệp</a>
         <a href="roadmap.html" class="tab-item">Lộ trình phát triển</a>
     </div>
 
-    <div class="timeline-view">
-        <header class="timeline-header">
-            <h1 id="timeline-title">Khám phá <span>Chuyên sâu</span></h1>
-            <p style="color: #666; font-weight: 500;">Phân tích chi tiết nhiệm vụ, yêu cầu và lộ trình cho từng vị trí mục tiêu.</p>
-        </header>
-
-        <div class="filter-box">
-            <div class="select-group">
-                <label>Vị trí công việc mục tiêu</label>
-                <select id="role-filter"></select>
+    <div class="timeline-container">
+        <div id="career-detail-root">
+            <!-- Dynamic Content Loaded Here -->
+            <div style="text-align: center; padding: 100px;">
+                <h2>Đang tải dữ liệu nghề nghiệp...</h2>
+                <p>Vui lòng đợi trong giây lát.</p>
             </div>
         </div>
-
-        <div id="details-container" style="width: 100%;"></div>
     </div>
 
+    <script src="database.js"></script>
     <script>
-        // Use global specializedData and careerDatabase from database.js
-        const careerList = (typeof careerDatabase !== 'undefined') ? careerDatabase.map(c => c.name) : [];
-
-        function getPersonalizedAnalysis(role, userScores) {
-            const data = specializedData[role] || { traits: ['enterprising', 'social', 'investigative'] };
-            const idealTraits = data.traits || ['enterprising', 'social'];
+        document.addEventListener('DOMContentLoaded', () => {
+            const selectedCareer = localStorage.getItem('selectedCareer');
+            const root = document.getElementById('career-detail-root');
             
-            const strengths = [];
-            const improvements = [];
-            const advantages = [];
-            
-            const traitLabels = {
-                realistic: 'Thực tế (R)', investigative: 'Nghiên cứu (I)', artistic: 'Nghệ thuật (A)',
-                social: 'Xã hội (S)', enterprising: 'Quản lý (E)', conventional: 'Nghiệp vụ (C)'
-            };
-
-            const advantageMapping = {
-                realistic: { title: "Tư duy Thực thi & Kỹ thuật", points: ["Chuyển đổi chiến lược thành quy trình vận hành cụ thể.", "Làm chủ hạ tầng công cụ phức tạp.", "Tối ưu hóa hiệu suất vận hành thực tế."] },
-                investigative: { title: "Năng lực Phân tích Chiến lược", points: ["Giải quyết vấn đề dựa trên dữ liệu và logic.", "Nhận diện sớm rủi ro và cơ hội thị trường.", "Tư duy phản biện sắc bén."] },
-                artistic: { title: "Sáng tạo & Thẩm mỹ Đột phá", points: ["Kiến tạo bản sắc thương hiệu độc bản.", "Giải quyết vấn đề bằng Design Thinking.", "Tầm nhìn đổi mới mang tính cách mạng."] },
-                social: { title: "Trí tuệ Cảm xúc & Kết nối", points: ["Lãnh đạo thấu cảm và truyền cảm hứng.", "Bậc thầy đàm phán dựa trên lòng tin.", "Xây dựng đội ngũ gắn kết bền vững."] },
-                enterprising: { title: "Bản lĩnh Lãnh đạo & Kinh doanh", points: ["Quyết đoán dưới áp lực thị trường.", "Nhạy bén trong việc khai thác cơ hội sinh lời.", "Tối ưu hóa nguồn lực và gây ảnh hưởng lớn."] },
-                conventional: { title: "Quản trị Hệ thống Chuẩn xác", points: ["Thiết lập quy trình vận hành hoàn hảo.", "Kiểm soát chi tiết và tuân thủ chuẩn mực.", "Quản trị rủi ro hệ thống từ xa."] }
-            };
-
-            const advice = {
-                realistic: ["Số hóa quy trình thực tế bằng AI/Automation.", "Nâng tầm quản trị bằng chứng chỉ Lean Six Sigma."],
-                investigative: ["Bổ sung kỹ năng Big Data Analytics.", "Học cách kể chuyện bằng dữ liệu (Data Storytelling)."],
-                artistic: ["Kết hợp sáng tạo với User Analytics.", "Xây dựng Design System bền vững cho doanh nghiệp."],
-                social: ["Học về Quản trị thay đổi (Change Management).", "Phát triển kỹ năng cố vấn (Mentoring) chuyên sâu."],
-                enterprising: ["Nâng cao năng lực quản trị rủi ro tài chính.", "Mở rộng tầm nhìn và mạng lưới quan hệ toàn cầu."],
-                conventional: ["Dẫn dắt chuyển đổi số trong quy trình nghiệp vụ.", "Nâng cấp lên phân tích quản trị chiến lược."]
-            };
-
-            const sortedIdealTraits = [...idealTraits].sort((a, b) => (userScores[b] || 0) - (userScores[a] || 0));
-            const advantageTraits = sortedIdealTraits.slice(0, 2);
-            const improvementTraits = sortedIdealTraits.slice(2);
-
-            advantageTraits.forEach(trait => {
-                strengths.push(traitLabels[trait]);
-                advantages.push(advantageMapping[trait] || { title: traitLabels[trait], points: [] });
-            });
-
-            improvementTraits.forEach(trait => {
-                improvements.push({ label: traitLabels[trait], advice: advice[trait] || [] });
-            });
-
-            return { strengths, improvements, advantages };
-        }
-
-        function render() {
-            const role = document.getElementById('role-filter').value;
-            const quizResult = JSON.parse(localStorage.getItem('kareer_result') || '{}');
-            const userScores = quizResult.scores || {};
-            
-            const data = specializedData[role] || {
-                mission: "Dẫn dắt tổ chức vươn tới tầm cao mới.",
-                responsibilities: ["Hoạch định chiến lược dài hạn", "Phát triển nhân tài", "Quản trị nguồn lực"],
-                dailyTasks: ["Họp chiến lược", "Review hiệu suất", "Đàm phán đối tác"],
-                requirements: { degree: "Đại học trở lên", professional: "Kinh nghiệm dày dặn", itSkills: "Thành thạo công nghệ ngành", attitude: "Chính trực, Lãnh đạo" },
-                kpis: ["Tăng trưởng doanh thu", "Chỉ số hài lòng"]
-            };
-
-            const analysis = getPersonalizedAnalysis(role, userScores);
-            
-            document.getElementById('details-container').innerHTML = `
-                <div class="detail-card">
-                    <div style="margin-bottom: 2.5rem;">
-                        <h2 style="font-size: 2.8rem; font-weight: 900; margin-bottom: 1rem;">${role}</h2>
+            if (!selectedCareer) {
+                root.innerHTML = `
+                    <div class="card" style="text-align:center; padding: 100px;">
+                        <h2>Chưa có nghề nghiệp nào được chọn</h2>
+                        <p>Vui lòng quay lại Ma trận định hướng để chọn một nghề nghiệp phù hợp.</p>
+                        <a href="step3.html" class="cta-roadmap" style="display:inline-block; padding: 1rem 2rem; width: auto;">Đến Ma trận định hướng</a>
                     </div>
+                `;
+                return;
+            }
 
-                    <div class="detail-grid">
-                        <section>
-                            <h3 style="font-size: 1.5rem; font-weight: 900; margin-bottom: 1.5rem;">📋 Trách nhiệm chiến lược</h3>
-                            <ul class="bullet-list">
-                                ${data.responsibilities.map(r => `<li>${r}</li>`).join('')}
-                            </ul>
+            // Find data in database.js (Global specializedData)
+            const data = specializedData[selectedCareer] || {
+                description: "Thông tin chi tiết cho vị trí này đang được cập nhật. Vui lòng quay lại sau.",
+                responsibilities: ["Đang cập nhật..."],
+                advantages: ["Đang cập nhật..."],
+                salary: "Thỏa thuận",
+                aiCoach: "Hãy tập trung phát triển các kỹ năng chuyên môn cốt lõi và xây dựng mạng lưới quan hệ trong ngành này."
+            };
 
-                            <h3 style="font-size: 1.5rem; font-weight: 900; margin: 2rem 0 1.5rem;">🎯 Yêu cầu năng lực</h3>
-                            <div style="display: grid; gap: 1rem;">
-                                <div style="background: #f8f9fa; padding: 1rem; border-radius: 12px;">
-                                    <strong style="display:block; font-size: 0.8rem; text-transform: uppercase; color: #888;">Bằng cấp & Kinh nghiệm</strong>
-                                    <span>${data.requirements.degree}. ${data.requirements.professional}</span>
-                                </div>
-                                <div style="background: #f8f9fa; padding: 1rem; border-radius: 12px;">
-                                    <strong style="display:block; font-size: 0.8rem; text-transform: uppercase; color: #888;">Công nghệ & Kỹ thuật</strong>
-                                    <span>${data.requirements.itSkills}</span>
-                                </div>
-                            </div>
-                        </section>
+            // Calculate Fit (Dummy for UI demonstration, in reality would use scores)
+            const resultData = JSON.parse(localStorage.getItem('kareer_result') || '{}');
+            const topGroup = resultData.topGroup || "N/A";
+            
+            root.innerHTML = `
+                <div class="career-hero">
+                    <div class="hero-info">
+                        <div class="hero-meta">
+                            <span>📍 Thị trường Việt Nam</span>
+                            <span>🔥 Xu hướng: Tăng trưởng</span>
+                        </div>
+                        <h1>${selectedCareer}</h1>
+                        <div class="hero-meta">
+                            <span>Nhóm phù hợp nhất: ${topGroup}</span>
+                        </div>
+                    </div>
+                </div>
 
-                        <section style="background: #000; color: #fff; padding: 2.5rem; border-radius: 32px; box-shadow: 0 20px 40px rgba(0,0,0,0.2); position: relative; overflow: hidden;">
-                            <div style="position: absolute; top: -50px; right: -50px; width: 150px; height: 150px; background: radial-gradient(circle, rgba(255,222,89,0.1) 0%, transparent 70%); border-radius: 50%;"></div>
-                            
-                            <h3 style="color: #ffde59; font-size: 1.5rem; font-weight: 900; margin-bottom: 2rem; display: flex; align-items: center; gap: 0.8rem;">
-                                <span style="font-size: 2rem;">🤖</span> KAREER AI COACHING
-                            </h3>
-                            
-                            <div style="margin-bottom: 2.5rem;">
-                                <h4 style="color: #4ade80; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 1.5rem; border-left: 4px solid #4ade80; padding-left: 12px; font-weight: 800;">Lợi thế cạnh tranh của bạn</h4>
-                                ${analysis.advantages.map(adv => `
-                                    <div style="margin-top: 1.5rem; background: rgba(255,255,255,0.05); padding: 1.2rem; border-radius: 16px; border: 1px solid rgba(255,255,255,0.1);">
-                                        <div style="font-weight: 800; color: #fff; font-size: 1.05rem; margin-bottom: 0.8rem;">${adv.title}</div>
-                                        <ul style="list-style: none; padding: 0; margin: 0;">
-                                            ${adv.points.map(p => `
-                                                <li style="font-size: 0.9rem; color: #ccc; margin-bottom: 0.6rem; display: flex; gap: 8px;">
-                                                    <span style="color: #4ade80;">•</span> <span>${p}</span>
-                                                </li>
-                                            `).join('')}
-                                        </ul>
+                <div class="content-grid">
+                    <div class="main-col">
+                        <div class="card">
+                            <h2 class="section-title"><i>📝</i> Mô tả công việc</h2>
+                            <div class="job-desc">${data.description}</div>
+                        </div>
+
+                        <div class="card">
+                            <h2 class="section-title"><i>🎯</i> Nhiệm vụ chính</h2>
+                            <div class="list-items">
+                                ${data.responsibilities.map((task, i) => `
+                                    <div class="list-item">
+                                        <div class="item-number">${i+1}</div>
+                                        <div>${task}</div>
                                     </div>
                                 `).join('')}
                             </div>
+                        </div>
 
-                            <div style="margin-bottom: 3rem;">
-                                <h4 style="color: #facc15; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 1.5rem; border-left: 4px solid #facc15; padding-left: 12px; font-weight: 800;">Chiến lược bứt phá</h4>
-                                <div style="background: rgba(250, 204, 21, 0.05); padding: 1.2rem; border-radius: 16px; border: 1px solid rgba(250, 204, 21, 0.1);">
-                                    <ul style="list-style: none; padding: 0; margin: 0;">
-                                        ${analysis.improvements.map(imp => imp.advice.map(a => `
-                                            <li style="font-size: 0.9rem; color: #ddd; margin-bottom: 0.8rem; display: flex; gap: 10px; line-height: 1.5;">
-                                                <i class="fas fa-arrow-right" style="color: #facc15; font-size: 0.7rem; margin-top: 5px;"></i>
-                                                <span>${a}</span>
-                                            </li>
-                                        `).join('')).join('')}
-                                    </ul>
-                                </div>
+                        <div class="card">
+                            <h2 class="section-title"><i>🚀</i> Lợi thế cạnh tranh của bạn</h2>
+                            <div class="job-desc">
+                                Dựa trên bản sắc cá nhân của bạn, đây là những điểm giúp bạn nổi bật:
+                                <ul style="margin-top: 1rem;">
+                                    ${data.advantages.map(adv => `<li>${adv}</li>`).join('')}
+                                </ul>
                             </div>
+                        </div>
+                    </div>
 
-                            <div style="text-align: center;">
-                                <a href="roadmap.html" class="btn-roadmap" style="background: #ffde59; color: #000; padding: 1rem 2rem; font-size: 0.95rem; box-shadow: 0 10px 20px rgba(255,222,89,0.2); width: fit-content; margin: 0 auto;">
-                                    XEM LỘ TRÌNH PHÁT TRIỂN <i class="fas fa-rocket" style="margin-left: 10px;"></i>
-                                </a>
-                            </div>
-                        </section>
+                    <div class="side-col">
+                        <div class="card widget-salary">
+                            <div class="section-title" style="justify-content:center; margin-bottom: 0.5rem;">Mức lương kỳ vọng</div>
+                            <div class="salary-val">${data.salary}</div>
+                            <div style="font-size: 0.8rem; opacity: 0.6;">Dựa trên dữ liệu thị trường 2024</div>
+                        </div>
+
+                        <div class="card ai-coaching">
+                            <div class="ai-badge">AI Coaching</div>
+                            <h2 class="section-title" style="font-size: 1.1rem;">Lời khuyên từ chuyên gia AI</h2>
+                            <p class="ai-text">"${data.aiCoach}"</p>
+                        </div>
+
+                        <a href="roadmap.html" class="cta-roadmap">Xây dựng lộ trình phát triển →</a>
                     </div>
                 </div>
             `;
-        }
-
-
-
-        const roleFilter = document.getElementById('role-filter');
-        if (roleFilter && careerList.length > 0) {
-            roleFilter.innerHTML = careerList.map(c => `<option value="${c}">${c}</option>`).join('');
-            roleFilter.value = localStorage.getItem('selectedCareer') || careerList[0];
-            roleFilter.onchange = (e) => {
-                localStorage.setItem('selectedCareer', e.target.value);
-                render();
-            };
-        }
-
-        window.onload = render;
+        });
     </script>
 </body>
 </html>
