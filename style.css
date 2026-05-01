@@ -58,10 +58,9 @@ body::-webkit-scrollbar-thumb {
     padding: 0 2rem;
     display: flex;
     align-items: center;
-    background: rgba(255, 255, 255, 0.85);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
-    border-bottom: 1px solid rgba(0,0,0,0.05);
+    background: transparent;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
     pointer-events: auto;
 }
 
@@ -773,8 +772,9 @@ body::-webkit-scrollbar-thumb {
         width: 100%;
         display: flex;
         justify-content: center;
-        background: rgba(255, 255, 255, 0.9);
-        border-bottom: 1px solid rgba(0,0,0,0.05);
+        background: transparent;
+        backdrop-filter: blur(5px);
+        -webkit-backdrop-filter: blur(5px);
     }
 
     .logo-area img {
