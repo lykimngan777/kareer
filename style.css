@@ -49,12 +49,20 @@ body::-webkit-scrollbar-thumb {
 
 /* Layout & Header */
 .main-header {
-    position: absolute;
-    top: 1.5rem;
-    left: 2rem;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 80px;
     z-index: 9999;
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border-bottom: 1px solid rgba(0,0,0,0.05);
     pointer-events: auto;
-    /* Allows clicking through if needed */
 }
 
 .logo-area {
@@ -757,13 +765,16 @@ body::-webkit-scrollbar-thumb {
     }
 
     .main-header {
-        padding: 0.5rem;
-        top: 0.5rem;
-        left: 50%;
-        transform: translateX(-50%);
+        height: 60px;
+        padding: 0 1rem;
+        top: 0;
+        left: 0;
+        transform: none;
         width: 100%;
         display: flex;
         justify-content: center;
+        background: rgba(255, 255, 255, 0.9);
+        border-bottom: 1px solid rgba(0,0,0,0.05);
     }
 
     .logo-area img {
@@ -927,7 +938,7 @@ body::-webkit-scrollbar-thumb {
 .builder-left {
     flex: 0 0 40%;
     background: #fff;
-    padding: 8rem 6rem 4rem 6rem;
+    padding: 80px 6rem 4rem 6rem; /* Adjusted for 80px header */
     height: 100vh;
     overflow-y: auto;
     /* Hide scrollbar */
@@ -942,7 +953,7 @@ body::-webkit-scrollbar-thumb {
 .builder-right {
     flex: 0 0 60%;
     background: #fff;
-    padding: 8rem 4rem 3rem 4rem;
+    padding: 80px 4rem 3rem 4rem; /* Adjusted for 80px header */
     display: flex;
     flex-direction: column;
     justify-content: center;
