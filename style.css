@@ -1278,8 +1278,12 @@ body::-webkit-scrollbar-thumb {
     .builder-left, .builder-right {
         padding-top: 60px !important;
     }
-    .statement-card {
-        padding: 2rem 1.5rem;
+    .statement-card, .assessment-card, .results-card {
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        padding: 1.5rem 0 !important;
+        border-radius: 0 !important;
         min-height: auto;
     }
     .ai-statement-text {
@@ -1479,8 +1483,10 @@ body::-webkit-scrollbar-thumb {
         gap: 80px;
     }
     .journey-frame {
-        box-shadow: 10px 10px 0px #ffde59;
-        padding: 15px; /* Less padding on mobile */
-        border-radius: 20px;
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        border-radius: 0 !important;
     }
 }

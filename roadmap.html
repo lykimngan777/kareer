@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lộ trình phát triển - Kareer</title>
+    <script src="analytics.js"></script>
+    <title>Lộ trình phát triển | Kareer</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
@@ -463,7 +464,13 @@
             .timeline { padding-left: 1.8rem; }
             .timeline-dot { left: -1.8rem; width: 12px; height: 12px; }
             .timeline-item.target .timeline-dot { left: -1.95rem; width: 18px; height: 18px; }
-            .timeline-content { padding: 1.2rem; border-radius: 12px; }
+            .timeline-content {
+                padding: 0;
+                border-radius: 0;
+                background: transparent !important;
+                border: none !important;
+                box-shadow: none !important;
+            }
             .timeline-role { font-size: 1.05rem !important; margin-bottom: 0.8rem; font-weight: 800; }
             .timeline-role span { font-size: 0.95rem; }
             .base-badge { font-size: 0.6rem; padding: 2px 8px; }

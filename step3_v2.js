@@ -482,12 +482,13 @@ function renderMobileList(nodes) {
 
     listContainer.innerHTML = nodes.map((node, i) => `
         <div class="mobile-career-card" onclick="localStorage.setItem('selectedCareer', '${node.name}'); window.location.href='timeline.html';" style="
-            background: white;
-            border: 3px solid #000;
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 6px 6px 0px 0px #000;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+            border-radius: 0;
+            padding: 20px 0;
+            margin-bottom: 0;
+            box-shadow: none;
             display: flex;
             flex-direction: column;
             gap: 12px;

@@ -1308,6 +1308,12 @@ body.modal-open {
     }
     .modal-content {
         padding: 1rem;
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        width: 100% !important;
+        max-width: none !important;
     }
     .analysis-tabs {
         flex-wrap: wrap;
@@ -1321,5 +1327,16 @@ body.modal-open {
     .comparison-table {
         min-width: 700px;
         font-size: 0.8rem;
+    }
+    .career-sidebar-card, .career-content-card {
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        border-radius: 0 !important;
+    }
+    .analysis-report-container {
+        background: transparent !important;
+        padding: 60px 1rem 2rem !important;
     }
 }

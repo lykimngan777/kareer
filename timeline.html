@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="analytics.js"></script>
     <title>Chi tiết nghề nghiệp | Kareer</title>
     <script src="api-client.js"></script>
     <script src="database.js"></script>
@@ -299,7 +300,13 @@
                 cursor: pointer;
             }
             .timeline-view { padding-top: 100px; padding-left: 1.5rem; padding-right: 1.5rem; }
-            .detail-card { padding: 1.5rem; }
+            .detail-card {
+                padding: 0;
+                border-radius: 0;
+                background: transparent !important;
+                border: none !important;
+                box-shadow: none !important;
+            }
             .timeline-header h1 { font-size: 1.5rem; }
             .timeline-header p { font-size: 0.75rem; }
             .filter-box { padding: 0.8rem; }
