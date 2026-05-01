@@ -199,44 +199,52 @@ document.addEventListener('DOMContentLoaded', () => {
             title: 'Kinh nghiệm', 
             icon: '🌱', 
             type: 'tags',
-            suggestions: {
-                'Học sinh': ['Câu lạc bộ', 'Hoạt động tình nguyện', 'Ban cán sự lớp', 'Cuộc thi học thuật'],
-                'Sinh viên': ['Thực tập sinh', 'Làm thêm (Part-time)', 'Nghiên cứu khoa học', 'Dự án cá nhân', 'Trưởng nhóm CLB'],
-                'Người đi làm': ['Quản lý dự án', 'Chuyên viên chuyên môn', 'Làm việc tự do (Freelance)', 'Khởi nghiệp (Startup)', 'Đào tạo nhân sự']
-            }
+            suggestions: [
+                'Dự án cá nhân', 'Thực tập (Intern)', 'Freelance', 'Part-time Job', 
+                'Dự án nhóm tại trường', 'Đồ án tốt nghiệp', 'Volunteer / Tình nguyện', 
+                'Tổ chức sự kiện', 'Câu lạc bộ trường', 'Bán hàng online', 
+                'Content Creator (TikTok/Insta)', 'Gia sư / Dạy kèm', 
+                'Nhân viên bán hàng / Promoter', 'Dự án cộng đồng', 'Làm việc nhóm freelance'
+            ]
         },
         { 
             id: 'education', 
             title: 'Học vấn', 
             icon: '🎓', 
             type: 'tags',
-            suggestions: {
-                'Học sinh': ['Tiểu học', 'Trung học cơ sở', 'Trung học phổ thông', 'IELTS/SAT'],
-                'Sinh viên': ['Đại học', 'Cao đẳng', 'Trung cấp', 'Nghề nghiệp sơ cấp', 'Khóa học online'],
-                'Người đi làm': ['Đại học', 'Thạc sĩ', 'Tiến sĩ', 'Chứng chỉ cao cấp', 'Đào tạo nội bộ']
-            }
+            suggestions: [
+                'Đại học', 'Cao đẳng', 'Chứng chỉ IELTS', 'Chứng chỉ TOEIC', 
+                'Tin học văn phòng (MOS)', 'Khóa học Coursera', 'Khóa học Udemy', 
+                'Chứng chỉ Google', 'Chứng chỉ chuyên ngành', 'Lớp chuyên Toán/Anh/Tin', 
+                'Trao đổi sinh viên', 'Học bổng', 'Khóa học ngắn hạn offline', 
+                'Đào tạo nội bộ', 'Chứng chỉ ngoại ngữ (Nhật/Hàn...)'
+            ]
         },
         { 
             id: 'skills', 
             title: 'Kỹ năng', 
             icon: '💪', 
             type: 'tags',
-            suggestions: {
-                'Học sinh': ['Tự học', 'Làm việc nhóm', 'Thuyết trình', 'Tin học cơ bản'],
-                'Sinh viên': ['Phân tích dữ liệu', 'Ngoại ngữ', 'Giao tiếp', 'Giải quyết vấn đề', 'Thiết kế cơ bản'],
-                'Người đi làm': ['Lãnh đạo', 'Tư duy chiến lược', 'Đàm phán', 'Quản trị thời gian', 'Chuyên môn sâu']
-            }
+            suggestions: [
+                'Tiếng Anh giao tiếp', 'Làm việc nhóm', 'Giải quyết vấn đề', 
+                'Tin học văn phòng', 'Giao tiếp & Thuyết trình', 'Quản lý thời gian', 
+                'Học hỏi nhanh', 'Làm việc dưới áp lực', 'Tư duy phản biện', 
+                'Sáng tạo', 'Leadership / Lãnh đạo', 'Photoshop / Đồ họa', 
+                'Canva', 'Figma (UI/UX)', 'Python / Lập trình cơ bản'
+            ]
         },
         { 
             id: 'interests', 
             title: 'Sở thích', 
             icon: '💕', 
             type: 'tags',
-            suggestions: {
-                'Học sinh': ['Công nghệ', 'Nghệ thuật', 'Khoa học', 'Ngôn ngữ', 'Thể thao'],
-                'Sinh viên': ['Kinh doanh', 'Truyền thông', 'Tâm lý học', 'Môi trường', 'Tài chính'],
-                'Người đi làm': ['Đầu tư', 'Công nghệ mới', 'Phát triển bền vững', 'Giáo dục', 'Chăm sóc sức khỏe']
-            }
+            suggestions: [
+                'Đọc sách phát triển bản thân', 'Đọc sách chuyên ngành', 
+                'Thể thao (Gym/Chạy bộ...)', 'Du lịch / Khám phá', 'Nghiên cứu nhiếp ảnh', 
+                'Quay & Chỉnh sửa video', 'Viết blog / Viết lách', 'Nấu ăn', 
+                'Học ngoại ngữ', 'Kinh doanh online', 'Nghe nhạc / Nhạc cụ', 
+                'Xem & Phân tích phim', 'Tình nguyện xã hội', 'Game chiến lược', 'Lập trình cá nhân'
+            ]
         }
     ];
 
@@ -341,9 +349,16 @@ document.addEventListener('DOMContentLoaded', () => {
         title.textContent = `Thêm ${cat.title}`;
         input.value = '';
         
-        const suggestions = cat.suggestions[userAnswers.role] || [];
-        list.innerHTML = suggestions.map(s => `
-            <button class="suggestion-btn" onclick="addTagFromSuggestion('${s}')">${s}</button>
+        const pastelColors = [
+            '#E8F5E9', '#E3F2FD', '#F3E5F5', '#FFF3E0', '#FCE4EC', 
+            '#E0F2F1', '#FFFDE7', '#EFEBE9', '#F9FBE7', '#E1F5FE'
+        ];
+        
+        const suggestions = Array.isArray(cat.suggestions) ? cat.suggestions : (cat.suggestions[userAnswers.role] || []);
+        list.innerHTML = suggestions.map((s, idx) => `
+            <button class="suggestion-btn" 
+                    style="background-color: ${pastelColors[idx % pastelColors.length]}; border-color: rgba(0,0,0,0.05);"
+                    onclick="addTagFromSuggestion('${s}')">${s}</button>
         `).join('');
 
         modal.classList.add('active');

@@ -10,7 +10,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function initMatrix() {
     const nodesContainer = document.getElementById('career-nodes');
+    const matrixCanvas = document.getElementById('matrix-canvas');
     if (!nodesContainer) return;
+
+    const isMobile = window.innerWidth <= 768;
+    if (isMobile && matrixCanvas) {
+        matrixCanvas.style.display = 'none';
+    }
 
     // Load user data
     const resultStr = localStorage.getItem('kareer_result');
@@ -117,6 +123,11 @@ function initMatrix() {
             element: null
         };
     });
+
+    if (isMobile) {
+        renderMobileList(nodes);
+        return;
+    }
 
     // Create DOM elements
     nodes.forEach((node, idx) => {
@@ -464,3 +475,60 @@ window.showCareerWhy = function(index) {
         targetContent.classList.add('active');
     }
 };
+
+function renderMobileList(nodes) {
+    const listContainer = document.getElementById('career-list-container');
+    if (!listContainer) return;
+
+    listContainer.innerHTML = nodes.map((node, i) => `
+        <div class="mobile-career-card" onclick="localStorage.setItem('selectedCareer', '${node.name}'); window.location.href='timeline.html';" style="
+            background: white;
+            border: 3px solid #000;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 6px 6px 0px 0px #000;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        ">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                <span style="
+                    background: ${node.fit.color};
+                    color: ${node.fit.textColor};
+                    padding: 4px 12px;
+                    border-radius: 50px;
+                    font-size: 0.65rem;
+                    font-weight: 800;
+                    text-transform: uppercase;
+                    border: 1.5px solid ${node.fit.textColor};
+                ">${node.fit.label}</span>
+                <span style="font-size: 0.7rem; color: #888; font-weight: 700;">${node.code}</span>
+            </div>
+            <div style="font-size: 1.1rem; font-weight: 900; text-transform: uppercase; color: #111;">${node.name}</div>
+            <div style="font-size: 0.85rem; color: #444; line-height: 1.5;">${node.description}</div>
+            <div style="margin-top: 5px; padding-top: 15px; border-top: 1px dashed #ddd;">
+                <div style="font-size: 0.6rem; color: #888; font-weight: 700; text-transform: uppercase;">Mức lương ước tính</div>
+                <div style="font-size: 1rem; font-weight: 800; color: #111; margin-top: 2px;">${node.salary || '45.000.000 - 95.000.000'} <small style="font-size: 0.7rem;">đ</small></div>
+            </div>
+            <div style="
+                margin-top: 10px;
+                background: #111;
+                color: #fff;
+                padding: 14px;
+                border-radius: 12px;
+                text-align: center;
+                font-weight: 900;
+                font-size: 0.85rem;
+                letter-spacing: 0.05em;
+                text-transform: uppercase;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 10px;
+            ">
+                XEM CHI TIẾT NGHỀ NGHIỆP <i class="fas fa-arrow-right" style="font-size: 0.8rem;"></i>
+            </div>
+        </div>
+    `).join('');
+}

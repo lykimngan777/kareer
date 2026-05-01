@@ -53,6 +53,16 @@
       --radius: 12px;
     }
 
+    .mobile-only {
+      display: none;
+    }
+    .desktop-only {
+      display: inline;
+    }
+    .mobile-nav-overlay {
+      display: none;
+    }
+
     /* ─── HEADER / LOGO ─── */
     .main-header {
       position: absolute;
@@ -74,15 +84,6 @@
     }
 
     @media (max-width: 768px) {
-      .main-header {
-        top: 0.5rem;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 100%;
-        display: flex;
-        justify-content: center;
-      }
-
       .main-logo {
         height: 35px;
       }
@@ -199,8 +200,157 @@
       left: 0;
       width: 100%;
       height: 6px;
-      background: var(--border-color);
-      z-index: 2000;
+      background: rgba(0,0,0,0.05);
+      z-index: 3000;
+    }
+
+    .result-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 40px;
+      width: 100%;
+      gap: 20px;
+    }
+
+    @media (max-width: 992px) {
+        .quiz-container {
+            margin-top: 120px;
+            padding: 0 20px;
+        }
+        .card {
+            padding: 30px 20px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .main-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 70px !important;
+            background: rgba(242, 242, 242, 0.95) !important;
+            backdrop-filter: blur(10px);
+            z-index: 10000;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            padding: 0 1.5rem !important;
+            transform: none !important;
+        }
+        .main-logo {
+            height: 35px !important;
+        }
+        .tab-container {
+            display: none !important;
+        }
+
+        .mobile-nav-toggle {
+            display: flex !important;
+            position: static !important;
+            width: 45px;
+            height: 45px;
+            background: #000;
+            color: #fff;
+            border-radius: 50%;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.2rem;
+            z-index: 10001;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            border: none;
+            cursor: pointer;
+            margin: 0 !important;
+        }
+
+        .mobile-nav-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            z-index: 9998;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+            padding: 2rem;
+        }
+
+        .mobile-nav-overlay.active {
+            display: flex;
+        }
+
+        .mobile-nav-link {
+            font-size: 1.5rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            color: #000;
+            text-decoration: none;
+            letter-spacing: 2px;
+        }
+
+        .mobile-nav-link.active {
+            color: #ffde59;
+            text-decoration: underline;
+        }
+
+        .btn-close-nav {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            background: none;
+            border: none;
+            font-size: 2rem;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        #hdrBlock h1 {
+            font-size: 1.4rem !important;
+        }
+
+        .mobile-only {
+            display: inline !important;
+        }
+        .desktop-only {
+            display: none !important;
+        }
+
+        .result-actions {
+            flex-direction: column;
+            gap: 12px;
+            align-items: center;
+        }
+        .result-actions .btn {
+            width: fit-content;
+            min-width: 200px;
+            justify-content: center;
+            padding: 0.8rem 1.5rem !important;
+            font-size: 0.85rem !important;
+        }
+        .quiz-container {
+            margin-top: 100px;
+        }
+        .section-header h2 {
+            font-size: 1.5rem;
+        }
+        .section-header p {
+            font-size: 0.85rem;
+        }
+        .card {
+            padding: 20px 15px;
+        }
+        .score-val {
+            font-size: 1.8rem;
+        }
+        .trait-label {
+            font-size: 0.8rem;
+        }
     }
 
     .progress-fill {
@@ -406,20 +556,22 @@
     }
 
     .dim-item {
-      padding: 20px;
+      padding: 25px 20px;
       background: white;
       border: 2px solid #eee;
-      border-radius: 10px;
-      margin-bottom: 15px;
+      border-radius: 12px;
+      margin-bottom: 35px;
       position: relative; /* For absolute badge */
+      box-shadow: 0 4px 15px rgba(0,0,0,0.02);
     }
 
     .dim-item-top {
       display: flex;
-      justify-content: flex-start; /* Label on left */
+      justify-content: space-between;
       align-items: center;
-      margin-bottom: 12px;
-      padding-right: 80px; /* Avoid overlap with absolute badge */
+      margin-bottom: 15px;
+      gap: 15px;
+      flex-wrap: wrap; /* For very small screens */
     }
 
     .dim-label {
@@ -430,14 +582,14 @@
 
     .dim-badge {
       font-weight: 800;
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       text-transform: uppercase;
-      position: absolute;
-      top: 8px;
-      right: 15px;
-      background: transparent !important;
-      color: #000 !important;
-      padding: 0 !important;
+      padding: 6px 14px !important;
+      border-radius: 50px;
+      border-width: 1.5px;
+      border-style: solid;
+      letter-spacing: 0.05em;
+      white-space: nowrap;
     }
 
     .dim-bar-track {
@@ -455,8 +607,22 @@
       transition: width 1s ease-out;
     }
 
-    .val-vhigh, .val-med, .val-low {
-      color: #000;
+    .val-vhigh {
+      background-color: #e8f5e9 !important; /* Pastel Green */
+      color: #2e7d32 !important;
+      border-color: #c8e6c9 !important;
+    }
+
+    .val-med {
+      background-color: #fffde7 !important; /* Pastel Yellow */
+      color: #f57f17 !important;
+      border-color: #fff9c4 !important;
+    }
+
+    .val-low {
+      background-color: #ffebee !important; /* Pastel Red/Pink */
+      color: #c62828 !important;
+      border-color: #ffcdd2 !important;
     }
 
     /* Recommendation Box */
@@ -738,6 +904,19 @@
         font-size: 1.4rem;
       }
 
+      .theory-title {
+        font-size: 1.1rem !important;
+      }
+
+      .recommendation-box h3 {
+        font-size: 0.9rem !important;
+      }
+
+      .btn-toggle-narrative {
+        font-size: 0.75rem !important;
+        padding: 8px 16px !important;
+      }
+
       .rec-grid {
         grid-template-columns: 1fr;
         gap: 15px;
@@ -776,6 +955,7 @@
           <img src="KAREER.png" alt="Kareer Logo" class="main-logo">
         </a>
       </div>
+      <button class="mobile-nav-toggle" onclick="toggleMobileNav()" style="display: none;">☰</button>
     </header>
 
     <div class="tab-container" id="main-nav-tabs">
@@ -793,7 +973,7 @@
       <div class="card" id="hdrBlock">
         <h1
           style="font-family: var(--font-heading); font-size: 2.2rem; font-weight: 900; margin-bottom: 10px; text-align: center; text-transform: uppercase;">
-          Khám Phá Bản Sắc Nghề Nghiệp</h1>
+          Khám Phá Bản Sắc <br class="mobile-only"> Nghề Nghiệp</h1>
       </div>
 
       <div id="questionArea" style="margin-top: 30px;">
@@ -1249,9 +1429,12 @@
             </div>
           </div>
 
-          <div class="result-actions" style="display: flex; justify-content: space-between; align-items: center; margin-top: 40px; width: 100%;">
+          <div class="result-actions">
             <button class="btn btn-ghost" onclick="retakeTest()">Làm lại</button>
-            <button class="btn btn-primary" style="background: #111; color: white;" onclick="window.location.href='step3.html'">Khám phá ma trận nghề nghiệp</button>
+            <button class="btn btn-primary" style="background: #111; color: white; border: 2px solid #000;" onclick="window.location.href='step3.html'">
+                <span class="desktop-only">Khám phá ma trận nghề nghiệp</span>
+                <span class="mobile-only">Khám phá các vị trí nghề nghiệp</span>
+            </button>
           </div>`;
 
         document.getElementById('hdrBlock').style.display = 'none';
@@ -1263,7 +1446,9 @@
         const navTabs = document.getElementById('main-nav-tabs');
         if (navTabs) navTabs.style.display = 'flex';
         const quizContainer = document.querySelector('.quiz-container');
-        if (quizContainer) quizContainer.style.marginTop = '160px';
+        if (quizContainer) {
+            quizContainer.style.marginTop = window.innerWidth <= 768 ? '100px' : '160px';
+        }
         window.scrollTo({ top: 0, behavior: 'smooth' });
       } catch (err) { console.error(err); showToast("Có lỗi xảy ra. Vui lòng thử lại."); }
     }
@@ -1286,6 +1471,19 @@
 
     renderPage();
   </script>
-</body>
 
+  <div class="mobile-nav-overlay" id="mobileNav">
+      <button class="btn-close-nav" onclick="toggleMobileNav()">&times;</button>
+      <a href="step2.html" class="mobile-nav-link active">Kết quả phân tích</a>
+      <a href="step3.html" class="mobile-nav-link">Định hướng</a>
+      <a href="timeline.html" class="mobile-nav-link">Chi tiết nghề nghiệp</a>
+      <a href="roadmap.html" class="mobile-nav-link">Lộ trình phát triển</a>
+  </div>
+
+  <script>
+      function toggleMobileNav() {
+          document.getElementById('mobileNav').classList.toggle('active');
+      }
+  </script>
+</body>
 </html>

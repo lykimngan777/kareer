@@ -10,12 +10,25 @@
     <style>
         * {
             box-shadow: none !important;
+            box-sizing: border-box;
         }
         :root {
             --font-main: 'Plus Jakarta Sans', sans-serif;
             --primary: #000000;
             --accent: #ffde59;
             --bg: #ffffff;
+        }
+        .mobile-nav-overlay { display: none; }
+        .main-header {
+            position: absolute;
+            top: 1.5rem;
+            left: 2rem;
+            z-index: 9999;
+        }
+        .main-logo {
+            height: 55px;
+            width: auto;
+            display: block;
         }
 
         body {
@@ -192,40 +205,118 @@
             background: #222;
         }
 
+        .detail-role-title {
+            font-size: 2.8rem;
+        }
+
         @media (max-width: 992px) {
-            .detail-grid { grid-template-columns: 1fr; }
-            .timeline-header h1 { font-size: 2.5rem; }
+            .detail-grid { grid-template-columns: 1fr; gap: 2rem; }
+            .timeline-header h1 { font-size: 2.2rem; }
+            .timeline-view { padding-top: 120px; }
+            .detail-role-title { font-size: 2rem; }
         }
 
         @media (max-width: 768px) {
-            .timeline-view { padding-top: 8rem; }
-            .tab-container { width: 95%; border-radius: 20px; top: 1rem; }
-            .tab-item { padding: 0.6rem 1rem; font-size: 0.7rem; }
-            .detail-card { padding: 1.5rem; }
-        }
-
-        .main-header {
-            position: absolute;
-            top: 1.5rem;
-            left: 2rem;
-            z-index: 9999;
-        }
-
-        .main-logo {
-            height: 55px;
-            width: auto;
-            display: block;
-        }
-
-        @media (max-width: 768px) {
+            .detail-role-title { font-size: 1.1rem; }
             .main-header {
-                left: 50%;
-                transform: translateX(-50%);
-                top: 0.5rem;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 70px !important;
+                background: rgba(255, 255, 255, 0.95) !important;
+                backdrop-filter: blur(10px);
+                z-index: 10000;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: space-between !important;
+                padding: 0 1.5rem !important;
+                transform: none !important;
             }
             .main-logo {
-                height: 35px;
+                height: 35px !important;
             }
+            .tab-container {
+                display: none !important;
+            }
+            .mobile-nav-toggle {
+                display: flex !important;
+                position: static !important;
+                width: 45px;
+                height: 45px;
+                background: #000;
+                color: #fff;
+                border-radius: 50%;
+                justify-content: center;
+                align-items: center;
+                font-size: 1.2rem;
+                z-index: 10001;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+                border: none;
+                cursor: pointer;
+                margin: 0 !important;
+            }
+            .timeline-header h1 { font-size: 1.5rem; }
+            .mobile-nav-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(255, 255, 255, 0.98);
+                backdrop-filter: blur(10px);
+                z-index: 9998;
+                display: none;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                gap: 2rem;
+                padding: 2rem;
+            }
+            .mobile-nav-overlay.active {
+                display: flex;
+            }
+            .mobile-nav-link {
+                font-size: 1.5rem;
+                font-weight: 800;
+                text-transform: uppercase;
+                color: #000;
+                text-decoration: none;
+                letter-spacing: 2px;
+            }
+            .mobile-nav-link.active {
+                color: #ffde59;
+                text-decoration: underline;
+            }
+            .btn-close-nav {
+                position: absolute;
+                top: 2rem;
+                right: 2rem;
+                background: none;
+                border: none;
+                font-size: 2rem;
+                font-weight: 800;
+                cursor: pointer;
+            }
+            .timeline-view { padding-top: 100px; padding-left: 1.5rem; padding-right: 1.5rem; }
+            .detail-card { padding: 1.5rem; }
+            .timeline-header h1 { font-size: 1.5rem; }
+            .timeline-header p { font-size: 0.75rem; }
+            .filter-box { padding: 0.8rem; }
+            
+            /* Global Font Reductions */
+            .detail-card h3 { font-size: 1.1rem !important; margin-bottom: 1rem !important; }
+            .bullet-list li { font-size: 0.8rem !important; margin-bottom: 0.5rem !important; }
+            .detail-card strong { font-size: 0.65rem !important; }
+            .detail-card span { font-size: 0.85rem !important; }
+            
+            /* AI Section Reductions */
+            .detail-card section:last-child { padding: 1.5rem !important; }
+            .detail-card h3 span { font-size: 1.5rem !important; } /* AI Icon */
+            .detail-card h4 { font-size: 0.65rem !important; margin-bottom: 1rem !important; letter-spacing: 1px !important; }
+            .detail-card .insight-title { font-size: 0.9rem !important; }
+            .detail-card .insight-list li { font-size: 0.8rem !important; }
+            .btn-roadmap { padding: 0.8rem 1.5rem !important; font-size: 0.8rem !important; width: 100%; justify-content: center; }
         }
     </style>
 </head>
@@ -236,6 +327,7 @@
                 <img src="KAREER.png" alt="Kareer Logo" class="main-logo">
             </a>
         </div>
+        <button class="mobile-nav-toggle" onclick="toggleMobileNav()" style="display: none;">☰</button>
     </header>
 
     <div class="tab-container">
@@ -330,7 +422,7 @@
             document.getElementById('details-container').innerHTML = `
                 <div class="detail-card">
                     <div style="margin-bottom: 2.5rem;">
-                        <h2 style="font-size: 2.8rem; font-weight: 900; margin-bottom: 1rem;">${role}</h2>
+                        <h2 class="detail-role-title" style="font-weight: 900; margin-bottom: 1rem;">${role.replace(' / ', ' / <br>')}</h2>
                     </div>
 
                     <div class="detail-grid">
@@ -414,6 +506,18 @@
         }
 
         window.onload = render;
+
+        function toggleMobileNav() {
+            document.getElementById('mobileNav').classList.toggle('active');
+        }
     </script>
+
+    <div class="mobile-nav-overlay" id="mobileNav">
+        <button class="btn-close-nav" onclick="toggleMobileNav()">&times;</button>
+        <a href="step2.html" class="mobile-nav-link">Kết quả phân tích</a>
+        <a href="step3.html" class="mobile-nav-link">Định hướng</a>
+        <a href="timeline.html" class="mobile-nav-link active">Chi tiết nghề nghiệp</a>
+        <a href="roadmap.html" class="mobile-nav-link">Lộ trình phát triển</a>
+    </div>
 </body>
 </html>
